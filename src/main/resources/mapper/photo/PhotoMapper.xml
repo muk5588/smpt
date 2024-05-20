@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="photo.dao.PhotoDao">
+
+     <sql id="selectPhotoColumns">
+        photoNo, title, content, nickname, boardView, createDate, updateDate
+    </sql>
+
+    <select id="selectAll" resultType="Photo" parameterType="util.Paging">
+        SELECT * FROM (
+            SELECT rownum AS rnum, p.* FROM (
+                SELECT 
+                    <include refid="selectPhotoColumns"/>
+                FROM photo
+                ORDER BY photono DESC
+            ) p
+        )
+        WHERE rnum BETWEEN #{startNo} AND #{endNo}
+    </select>
+
+    <select id="selectCntAll" resultType="int">
+        SELECT count(*) FROM photo
+    </select>
+
+    <insert id="insert" parameterType="photo.dto.Photo">
+    INSERT INTO photo (photono, title, content, nickname, boardview, createDate, updateDate)
+    VALUES (photo_seq.nextval, #{title}, #{content}, #{nickname}, #{boardview}, sysdate, sysdate)
+</insert>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM photo WHERE photono = #{photono}
+    </delete>
+
+    <select id="selectByPhotoNo" resultType="Photo" parameterType="int">
+        SELECT 
+            <include refid="selectPhotoColumns"/>
+        FROM photo
+        WHERE photono = #{photoNo}
+    </select>
+
+  <update id="update" parameterType="photo.dto.Photo">
+    UPDATE photo
+    SET title = #{title}, nickname = #{nickname}, content = #{content}, boardview = #{boardview}, updatedate = sysdate, original_name = #{originalName}, stored_name = #{storedName}
+    WHERE photoNo = #{photono}
+</update>
+
+    <update id="incrementViewCount" parameterType="int">
+        UPDATE photo
+        SET boardview = boardview + 1
+        WHERE photono = #{photoNo}
+    </update>
+
+
+</mapper>
