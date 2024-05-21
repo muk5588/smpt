@@ -1,5 +1,6 @@
 package shop.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,38 +25,46 @@ public class ShopController {
 	
 	@Autowired private ShopService shopService;
 	@Autowired private ShopFileService shopFileService;
-	
+	@Autowired
+	   private util.ExchangeRateUtils exchangeRateUtils;
+
 	@RequestMapping("/main")
 	public String shopMain() { return "redirect:/shop/"; }
 	
 	@RequestMapping("/")
-	public String list(Model model , Paging shopPaging
-			, @RequestParam(value="curPage", required = false, defaultValue = "0") int curPage
-			, @RequestParam(required = false)String search
-	) {
-		//페이징
+	public String list(Model model, Paging shopPaging,
+			@RequestParam(value="curPage", required = false, defaultValue = "0") int curPage,
+			@RequestParam(required = false) String search) {
+		// 페이징
 		shopPaging.setCurPage(curPage);
-		if( null == search || "".equals(search)) {
+		if (search == null || search.isEmpty()) {
 			shopPaging = shopService.getPagging(shopPaging);
-		}else if( search != null && !"".equals(search)) {
+		} else {
 			shopPaging.setSearch(search);
 			shopPaging = shopService.getPagging(shopPaging);
-			shopPaging.setSearch(search);
 		}
 		logger.debug("Paging : {}", shopPaging);
 		model.addAttribute("paging", shopPaging);
 		model.addAttribute("curPage", curPage);
+		model.addAttribute("search", search);
 		
-		//ITEM 객체 List + 대표 이미지 파일 정보 조회 및 view로 전달
-		List<Item> item = shopService.list();
+		// ITEM 객체 List + 대표 이미지 파일 정보 조회 및 view로 전달
+		List<Item> items;
+		if (search == null || search.isEmpty()) {
+			items = shopService.list();
+		} else {
+			items = shopService.searchItems(search);
+		}
 		List<ItemFile> files = shopFileService.getTitleImgs();
-		logger.debug("title IMG files : {}", files);
-		logger.debug("item Chk: {}", item);
-		model.addAttribute("files", files);
-		model.addAttribute("item", item);
-		
-		return "/shop/main";
-	}
+		BigDecimal[] exchangeRates = exchangeRateUtils.getExchangeRate();
+		logger.debug("title IMG files: {}", files);
+logger.debug("item Chk: {}", items);
+model.addAttribute("files", files);
+model.addAttribute("item", items);
+model.addAttribute("exchangeRates", exchangeRates);
+	return "/shop/main";
+}
+
 	
 	@RequestMapping("/detail")
 	public void detail(

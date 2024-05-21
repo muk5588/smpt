@@ -10,7 +10,6 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <style type="text/css">
-
     .wrap {
         width: 1100px;
     }
@@ -19,55 +18,35 @@
         text-align: center;
     }
 
-    /* <!-- body { --> */
-    /* <!-- 	width: 1500px; --> */
-    /* <!-- 	margin: 0 auto; --> */
-    /* <!-- } --> */
+    .exchange-card {
+        position: fixed;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        width: 250px;
+        cursor: pointer;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        padding: 10px;
+    }
 
-    /* <!-- h1 { --> */
-    /* <!-- 	text-align: center; --> */
-    /* <!-- } --> */
+    .exchange-rates {
+        display: none;
+    }
 
-    /* <!-- table { --> */
-    /* <!-- 	border: 1px solid black; --> */
-    /* <!-- 	margin: 0 auto; --> */
-    /* <!-- } --> */
+    .exchange-card:hover .exchange-rates {
+        display: block;
+    }
 
-    /* <!-- tr, th, td { --> */
-    /* <!-- 	border: 1px solid black; --> */
-    /* <!-- } --> */
-
-    /* <!-- th { --> */
-    /* <!-- 	background-color: #ccc; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.no, .title, .id, .nick, .hit, .date { --> */
-    /* <!-- 	text-align: center; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.title { --> */
-    /* <!-- 	width: 200px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.content { --> */
-    /* <!-- 	width: 500px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.id, .nick { --> */
-    /* <!-- 	width: 150px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.hit { --> */
-    /* <!-- 	width: 50px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.date { --> */
-    /* <!-- 	width: 200px; --> */
-    /* <!-- } --> */
+    .exchange-card .card-body {
+        position: relative;
+    }
 </style>
 <script type="text/javascript">
     $(function () {
-
         var blank_pattern = /^\s+|\s+$/g;
 
         $("#searchForm").submit(function (e) {
@@ -86,76 +65,80 @@
             }
 
             $("#search").val(searchTerm)
-
         })
-
-
-
     })
 </script>
 </head>
 <body>
 
-<!-- wrap 때문에 container가 반응형 X로 바뀜 -->
+<div class="exchange-card">
+    <div class="card-body">
+        <h5 class="card-title">환율 정보 </h5>
+        <div class="exchange-rates">
+            <p class="card-text">미국 달러(USD) 환율 정보: ${exchangeRates[0]}</p>
+            <p class="card-text">일본 엔(JPY) 환율 정보: ${exchangeRates[1]}</p>
+            <p class="card-text">중국 위안(CNY) 환율 정보: ${exchangeRates[2]}</p>
+            <p class="card-text">태국 바트(THB) 환율 정보: ${exchangeRates[3]}</p>
+            <p class="card-text">유럽 유로(EUR) 환율 정보: ${exchangeRates[4]}</p>
+        </div>
+    </div>
+</div>
+
 <div class="wrap mx-auto">
-
-
     <div class="container">
-
         <h1>상품 구매</h1>
         <a href="../main">
             <button>메인 페이지로</button>
         </a>
+        <a href="../basket/userbasket">
+        	<button>장바구니</button>
+        </a>
         <div>
             <form action="" method="get" id="searchForm">
-                <input type="text" name="search" id="search">
+                <input type="text" name="search" id="search" value="${search}">
                 <input hidden="hidden" name="curPage" value="${curPage}">
-                <button id="serchBtn">검색</button>
+                <button id="searchBtn">검색</button>
             </form>
         </div>
         <hr>
         
     	<c:set var="imgFiles" property="${files }"/>
-<div id="itemwarp">
-    <ul>
-    <c:forEach var="item" items="${item }">
-    <div class="oneItem">
-    	<li style="list-style: none; border: 1px solid #ccc;">
-    	<div class="item Img">
-    	<a href="./detail?itemNo=${item.itemNo }">
-    	<c:choose>
-	    	<c:when test="${not empty imgFiles}">
-		    	<c:forEach items="${files}" var="files">
-		    	<c:if test="${not empty files.itemNo and item.itemNo eq  files.itemNo}">
-		    		<img alt="ItemImg" src="/resources/img/shop/upload/${files.storedName }">
-		    	</c:if>
-		    	<c:if test="${empty files.itemNo}">
-		    		<img src="/resources/img/shop/nullimg.jpg" alt="notready">
-		    	</c:if>
-		   		</c:forEach>
-	   		</c:when>
-	   		<c:when test="${empty imgFiles }">
-	    		<img src="/resources/img/shop/nullimg.jpg" alt="notready">
-	   		</c:when>
-   		</c:choose>
-    	</a>
-    	</div>
-    	<div class="item Info">
-    	<a href="./detail?itemNo=${item.itemNo }">
-   		${item.itemName}<br>
-   		<fmt:setLocale value="ko_KR"/><fmt:formatNumber type="currency" value="${item.price}" />
-   		</div>
-    	</li>
-    </c:forEach>
-    </div>
-    </ul>
-</div>
-       
-
+        <div id="itemwarp">
+            <ul>
+            <c:forEach var="item" items="${item }">
+                <div class="oneItem">
+                    <li style="list-style: none; border: 1px solid #ccc;">
+                        <div class="itemImg">
+                            <a href="./detail?itemNo=${item.itemNo }">
+                                <c:choose>
+                                    <c:when test="${not empty imgFiles}">
+                                        <c:forEach items="${files}" var="files">
+                                            <c:if test="${not empty files.itemNo and item.itemNo eq files.itemNo}">
+                                                <img alt="ItemImg" src="/resources/img/shop/upload/${files.storedName }">
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="/resources/img/shop/nullimg.jpg" alt="notready">
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </div>
+                        <div class="itemInfo">
+                            <a href="./detail?itemNo=${item.itemNo }">
+                                ${item.itemName}<br>
+                                <fmt:setLocale value="ko_KR"/>
+                                <fmt:formatNumber type="currency" value="${item.price}" />
+                            </a>
+                        </div>
+                    </li>
+                </div>
+            </c:forEach>
+            </ul>
+        </div>
     </div>
     <!-- .container End -->
-
     <c:import url="/WEB-INF/views/layout/shopPaging.jsp"/>
-
+</div>
 
 <c:import url="/WEB-INF/views/layout/footer.jsp"/>

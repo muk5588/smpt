@@ -27,4 +27,9 @@
 		AND itemno = #{itemNo}
 	</where>
 </select>
+
+  <!-- 검색어로 아이템 조회 -->
+  <select id="selectBySearch" parameterType="string" resultType="dto.Item">
+    SELECT * FROM Item WHERE itemName LIKE '%' || #{search} || '%'
+  </select>
 </mapper>

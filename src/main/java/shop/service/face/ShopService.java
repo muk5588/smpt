@@ -22,5 +22,6 @@ public interface ShopService {
 	 * @return - 조회된 상품 정보 행
 	 */
 	public Item getItemByItemNo(int itemNo);
-
+	// 검색 메서드 추가
+	public List<Item> searchItems(String search);
 }
