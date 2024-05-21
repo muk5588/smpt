@@ -226,6 +226,7 @@
 <button onclick="location.href = '/calendar'">캘린더</button>
 <button onclick="location.href = '/shop/'">상품</button>
 <button onclick="location.href = '/order/history'">주문목록</button>
+<button onclick="location.href = '/photo/list'">사진</button>
 
 
 <%--<c:if test="${empty isLogin}">--%>

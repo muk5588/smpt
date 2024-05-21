@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="QandA.dao.QandADao">
+    <resultMap id="QandAResultMap" type="QandA.dto.QandA">
+        <id property="seq" column="seq"/>
+        <result property="userno" column="userno"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createDate" column="createDate"/>
+        <result property="updateDate" column="updateDate"/>
+        <result property="views" column="views"/>
+        <result property="good" column="good"/>
+        <result property="imagePath" column="imagePath"/>
+        <result property="attachmentPath" column="attachmentPath"/>
+    </resultMap>
+	
+	
+	    <resultMap id="CommentResultMap" type="QandA.dto.QandAComment">
+        <id property="id" column="id"/>
+        <result property="qandaId" column="qandaId"/>
+        <result property="userno" column="userno"/>
+        <result property="content" column="content"/>
+        <result property="createDate" column="createDate"/>
+        <result property="updateDate" column="updateDate"/>
+    </resultMap>
+    
+    
+    <select id="getAllQandAs" resultMap="QandAResultMap">
+        SELECT * FROM qanda
+    </select>
+
+    <select id="getQandAById" resultMap="QandAResultMap" parameterType="int">
+        SELECT * FROM qanda WHERE seq = #{seq}
+    </select>
+
+    <insert id="addQandA" parameterType="QandA.dto.QandA">
+        INSERT INTO qanda (userno, title, content, createDate, updateDate, views, good, imagePath, attachmentPath)
+        VALUES (#{userno}, #{title}, #{content}, SYSDATE, SYSDATE, #{views}, #{good}, #{imagePath}, #{attachmentPath})
+    </insert>
+
+	  <update id="updateQandA" parameterType="QandA.dto.QandA">
+        UPDATE qanda
+        SET userno = #{userno}, 
+            title = #{title}, 
+            content = #{content},  
+            updateDate = SYSDATE, 
+            views = #{views}, 
+            good = #{good}, 
+            imagePath = #{imagePath}, 
+            attachmentPath = #{attachmentPath}
+        WHERE seq = #{seq}
+    </update>
+
+    <delete id="deleteQandA" parameterType="int">
+        DELETE FROM qanda WHERE seq = #{seq}
+       	DELETE FROM qanda_recommend WHERE seq = #{seq};
+    </delete>
+
+    <update id="increaseViews" parameterType="int">
+        UPDATE qanda
+        SET views = views + 1
+        WHERE seq = #{seq}
+    </update>
+
+    <update id="updateImagePath" parameterType="map">
+        UPDATE qanda 
+        SET imagePath = #{imagePath} 
+        WHERE seq = #{seq}
+    </update>
+
+    <update id="updateAttachmentPath" parameterType="map">
+        UPDATE qanda 
+        SET attachmentPath = #{attachmentPath} 
+        WHERE seq = #{seq}
+    </update>
+    
+     <update id="increaseLikes"  parameterType="int">
+        UPDATE qanda
+        SET good = good + 1
+        WHERE seq = #{seq}
+    </update>
+    
+	    <!-- 사용자 추천 여부 확인 -->
+    <select id="checkUserRecommendation" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM qanda_recommend
+        WHERE userno = #{userno} AND seq = #{seq}
+    </select>
+
+    <!-- 추천 추가 -->
+    <insert id="addUserRecommendation" parameterType="map">
+        INSERT INTO qanda_recommend (userno, seq, recommend_date)
+        VALUES (#{userno}, #{seq}, SYSDATE)
+    </insert>
+    
+    
+    <select id="getAllSelectQandAs" resultMap="QandAResultMap" parameterType="map">
+        SELECT * FROM qanda
+        ORDER BY
+        <choose>
+            <when test="sort == 'popular'">
+                good DESC
+            </when>
+            <when test="sort == 'views'">
+                views DESC
+            </when>
+            <otherwise>
+                createDate DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+	
+	 <select id="getCommentsByQandAId" parameterType="int" resultMap="CommentResultMap">
+        SELECT id, qandaId, userno, content, createDate, updateDate
+        FROM qanda_comment
+        WHERE qandaId = #{seq}
+        ORDER BY createDate DESC
+    </select>
+
+    <insert id="addComment" parameterType="QandA.dto.QandAComment">
+        INSERT INTO qanda_comment (id, qandaId, userno, content, createDate, updateDate)
+        VALUES (qanda_comment_seq.nextval, #{qandaId}, #{userno}, #{content}, SYSDATE, SYSDATE)
+    </insert>
+
+
+    
+</mapper>
