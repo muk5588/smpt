@@ -133,87 +133,73 @@ $(function(){
 </head>
 <body>
 
-   <div class="container">
-
-        <h1>상품 정보</h1>
-        <a href="/">
-            <button>메인 페이지로</button>
-        </a>
-       
+ <div class="container">
+    <h1>상품 정보</h1>
+    <a href="/">
+        <button>메인 페이지로</button>
+    </a>
         
-<div id="itemwarp" style="border: 1px solid #ccc; padding: 20px; margin-top: 20px;">
-    <table>
-        <tr>
-            <td>
+    <div id="itemwarp" style="border: 1px solid #ccc; padding: 20px; margin-top: 20px;">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- 상품 이미지 -->
                 <c:choose>
                     <c:when test="${not empty files}">
-                        <c:forEach items="${files}" var="files">
+                        <c:forEach items="${files}" var="file">
                             <c:if test="${not empty file}">
-                                <img alt="ItemImg" src="/resources/img/shop/upload/${file.storedName}">
+                                <img alt="ItemImg" src="/resources/img/shop/upload/${file.storedName}" class="img-fluid">
                             </c:if>
                             <c:if test="${empty files.itemNo}">
-                                <img src="/resources/img/shop/nullimg.jpg" alt="notready">
+                                <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
                             </c:if>
                         </c:forEach>
                     </c:when>
                     <c:when test="${empty imgFiles}">
-                        <img src="/resources/img/shop/nullimg.jpg" alt="notready">
+                        <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
                     </c:when>
                 </c:choose>
-            </td>
-        </tr>
-        <tr>
-            <td>${item.itemName}</td>
-        </tr>
-        <tr>
-            <td><fmt:setLocale value="ko_KR"/><fmt:formatNumber type="currency" value="${item.price}" /></td>
-        </tr>
-        <tr>
-            <td>재고 : ${item.remain}</td>
-        </tr>
-<!--         <tr> -->
-<!--             <td> -->
-<!--                 Quantity Selector -->
-<!--                 <label for="quantity">수량:</label> -->
-<!--                 <input type="number" id="quantity" name="quantity" min="1" value="1"> -->
-<!--             </td> -->
-<!--         </tr> -->
-		<tr>
-		    <td>
-		        <!-- 수량 선택기에 증가 및 감소 버튼 추가 -->
-		        <label for="quantity">수량:</label>
-		        <div class="quantity-selector">
-		            <input type="text" id="quantity" name="quantity" value="1" readonly="readonly">
-		            <button type="button" onclick="incrementQuantity()">+</button>
-		            <button type="button" onclick="decrementQuantity()">-</button>
-		        </div>
-		    </td>
-		</tr>
-        <tr>
-        	<td>
-				<!-- 장바구니 담기 버튼 -->
-				<button type="button" id="addToCartBtn">장바구니 담기</button>
-				<!-- 구매하기 버튼 -->
-				<button type="button" id="purchaseBtn">구매하기</button>
-            </td>
-        </tr>
-        <tr>
-            <td>${item.itemComm}</td>
-        </tr>
-
-    </table>
-    
-</div>
-<form id="" action="" hidden="hidden" method="post"></form>
-       
-<div id="reviewWrap">
-	
-</div>
-
+            </div>
+            <div class="col-md-8">
+                <!-- 상품 정보 -->
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">상품명</th>
+                            <td>${item.itemName}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">가격</th>
+                            <td><fmt:setLocale value="ko_KR"/><fmt:formatNumber type="currency" value="${item.price}" /></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">상품 설명</th>
+                            <td>${item.itemComm}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">재고</th>
+                            <td>${item.remain}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">수량</th>
+                            <td>
+                                <!-- 수량 선택기에 증가 및 감소 버튼 추가 -->
+                                <div class="quantity-selector">
+                                    <input type="text" id="quantity" name="quantity" value="1" readonly="readonly">
+                                    <button type="button" onclick="incrementQuantity()">+</button>
+                                    <button type="button" onclick="decrementQuantity()">-</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- 장바구니 담기 버튼 -->
+                <button type="button" id="addToCartBtn">장바구니 담기</button>
+                <!-- 구매하기 버튼 -->
+                <button type="button" id="purchaseBtn">구매하기</button>
+            </div>
+        </div>
     </div>
-    <!-- .container End -->
-
-    <c:import url="/WEB-INF/views/layout/shopPaging.jsp"/>
-
-
-<c:import url="/WEB-INF/views/layout/footer.jsp"/>
+    
+    <form id="" action="" hidden="hidden" method="post"></form>
+</div>

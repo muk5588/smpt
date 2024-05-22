@@ -25,8 +25,6 @@ public class ShopController {
 	
 	@Autowired private ShopService shopService;
 	@Autowired private ShopFileService shopFileService;
-	@Autowired
-	   private util.ExchangeRateUtils exchangeRateUtils;
 
 	@RequestMapping("/main")
 	public String shopMain() { return "redirect:/shop/"; }
@@ -56,14 +54,12 @@ public class ShopController {
 			items = shopService.searchItems(search);
 		}
 		List<ItemFile> files = shopFileService.getTitleImgs();
-		BigDecimal[] exchangeRates = exchangeRateUtils.getExchangeRate();
 		logger.debug("title IMG files: {}", files);
-logger.debug("item Chk: {}", items);
-model.addAttribute("files", files);
-model.addAttribute("item", items);
-model.addAttribute("exchangeRates", exchangeRates);
-	return "/shop/main";
-}
+		logger.debug("item Chk: {}", items);
+		model.addAttribute("files", files);
+		model.addAttribute("item", items);
+			return "/shop/main";
+		}
 
 	
 	@RequestMapping("/detail")
