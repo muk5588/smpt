@@ -250,6 +250,47 @@
 
 
     })
+    
+    
+    
+    $(function () {
+        // 게시물 공유 함수
+        function sharePost() {
+            var postUrl = ""; // 게시물 URL을 여기에 할당
+            var postTitle = ""; // 게시물 제목을 여기에 할당
+            if (navigator.share) {
+                navigator.share({
+                    title: postTitle,
+                    text: '게시물을 공유합니다.',
+                    url: postUrl
+                })
+                .then(() => console.log('게시물 공유됨'))
+                .catch((error) => console.error('게시물 공유 실패', error));
+            } else {
+                console.error('Web Share API를 지원하지 않습니다.');
+            }
+        }
+
+        // 페이지 로드 시 실행될 함수
+        $(document).ready(function () {
+            // 댓글 갱신 버튼 클릭
+            $("#commentRefresh").click();
+            // 추천 여부에 따라 버튼 표시 설정
+            if (${empty isRecomm or isRecomm eq 0}) {
+                $(".cancle").toggle();
+            }
+            if (${not empty isRecomm and isRecomm eq 1}) {
+                $(".do").toggle();
+            }
+        });
+
+        // 게시물 공유 버튼 클릭 시 sharePost() 함수 호출
+        $("#sharePostButton").click(function () {
+            sharePost();
+        });
+    });
+    
+    
 </script>
 </head>
 <body>
@@ -288,6 +329,10 @@
         </c:if>
 
         <hr>
+        
+           <div class="share-button">
+            <button id="sharePostButton">게시물 공유하기</button>
+        </div>
 
         <div id="file"></div>
         <table class="table table-striped table-hover table-sm">
