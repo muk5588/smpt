@@ -16,4 +16,6 @@ public interface ShopDao {
 
 	public Item getItemByItemNo(int itemNo);
 
+	public List<Item> selectBySearch(String search);
+
 }

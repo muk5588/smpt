@@ -37,4 +37,9 @@ public class ShopServiceImpl implements ShopService {
 		return shopDao.getItemByItemNo(itemNo);
 	}
 	
+	@Override
+	public List<Item> searchItems(String search) {
+		return shopDao.selectBySearch(search);
+	}
+	
 }
