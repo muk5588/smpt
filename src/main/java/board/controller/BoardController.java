@@ -138,6 +138,9 @@ public class BoardController {
 			logger.info("isRecomm : {}", good.getIsRecomm());
 			recomm = good.getTotalRecomm();
 		}
+		List<BoardFile> files = fileService.getFilesByBoardNo(boardno); // 파일 리스트 조회 추가 : 이미지 출력
+		model.addAttribute("files", files); // 모델에 파일 리스트 추가 : 이미지 출력
+		
 		List<Comment> comment = boardService.commentList(board);
 		model.addAttribute("comment", comment);
 		model.addAttribute("recomm", recomm);
@@ -158,7 +161,7 @@ public class BoardController {
 			HttpSession session
 			, Board board
 			, @RequestParam("categoryNo") int categoryNo
-			, @RequestAttribute(required = false)MultipartFile file
+			, @RequestParam("files") List<MultipartFile> files	//다중 이미지 첨부 
 			) {
 		logger.debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 		User user = (User) session.getAttribute("dto1");
@@ -180,8 +183,9 @@ public class BoardController {
 		logger.info("originNames Ȯ�� : {}", originNames);
 		List<String> storedNames = fileService.extractStoredName(content, originNames);
 		logger.info("storedNames Ȯ�� : {}", storedNames);
+		
 		if (originNames != null && storedNames != null && originNames.size() == storedNames.size() && !originNames.isEmpty() && !storedNames.isEmpty()) {
-			ArrayList<BoardFile> files = new ArrayList<>();
+			ArrayList<BoardFile> filesList = new ArrayList<>();
 			logger.info("�̹��� ���� ó���� :%%%%%%%%%%%%%%%%%%%%%%%%%%" );
 		    for (int i = 0; i < originNames.size(); i++) {
 		        String originName = originNames.get(i);
@@ -191,22 +195,23 @@ public class BoardController {
 		            bf.setBoardNo(board.getBoardNo());
 		            bf.setOriginName(originName);
 		            bf.setStoredName(storedName);
-		            files.add(bf);
+		            filesList.add(bf);
 		        }
 		    }
-		    fileService.setFile(files);
+		    fileService.setFile(filesList);
 		}
         
 		logger.info("board �� Ȯ�� : {}", board);
 		
-		if( null == file ) {
-			logger.debug("÷�� ���� ����");
-		}else if( file.getSize() <= 0 ){
-			logger.debug("������ ũ�Ⱑ 0");
-		}else { 
-//			for( )
-			fileService.filesave(board,file);
+		
+		// 다중 이미지 출력
+		 for (MultipartFile file : files) {
+		 if (file != null && !file.isEmpty()) { 
+			 fileService.filesave(board, file);  //이미지 출력
+		 
+		 }
 		}
+		
 		
 		return "redirect:/board/list";
 	}

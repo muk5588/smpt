@@ -335,6 +335,7 @@
 						<div id="fileDown"></div>
 					</td>
 				</tr>
+				
 				<tr>
 					<td class="no">${board.boardNo }</td>
 					<td class="title">${board.title }</td>
