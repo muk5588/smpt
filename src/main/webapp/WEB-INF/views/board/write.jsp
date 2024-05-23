@@ -122,7 +122,9 @@ var sUploadURL = '/board/fileupload';
 
     <div class="mb-3">
         <label for="file" class="form-label">첨부파일</label>
-        <input type="file" id="file" name="file">
+        <!-- <input type="file" id="file" name="file"> -->
+        
+        <input type="file" name="files" multiple>
     </div>
 <textarea rows="10" cols="100" id="txtContent" style="width: 100%;"></textarea>
 <div id="se2_sample" style="margin:10px 0;">
