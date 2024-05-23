@@ -1,272 +1,207 @@
 package QandA.controller;
 
-import QandA.dto.QandA;
-import QandA.dto.QandAComment;
-import QandA.dto.QandARecommendation;
-import QandA.service.QandAService;
-import user.dto.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import QandA.dto.QandACategory;
+import QandA.dto.Criteria;
+import QandA.dto.PageMaker;
+import QandA.dto.ReplyQandaVO;
+import QandA.dto.SearchCriteria;
+import QandA.dto.QandaVO;
+import QandA.service.QandAReplyService;
+import QandA.service.QandAService;
+import user.dto.User;
 
 @Controller
-@RequestMapping("/qanda")
+@RequestMapping("/QandA")
 public class QandAController {
 
-    private final QandAService qandAService;
+    @Inject
+    private QandAService qandaservice;
 
-    @Autowired
-    public QandAController(QandAService qandAService) {
-        this.qandAService = qandAService;
+    @Inject
+    private QandAReplyService qandareplyservice;
+
+    private static final Logger log = LoggerFactory.getLogger(QandAController.class);
+
+    // 여행이야기 리스트 보기
+    @GetMapping("/list")
+    public void boardListGET(Model model, @ModelAttribute("scri") SearchCriteria scri, HttpSession session) throws Exception {
+        log.info("검색 기능");
+
+        // 정렬 기준을 받아서 설정
+        String sortType = scri.getSortType();
+        model.addAttribute("sortType", sortType);
+
+        List<QandaVO> list = qandaservice.list(scri);
+        model.addAttribute("list", list);
+
+        // 추천 수 표시 추가
+        for (QandaVO story : list) {
+            story.setRecommendCount(qandaservice.getRecommendCount(story.getBoardNo()));
+        }
+
+        // 로그인 상태 확인 및 사용자 정보 추가
+        Integer isLoginInteger = (Integer) session.getAttribute("isLogin");
+        Boolean isLogin = isLoginInteger != null && isLoginInteger > 0;
+        User dto1 = (User) session.getAttribute("dto1");
+        if (isLogin != null && isLogin && dto1 != null) {
+            model.addAttribute("isLogin", true);
+            model.addAttribute("dto1", dto1);
+        } else {
+            model.addAttribute("isLogin", false);
+        }
+
+        PageMaker pageMaker = new PageMaker();
+        pageMaker.setCri(scri);
+        pageMaker.setTotalCount(qandaservice.countSearch(scri));
+        model.addAttribute("pageMaker", pageMaker);
+
+        log.info("게시판 목록 페이지 들어감");
     }
 
-    @GetMapping("/qandalist")
-    public String qandaList(@RequestParam(defaultValue = "latest") String sort, Model model, HttpSession session) {
-        User user = (User) session.getAttribute("dto");
-        model.addAttribute("user", user);
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public String getCreate(Model model) throws Exception {
+        log.info("게시판 작성페이지 들어가기 성공함");
 
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("sort", sort);
+        // 게시판 분류 목록 조회
+        List<QandACategory> categoryList = qandaservice.getCategoryList();
+        model.addAttribute("categoryList", categoryList);
 
-        List<QandA> qandas = qandAService.getAllSelectQandAs(paramMap);
-        model.addAttribute("qandas", qandas);
-        model.addAttribute("sort", sort);
-
-        return "qanda/qandalist";
+        return "/qanda/create";
     }
 
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public String postWrite(QandaVO vo, @RequestParam("uploadFiles") List<MultipartFile> uploadFiles,
+                            HttpServletRequest request) throws Exception {
+        String uploadsDir = "/resources/uploads/";
+        String realPathToUploads = request.getSession().getServletContext().getRealPath(uploadsDir);
 
-    @GetMapping("/detail/{seq}")
-    public String qandaDetails(@PathVariable("seq") int seq, Model model) {
-        qandAService.increaseViews(seq);
-
-        QandA qanda = qandAService.getQandAById(seq);
-        if (qanda == null) {
-            return "redirect:/qanda/qandalist";
+        File uploadPath = new File(realPathToUploads);
+        if (!uploadPath.exists()) {
+            uploadPath.mkdirs();
         }
 
-        List<QandAComment> commentList = qandAService.getCommentsByQandAId(seq);
+        StringBuilder imagePaths = new StringBuilder();
 
-        model.addAttribute("qanda", qanda);
-        model.addAttribute("commentList", commentList);
-        return "qanda/qandaDetail";
-    }
+        for (MultipartFile file : uploadFiles) {
+            if (!file.isEmpty()) {
+                String originalFileName = file.getOriginalFilename();
+                String uuid = UUID.randomUUID().toString();
+                String saveFileName = uuid + "_" + originalFileName;
+                File saveFile = new File(uploadPath, saveFileName);
 
-    @PostMapping("/addComment")
-    public String addComment(@RequestParam int qandaId, @RequestParam String content, HttpSession session) {
-        User user = (User) session.getAttribute("dto");
-        if (user == null || user.getUserid() == null) {
-            return "redirect:/login";
-        }
-        QandAComment comment = new QandAComment();
-        comment.setQandaId(qandaId);
-        comment.setUserno(user.getUserno());
-        comment.setContent(content);
-        qandAService.addComment(comment);
-        return "redirect:/qanda/detail/" + qandaId;
-    }
+                file.transferTo(saveFile);
 
-    // 댓글 삭제
-    @PostMapping("/deleteComment/{commentId}")
-    public String deleteComment(@PathVariable int commentId, @RequestParam int qandaId, HttpSession session) {
-        User user = (User) session.getAttribute("dto");
-        if (user == null || user.getUserid() == null) {
-            return "redirect:/login";
-        }
-        qandAService.deleteComment(commentId);
-        return "redirect:/qanda/detail/" + qandaId;
-    }
-    
-    @GetMapping("/qandaForm")
-    public String showCreateForm(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("dto");
-        if (user == null || user.getUserid() == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("qanda", new QandA());
-        return "qanda/qandaForm";
-    }
-    
-    @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("qanda", new QandA());
-        return "qanda/qandaForm";
-    }
-
-    @PostMapping("/create")
-    public String createQandA(@ModelAttribute("qanda") QandA qanda,
-                              @RequestParam(value="imageFile", required=false) MultipartFile imageFile,
-                              @RequestParam(value="attachmentFile", required=false) MultipartFile attachmentFile,
-                              HttpSession session, RedirectAttributes redirectAttributes) {
-
-        User user = (User) session.getAttribute("dto");
-        if (user == null || user.getUserid() == null) {
-            return "redirect:/login";
-        }
-        if (qanda.getTitle().isEmpty() || qanda.getContent().isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "제목과 내용을 입력하세요.");
-            return "redirect:/qanda/create";
-        }
-        qanda.setUserno(user.getUserno());
-
-        // 파일 업로드 경로 설정
-        String uploadDir = "C:/path/to/upload/directory"; // 실제 업로드 디렉토리 경로로 수정 필요
-
-        // 업로드 디렉토리 생성
-        File uploadDirFile = new File(uploadDir);
-        if (!uploadDirFile.exists()) {
-            uploadDirFile.mkdirs();
-        }
-
-        // 이미지 파일 저장
-        if (imageFile != null && !imageFile.isEmpty()) {
-            String imageFileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
-            try {
-                File imageDest = new File(uploadDir, imageFileName);
-                imageFile.transferTo(imageDest);
-                qanda.setImagePath("/uploads/" + imageFileName); // 웹에서 접근 가능한 경로 설정
-            } catch (IOException e) {
-                e.printStackTrace();
-                redirectAttributes.addFlashAttribute("message", "이미지 파일 업로드에 실패했습니다.");
-                return "redirect:/qanda/create";
-            }
-        }
-
-        // 첨부파일 저장
-        if (attachmentFile != null && !attachmentFile.isEmpty()) {
-            String attachmentFileName = System.currentTimeMillis() + "_" + attachmentFile.getOriginalFilename();
-            try {
-                File attachmentDest = new File(uploadDir, attachmentFileName);
-                attachmentFile.transferTo(attachmentDest);
-                qanda.setAttachmentPath("/uploads/" + attachmentFileName); // 웹에서 접근 가능한 경로 설정
-            } catch (IOException e) {
-                e.printStackTrace();
-                redirectAttributes.addFlashAttribute("message", "첨부파일 업로드에 실패했습니다.");
-                return "redirect:/qanda/create";
-            }
-        }
-
-        qandAService.addQandA(qanda);
-        return "redirect:/qanda/qandalist";
-    }
-
-    @PostMapping("/uploadImage")
-    @ResponseBody
-    public Map<String, Object> uploadImage(@RequestParam("file") MultipartFile file) {
-        Map<String, Object> response = new HashMap<>();
-        String[] allowedTypes = {"image/png", "image/jpeg", "image/gif"};
-        boolean isValidType = Arrays.asList(allowedTypes).contains(file.getContentType());
-
-        if (!isValidType) {
-            response.put("uploaded", false);
-            response.put("error", Collections.singletonMap("message", "지원되지 않는 형식입니다"));
-            return response;
-        }
-
-        if (!file.isEmpty()) {
-            try {
-                String originalFilename = file.getOriginalFilename();
-                String fileName = System.currentTimeMillis() + "_" + originalFilename;
-                Path uploadPath = Paths.get("uploads");
-
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
+                if (imagePaths.length() > 0) {
+                    imagePaths.append(",");
                 }
-
-                file.transferTo(uploadPath.resolve(fileName).toFile());
-
-                response.put("uploaded", true);
-                response.put("url", "/uploads/" + fileName);
-            } catch (IOException e) {
-                response.put("uploaded", false);
-                response.put("error", Collections.singletonMap("message", e.getMessage()));
+                imagePaths.append(request.getContextPath()).append(uploadsDir).append(saveFileName);
             }
+        }
+
+        vo.setImagePath(imagePaths.toString());
+        qandaservice.create(vo);
+
+        return "redirect:/qanda/list";
+    }
+
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public void getDetail(@RequestParam("boardNo") int boardNo, Model model, HttpSession session) throws Exception {
+        // 로그인 상태 확인 및 사용자 정보 추가
+        Integer isLoginInteger = (Integer) session.getAttribute("isLogin");
+        Boolean isLogin = isLoginInteger != null && isLoginInteger > 0;
+        User dto1 = (User) session.getAttribute("dto1");
+        if (isLogin != null && isLogin && dto1 != null) {
+            model.addAttribute("isLogin", true);
+            model.addAttribute("dto1", dto1);
         } else {
-            response.put("uploaded", false);
-            response.put("error", Collections.singletonMap("message", "파일이 비어 있습니다"));
+            model.addAttribute("isLogin", false);
         }
 
-        return response;
+        // 조회수 증가
+        qandaservice.incrementViewCount(boardNo);
+
+        QandaVO vo = qandaservice.detail(boardNo);
+        model.addAttribute("detail", vo);
+
+        // 추천 수 표시 추가
+        model.addAttribute("recommendCount", qandaservice.getRecommendCount(boardNo));
+
+        // 조회수 표시 추가
+        model.addAttribute("viewCount", vo.getBoardview());
+
+        // 댓글 표시
+        List<ReplyQandaVO> reply = qandaservice.replyList(boardNo);
+        model.addAttribute("reply", reply);
     }
 
-    @GetMapping("/edit/{seq}")
-    public String editQandA(@PathVariable("seq") int seq, Model model) {
-        QandA qanda = qandAService.getQandAById(seq);
-        if (qanda == null) {
-            return "redirect:/qanda/qandalist";
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    public String getUpdate(@RequestParam("boardNo") int boardNo, Model model, HttpSession session) throws Exception {
+        User currentUser = (User) session.getAttribute("dto1");
+        QandaVO vo = qandaservice.detail(boardNo);
+
+        if (currentUser == null || currentUser.getUserno() != vo.getUserno()) {
+            return "redirect:/story/detail?boardNo=" + boardNo; // 권한이 없으면 게시글 상세 페이지로 리디렉션
         }
-        model.addAttribute("qanda", qanda);
-        return "qanda/qandaUpdateForm"; // 수정 페이지로 이동
+
+        model.addAttribute("detail", vo);
+        return "/qanda/update";
     }
 
-    @PostMapping("/update/{seq}")
-    public String updateQandA(@PathVariable int seq, @ModelAttribute("qanda") QandA qanda, HttpSession session) {
-        User user = (User) session.getAttribute("dto");
-        if (user == null || user.getUserid() == null) {
-            return "redirect:/login";
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public String postUpdate(QandaVO vo, HttpSession session) throws Exception {
+        User currentUser = (User) session.getAttribute("dto1");
+
+        if (currentUser == null || currentUser.getUserno() != vo.getUserno()) {
+            return "redirect:/qanda/detail?boardNo=" + vo.getBoardNo(); // 권한이 없으면 게시글 상세 페이지로 리디렉션
         }
-        qanda.setSeq(seq);
-        qandAService.updateQandA(qanda);
-        return "redirect:/qanda/qandalist";
+
+        qandaservice.update(vo);
+        return "redirect:/qanda/detail?boardNo=" + vo.getBoardNo(); // 수정 완료 후 상세 페이지로 리디렉션
     }
 
-    @PostMapping("/delete/{seq}")
-    public String deleteQandA(@PathVariable int seq, HttpSession session) {
-        User user = (User) session.getAttribute("dto");
-        if (user == null || user.getUserid() == null) {
-            return "redirect:/login";
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String getDelete(@RequestParam("boardNo") int boardNo) throws Exception {
+        // 컨트롤러에서 삭제 요청을 처리할 때, 예외 처리를 추가하여 삭제 도중 오류가 발생할 경우를 대비
+        try {
+            qandaservice.delete(boardNo);
+        } catch (Exception e) {
+            log.error("Error deleting story", e);
+            // 에러 메시지를 추가하고 에러 페이지로 리디렉션할 수 있습니다.
+            return "redirect:/error";
         }
-        qandAService.deleteQandA(seq);
-        return "redirect:/qanda/qandalist";
-    }
-    
-    
-    @PostMapping("/increaseLikes/{seq}")
-    @ResponseBody
-    public Map<String, Object> increaseLikes(@PathVariable int seq, HttpSession session) {
-        User user = (User) session.getAttribute("dto");
-        Map<String, Object> result = new HashMap<>();
-
-        if (user == null) {
-            result.put("success", false);
-            result.put("message", "로그인이 필요합니다.");
-            return result;
-        }
-
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("userno", user.getUserno());
-        paramMap.put("seq", seq);
-
-        boolean alreadyRecommended = qandAService.checkUserRecommendation(paramMap);
-        if (alreadyRecommended) {
-            result.put("success", false);
-            result.put("message", "이미 추천한 게시물입니다.");
-        } else {
-            qandAService.addUserRecommendation(user.getUserno(), seq);
-            qandAService.increaseLikes(seq);
-            result.put("success", true);
-        }
-
-        return result;
+        return "redirect:/qanda/list";
     }
 
+    // 추천수 증가 post
+    @RequestMapping(value = "/recommend", method = RequestMethod.POST)
+    public String recommend(@RequestParam("boardNo") int boardNo, HttpSession session, Model model) throws Exception {
+        User currentUser = (User) session.getAttribute("dto1");
+        if (currentUser != null) {
+            boolean hasRecommended = qandaservice.incrementRecommendCount(boardNo, currentUser.getUserno());
+            if (!hasRecommended) {
+                return "redirect:/story/detail?boardNo=" + boardNo + "&alreadyRecommended=true";
+            }
+        }
+        return "redirect:/qanda/detail?boardNo=" + boardNo;
+    }
 }
