@@ -2,34 +2,65 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="shop.dao.ShopDao">
 
-<select id="getList" resultType="dto.Item">
-	SELECT itemno,userno,itemname,createdate,price,itemcomm,remain,titleImg
-	FROM ITEM
-	ORDER BY itemno DESC
-</select>
+    <!-- 기본 리스트 조회 -->
+    <sql id="selectItem">
+        SELECT
+            itemno, userno, itemname, createdate, price, itemcomm, remain, titleImg
+        FROM ITEM
+    </sql>
+    <select id="getList" parameterType="util.Paging" resultType="dto.Item">
+        SELECT * FROM (
+            SELECT rownum rnum, I.* FROM (
+                <include refid="selectItem"/>
+                ORDER BY itemno DESC    
+            ) I
+        )
+        <where>
+            AND rnum BETWEEN #{startNo } AND #{endNo }
+        </where>
+    </select>
 
-<select id="selectCntAll" resultType="int" parameterType="util.Paging">
-	SELECT count(*) FROM (
-		SELECT itemno,userno,itemname,createdate,price,itemcomm,remain,titleImg
-		FROM ITEM
-		<if test="search != null">
-		<where>
-			AND itemname LIKE '%${search}%'
-		</where>
-		</if>
-	)
-</select>
+    <!-- 가격 범위로 리스트 조회 -->
+    <select id="getListByPriceRange" parameterType="util.Paging" resultType="dto.Item">
+        SELECT * FROM (
+            SELECT rownum rnum, I.*
+            FROM (
+                SELECT itemno, userno, itemname, createdate, price, itemcomm, remain, titleImg
+                FROM ITEM
+                <where>
+                    <if test="minPrice != null and maxPrice != null">
+                        price BETWEEN #{minPrice} AND #{maxPrice}
+                    </if>
+                </where>
+                ORDER BY itemno DESC
+            ) I
+        )
+        <where> rnum BETWEEN #{startNo} AND #{endNo}</where>
+    </select>
 
-<select id="getItemByItemNo" parameterType="int" resultType="dto.Item">
-	SELECT itemno,userno,itemname,createdate,price,itemcomm,remain,titleImg
-	FROM ITEM
-	<where>
-		AND itemno = #{itemNo}
-	</where>
-</select>
+    <!-- 총 아이템 수 조회 -->
+    <select id="selectCntAll" parameterType="util.Paging" resultType="int">
+        SELECT COUNT(*)
+        FROM ITEM
+        <where>
+            <if test="search != null">
+                itemname LIKE '%' || #{search} || '%'
+            </if>
+        </where>
+    </select>
 
-  <!-- 검색어로 아이템 조회 -->
-  <select id="selectBySearch" parameterType="string" resultType="dto.Item">
-    SELECT * FROM Item WHERE itemName LIKE '%' || #{search} || '%'
-  </select>
+    <!-- 아이템 번호로 조회 -->
+    <select id="getItemByItemNo" parameterType="int" resultType="dto.Item">
+        SELECT itemno, userno, itemname, createdate, price, itemcomm, remain, titleImg
+        FROM ITEM
+        WHERE itemno = #{itemNo}
+    </select>
+
+    <!-- 검색어로 아이템 조회 -->
+    <select id="selectBySearch" parameterType="string" resultType="dto.Item">
+        SELECT itemno, userno, itemname, createdate, price, itemcomm, remain, titleImg
+        FROM ITEM
+        WHERE itemname LIKE '%' || #{search} || '%'
+        ORDER BY itemno DESC
+    </select>
 </mapper>
