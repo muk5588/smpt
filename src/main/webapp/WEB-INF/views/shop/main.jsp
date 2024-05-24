@@ -130,11 +130,10 @@
 <div class="wrap mx-auto mt-3">
     <div class="container">
         <h1>상품 구매</h1>
-        <a href="../main" class="btn btn-primary mb-2">메인 페이지로</a>
+        <a href="../" class="btn btn-primary mb-2">메인 페이지로</a>
         <a href="../basket/userbasket" class="btn btn-secondary mb-2">장바구니</a>
         <div>
             <form action="" method="get" id="searchForm" class="d-flex my-3">
-            
                 <input type="text" name="search" id="search" value="${search}" class="form-control me-2">
                 <input hidden="hidden" name="curPage" value="${curPage}">
                 <button id="searchBtn" class="btn btn-outline-success">검색</button>
@@ -180,6 +179,6 @@
     </div>
     <!-- .container End -->
     <jsp:include page="/WEB-INF/views/layout/shopPaging.jsp" />
+   
 </div>
-
 <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
