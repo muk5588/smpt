@@ -211,6 +211,9 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
+	
+	
+	
 	@ResponseBody
 	@PostMapping("/fileupload")
 	public void fileupload(HttpServletResponse response
@@ -234,31 +237,33 @@ public class BoardController {
 		return files;
 	}
 	
-	@GetMapping("/update")
-	public void update(
-			int boardNo
-			, Model model
-			) {
-		logger.info("{}",boardNo);
-		
-		Board board = boardService.boardView(boardNo);
-		
-		model.addAttribute("board", board);
-	}
-	
-	@PostMapping("/update")
-	public String updateProc(
-			Board board
-			) {
-		logger.info("{}", board);
-		
-		int res = boardService.boardUpdate(board);
-		
-		if ( res > 0) {
-			return "redirect:./list";
-		}
-		return "./list";
-	}
+	 @GetMapping("/update")
+	    public void update(
+	            @RequestParam("boardNo") int boardNo
+	            , Model model
+	            ) {
+	        logger.info("게시물 번호: {}",boardNo);
+	        Board board = boardService.boardView(boardNo);
+	        model.addAttribute("board", board);
+	    }
+
+	    @PostMapping("/update")
+	    public String updateProc(
+	            Board board,
+	            @RequestParam("file") MultipartFile file,
+	            HttpSession session) {
+	        logger.info("게시물 업데이트: {}", board);
+
+	        int res = boardService.boardUpdate(board);
+
+	        if (res > 0) {
+	            if (file != null && !file.isEmpty()) {
+	                fileService.filesave(board, file);
+	            }
+	            return "redirect:./list";
+	        }
+	        return "./list";
+	    }
 	
 	@RequestMapping("/delete")
 	public String delete(@RequestParam("boardNo") int boardno) {

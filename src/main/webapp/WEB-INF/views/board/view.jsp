@@ -163,37 +163,88 @@
             })
 
         })
+	
+	          function handleCommentDelete() {
+	       $(".commentDelete").click(function () {
+	        console.log(".commentDelete Click")
+	        var value = $(this).attr('value')
+	        console.log(".commentDelete Click", value)
+	
+	        $.ajax({
+	            type: "get",
+	            url: "../comment/delete",
+	            data: {   //수정완료
+	                commNo: value,
+	                boardNo: ${board.boardNo}
+	            },
+	            dataType: "json",
+	            success: function (res) {
+	                console.log("AJAX 성공")
+	
+	                if (res) {
+	                    $(function () {
+	                        $(location).attr('href', './view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}')
+	                    })
+	                }
+	            },
+	            error: function () {
+	                console.log("AJAX 실패")
+	            }
+	        })
+	    })
+	}
 
-        function handleCommentDelete() {
-            $(".commentDelete").click(function () {
-                console.log(".commentDelete Click")
-                var value = $(this).attr('value')
-                console.log(".commentDelete Click", value)
+      $(document).ready(function () {
+       handleCommentDelete();
+      })
+
+      
+    
+
+      
+  });
+      
+      
+      
+      
+	    
+      
+      
+      
+      
+        
+        function handleFileChk() {
+                console.log("handleFileChk")
 
                 $.ajax({
                     type: "get"
-                    , url: "../comment/delete"
+                    , url: "./fileChk"
                     , data: {
                         boardno: ${board.boardNo}
-                        , commentno: value
                     }
                     , dataType: "json"
                     , success: function (res) {
                         console.log("AJAX 성공")
-
-                        if (res) {
-                            $(function () {
-                                $(location).attr('href', './view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo }')
-                            })
+                        console.log(res)
+                        console.log(res[0].fileNo)
+                        if( res.length > 0 ){
+                        var fileList = "";
+                        fileList += '<p>첨부파일</p><br>'
+                           for(var i=0;  res.length >i ; i++){
+                        fileList += '<a href="./fileDown?fileNo=' + res[i].fileNo + '">' + res[i].originName + '<br>';
+                           }
+                           
+                        $("#fileDown").html(fileList);
                         }
+
                     }
                     , error: function () {
                         console.log("AJAX 실패")
                     }
                 })
 
-            })
         }
+
         
         function handleFileChk() {
                 console.log("handleFileChk")
@@ -249,7 +300,9 @@
         }
 
 
-    })
+    
+    
+    
     
     
     
@@ -291,6 +344,7 @@
     });
     
     
+   
 </script>
 </head>
 <body>
@@ -319,7 +373,7 @@
                 </a>
             </c:otherwise>
         </c:choose>
-        <c:if test="${board.userNo == dto.userno }">
+        <c:if test="${isLogin > 0 and board.userNo == dto1.userno }">
             <a href="./update?boardNo=${board.boardNo }">
                 <button id="btnUpdate">수정</button>
             </a>
@@ -404,7 +458,7 @@
                         <c:if test="${isLogin > 0}">
                             <td><a href='../report/commentReport?commno=${comment.commNo}'><button> 댓글신고하기</button></a></td>
                         </c:if>
-                        <c:if test="${userNo == comment.userNo }">
+                       <c:if test="${isLogin > 0 and board.userNo == comment.userNo }">
                             <td>
                                 <button class="commentDelete" value="${comment.commNo}">삭제</button>
                             </td>

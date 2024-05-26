@@ -85,7 +85,7 @@
 		<a href="/">
             <button class="go_main">Home</button>
         </a>
-        <c:if test="${isLogin != 0}">
+        <c:if test="${isLogin == 1}">
             <div class="write">
                 <form action="./write" method="get">
                     <button id="btnWrite" me>글쓰기</button>
