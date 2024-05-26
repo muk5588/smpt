@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="QandA.dao.ReplyQandADao">
+    <!-- 댓글 조회 -->
+    <select id="replyList" resultType="QandA.dto.ReplyQandaVO" parameterType="int">
+        select boardNo, userno, rno, content, nickname, createDate
+        from QandAReply
+        where boardNo = #{boardNo}
+    </select>
+
+    <!-- 댓글 작성 -->
+    <insert id="replyWrite" parameterType="QandA.dto.ReplyQandaVO">
+        insert into QandAReply(boardNo, userno, rno, content, nickname, createDate)
+        values(#{boardNo}, #{userno}, storyreply_rno_seq.NEXTVAL, #{content}, #{nickname}, SYSDATE)
+    </insert>
+
+    <!-- 댓글 수정 -->
+    <update id="replyModify" parameterType="QandA.dto.ReplyQandaVO">
+        update QandAReply set
+        nickname = #{nickname},
+        content = #{content}
+        where rno = #{rno}
+        and boardNo = #{boardNo}
+        and userno = #{userno}
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <delete id="replyDelete" parameterType="QandA.dto.ReplyQandaVO">
+        delete from QandAReply
+        where rno = #{rno}
+        and boardNo = #{boardNo}
+        and userno = #{userno}
+    
+    </delete>
+
+    <!-- 단일 댓글 조회 -->
+    <select id="replySelect" parameterType="QandA.dto.ReplyQandaVO" resultType="QandA.dto.ReplyQandaVO">
+        select rno, boardNo, userno, nickname, content, createDate
+        from QandAReply
+        where boardNo = #{boardNo}
+        and rno = #{rno}
+        and userno = #{userno}
+    </select>
+</mapper>

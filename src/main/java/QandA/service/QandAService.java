@@ -1,29 +1,61 @@
 package QandA.service;
 
 import java.util.List;
-import java.util.Map;
 
-import QandA.dto.QandA;
-import QandA.dto.QandAComment;
+import QandA.dto.QandACategory;
+import QandA.dto.Criteria;
+import QandA.dto.SearchCriteria;
+import QandA.dto.QandaVO;
+import QandA.dto.ReplyQandaVO;
 
 public interface QandAService {
-    List<QandA> getAllQandAs();
-    QandA getQandAById(int id);
-    void addQandA(QandA qanda);
-    void updateQandA(QandA qanda);
-    void deleteQandA(int seq);
-    void addComment(QandAComment comment);
-    void deleteComment(int commentId);
-    void increaseLikes(int seq);
-    void increaseViews(int seq);
-    void updateImagePath(int seq, String imagePath);
-    void updateAttachmentPath(int seq, String attachmentPath);
-    
-    boolean checkUserRecommendation(Map<String, Object> paramMap);
-    // 추천 추가
-    void addUserRecommendation(int userno, int seq);
-    
-    List<QandA> getAllSelectQandAs(Map<String, Object> paramMap);
-    
-    List<QandAComment> getCommentsByQandAId(int qandaId);
+
+	// 게시물 목록 조회 + 페이징
+	public List<QandaVO> list(SearchCriteria scri) throws Exception;
+
+	// 검색 결과 갯수
+	public int countSearch(SearchCriteria scri) throws Exception;
+
+	// 게시물 총 개수(페이징)
+	public int listCount() throws Exception;
+
+	// 게시물 작성
+	public void create(QandaVO vo) throws Exception;
+
+	// 게시물 조회
+	public QandaVO detail(int boardNo) throws Exception;
+
+	// 게시물 수정
+	public void update(QandaVO vo) throws Exception;
+
+	// 게시뮬 삭제
+	public void delete(int boardNo) throws Exception;
+
+	///////////////////////////////////////////////////////////////////////////////////////
+
+	// 추천 수 증가
+	public boolean incrementRecommendCount(int boardNo, int userno) throws Exception;
+
+	// 추천 수 조회
+	public int getRecommendCount(int boardNo) throws Exception;
+
+	// 중복 추천 여부 확인
+	public boolean hasRecommended(int userno, int boardNo) throws Exception;
+
+	// 추천 기록 추가
+	public void addRecommendRecord(int userno, int boardNo) throws Exception;
+
+	// 추천 기록 삭제
+	public void deleteRecommendRecords(int boardNo) throws Exception;
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+	// 조회수 증가
+	public void incrementViewCount(int boardNo) throws Exception;
+
+	// 게시판 분류 목록 조회
+	public List<QandACategory> getCategoryList() throws Exception;
+
+	public List<ReplyQandaVO> replyList(int boardNo);
+
 }
