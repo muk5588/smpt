@@ -12,6 +12,10 @@
         crossorigin="anonymous"></script>
 <script type="text/javascript" src="/resources/editor/js/HuskyEZCreator.js" charset="utf-8"></script>
 <script type="text/javascript">
+//스마트 에디터 (사진파일 업로드 URL)
+var sUploadURL = '/board/fileupload';
+</script>
+<script type="text/javascript">
 var oEditors = [];
 nhn.husky.EZCreator.createInIFrame({
  oAppRef: oEditors,
@@ -42,8 +46,7 @@ function save(){
     document.getElementById('btnWrite').click();
 	return; 
 }
-// 스마트 에디터 (사진파일 업로드 URL)
-var sUploadURL = '/board/fileupload';
+
 </script>
 <script type="text/javascript">
     $(function () {
