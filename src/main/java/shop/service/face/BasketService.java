@@ -44,4 +44,6 @@ public interface BasketService {
 	 */
 	public Map<String, Object> userorderProc(int[] no);
 
+	public int deleteBasket(int basketNo);
+
 }
