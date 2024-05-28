@@ -3,67 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<c:import url="/WEB-INF/views/layout/header.jsp"/>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
+<link rel="stylesheet" type="text/css" href="/resources/css/board/boardList.css">
+<title>내 작성글</title>
 <style type="text/css">
 
-    .wrap {
-        width: 1100px;
-    }
-
-    table, th {
-        text-align: center;
-    }
-
-    /* <!-- body { --> */
-    /* <!-- 	width: 1500px; --> */
-    /* <!-- 	margin: 0 auto; --> */
-    /* <!-- } --> */
-
-    /* <!-- h1 { --> */
-    /* <!-- 	text-align: center; --> */
-    /* <!-- } --> */
-
-    /* <!-- table { --> */
-    /* <!-- 	border: 1px solid black; --> */
-    /* <!-- 	margin: 0 auto; --> */
-    /* <!-- } --> */
-
-    /* <!-- tr, th, td { --> */
-    /* <!-- 	border: 1px solid black; --> */
-    /* <!-- } --> */
-
-    /* <!-- th { --> */
-    /* <!-- 	background-color: #ccc; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.no, .title, .id, .nick, .hit, .date { --> */
-    /* <!-- 	text-align: center; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.title { --> */
-    /* <!-- 	width: 200px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.content { --> */
-    /* <!-- 	width: 500px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.id, .nick { --> */
-    /* <!-- 	width: 150px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.hit { --> */
-    /* <!-- 	width: 50px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.date { --> */
-    /* <!-- 	width: 200px; --> */
-    /* <!-- } --> */
 </style>
 <script type="text/javascript">
     $(function () {
@@ -132,92 +78,96 @@
 </script>
 </head>
 <body>
-
+<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+<jsp:include page="/WEB-INF/views/layout/boardmenu.jsp"/>
 <!-- wrap 때문에 container가 반응형 X로 바뀜 -->
 <div class="wrap mx-auto">
-
-
     <div class="container">
-
         <h1>내 작성글</h1>
-        <a href="/">
-            <button>메인 페이지로</button>
-        </a>
-        <div>
-            <form action="" method="get" id="searchForm">
-                <select name="searchKind" id="searchKind">
-                    <option value="title"  <c:if test="${paging.searchKind == 'title'}">selected</c:if>>제목</option>
-                    <option value="content" <c:if test="${paging.searchKind == 'content'}">selected</c:if>>내용</option>
-                </select>
-                <input type="text" name="search" id="search" value="${paging.search }">
-                <input hidden="hidden" name="curPage" value="${curPage}">
-                <button id="serchBtn">검색</button>
-            </form>
+        <div class="title">
+            <div class="write">
+                <a href="/">
+                    <button class="go_main">Home</button>
+                </a>
+                <c:if test="${isLogin != 0}">
+                        <form action="./write" method="get">
+                            <button id="btnWrite" me>글쓰기</button>
+                        </form>
+                </c:if>
+            </div>
+            <div>
+                <form action="" method="get" id="searchForm">
+                    <select name="searchKind" id="searchKind">
+                        <option value="title" <c:if test="${paging.searchKind == 'title'}">selected</c:if>>제목</option>
+                        <option value="content" <c:if test="${paging.searchKind == 'content'}">selected</c:if>>내용
+                        </option>
+                    </select>
+                    <input type="text" name="search" id="search" value="${paging.search }">
+                    <input hidden="hidden" name="curPage" value="${curPage}">
+                    <button id="serchBtn">검색</button>
+                </form>
+            </div>
         </div>
-        <hr>
+            <hr style="clear: both; margin-bottom: 10px;">
 
-        <table class="table table-striped table-hover table-sm">
+            <table>
 
-             <colgroup>
-             	 <col style="width: 5%;">
-             	 <col style="width: 8%;">
-             	 <col style="width: 45%;">
-             	 <col style="width: 15%;">
-             	 <col style="width: 8%;">
-                 <col style="width: 10%;">
-                 <col style="width: 10%;">
-             </colgroup>
-            <tr>
-                <th><input type="checkbox" id="checkboxAllCheck"></th>
-                <th>글 번호</th>
-                <th>제목</th>
-                <th>작성자 닉네임</th>
-                <th>조회수</th>
-                <th>최초작성일</th>
-                <th>추천수</th>
-            </tr>
-            <c:choose>
-            	<c:when test="${not empty list }">
-	            <c:forEach var="board" items="${list }">
-	                <tr>
-	                    <td class="checkbox"><input type="checkbox" value="${board.boardNo }" name="deleteNum"
-	                                                class="delCheckBox"></td>
-	                    <td class="no">${board.boardNo }</td>
-	                    <td class="title">
-	                        <a href="./view?boardNo=${board.boardNo }&curPage=${curPage}&usrno=${board.userNo}">${board.title }</a>
-	                    </td>
-	                    <td class="nick">${board.nickName }</td>
-	                    <td class="hit">${board.boardView }</td>
-	                    <td class="date">
-	                        <fmt:formatDate value="${board.createDate }" pattern="yyyy-MM-dd"/>
-	                    </td>
-	                    <c:forEach items="${totalrecomm }" var="recommList">
-	                        <c:if test="${recommList.BOARDNO eq board.boardNo }">
-	                            <td><a id="totalRecommend">${recommList.GOOD }</a></td>
-	                        </c:if>
-	                    </c:forEach>
-	                </tr>
-	            </c:forEach>
-	            </c:when>
-	            <c:when test="${empty list }">
-	            	<tr>
-	                    <td class="title" colspan="7">게시글이 존재하지 않습니다
-	                    </td>
-	                </tr>
-	            </c:when>
-			</c:choose>
-        </table>
+                <%--             <colgroup>--%>
+                <%--             	 <col style="width: 5%;">--%>
+                <%--             	 <col style="width: 8%;">--%>
+                <%--             	 <col style="width: 45%;">--%>
+                <%--             	 <col style="width: 15%;">--%>
+                <%--             	 <col style="width: 8%;">--%>
+                <%--                 <col style="width: 10%;">--%>
+                <%--                 <col style="width: 10%;">--%>
+                <%--             </colgroup>--%>
+                <tr>
+                    <th><input type="checkbox" id="checkboxAllCheck"></th>
+                    <th>글 번호</th>
+                    <th>제목</th>
+                    <th>작성자 닉네임</th>
+                    <th>조회수</th>
+                    <th>최초작성일</th>
+                    <th>추천수</th>
+                </tr>
+                <c:choose>
+                    <c:when test="${not empty list }">
+                        <c:forEach var="board" items="${list }">
+                            <tr>
+                                <td class="checkbox"><input type="checkbox" value="${board.boardNo }" name="deleteNum"
+                                                            class="delCheckBox"></td>
+                                <td class="no">${board.boardNo }</td>
+                                <td class="title">
+                                    <a href="./view?boardNo=${board.boardNo }&curPage=${curPage}&usrno=${board.userNo}">${board.title }</a>
+                                </td>
+                                <td class="nick">${board.nickName }</td>
+                                <td class="hit">${board.boardView }</td>
+                                <td class="date">
+                                    <fmt:formatDate value="${board.createDate }" pattern="yyyy-MM-dd"/>
+                                </td>
+                                <c:forEach items="${totalrecomm }" var="recommList">
+                                    <c:if test="${recommList.BOARDNO eq board.boardNo }">
+                                        <td><a id="totalRecommend">${recommList.GOOD }</a></td>
+                                    </c:if>
+                                </c:forEach>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:when test="${empty list }">
+                        <tr>
+                            <td class="title" colspan="7">게시글이 존재하지 않습니다
+                            </td>
+                        </tr>
+                    </c:when>
+                </c:choose>
+            </table>
 
+
+            <button id="deleteBtn">체크 삭제</button>
+
+        </div>
+        <!-- .container End -->
     </div>
-    <!-- .container End -->
-    <button id="deleteBtn">체크 삭제</button>
-    <c:if test="${isLogin != 0}">
-    <div>
-        <form action="./write" method="get">
-            <button id="btnWrite" me>글쓰기</button>
-        </form>
-    </div>
-    </c:if>
 
     <c:import url="/WEB-INF/views/layout/boardPaging.jsp"/>
 

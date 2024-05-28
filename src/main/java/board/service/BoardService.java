@@ -4,6 +4,7 @@ import board.dto.*;
 import comment.dto.Comment;
 import user.dto.User;
 import util.Paging;
+import util.UserPaging;
 import vo.GoodVO;
 
 import javax.servlet.http.HttpSession;
@@ -81,7 +82,7 @@ public interface BoardService {
 
     public Comment commentByBoardNo(int commno);
 
-	public Paging getLogPaging(int curPage, Paging paging);
+	public UserPaging getLogPaging(int curPage, UserPaging paging);
 
     public Paging getAdminPaging(int curPage, Paging paging);
 
@@ -123,4 +124,8 @@ public interface BoardService {
 	 * @return - 페이징 객체
 	 */
 	public Paging getPagingByUserNo(int curPage, Paging paging, User login);
+
+	public Paging getPagingByUserNoGood(int curPage, Paging paging, User login);
+
+    public int category(Integer categoryNo);
 }

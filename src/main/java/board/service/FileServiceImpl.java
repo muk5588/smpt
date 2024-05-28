@@ -39,6 +39,8 @@ public class FileServiceImpl implements FileService {
 		//파일 업로드 경로 지정
 //		String storedPath = "/resources/boardupload";
 		String storedPath = servletContext.getRealPath("/resources/boardUpload");
+//		String documentsPath = System.getProperty("user.home") + File.separator + "Documents";
+//		String storedPath = documentsPath + File.separator + "boardUpload" + File.separator;
 		logger.info("storedPath : {}", storedPath);
 		
 		File storedFolder = new File(storedPath);
@@ -75,49 +77,8 @@ public class FileServiceImpl implements FileService {
 		filetest.setStoredName(storedName);
 		logger.info("fileTest : {}", filetest);
 		
-		fileDao.insert(filetest); //파일 정보 DB에 저장
-			//저장된 파일 이름 반환
+		fileDao.insert(filetest);
 	}
-	
-	
-	
-	
-	
-	//다중 파일 업로드
-	@Override
-	public List<String> filesave(Board board, List<MultipartFile> files) {
-		List<String> storedNames = new ArrayList<>();
-        for (MultipartFile file : files) { // 다중 파일 저장 로직 추가
-            if (file != null && !file.isEmpty()) {
-            	
-            }
-        }
-        return storedNames;
-	}	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	private String saveSingleFile(Board board, MultipartFile file) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-
 
 	@Override
 	public int getFileCnt(int boardno) {
@@ -172,6 +133,8 @@ public class FileServiceImpl implements FileService {
 				
 				//파일경로
 				String filePath = servletContext.getRealPath("/resources/boardUpload/");
+//				String documentsPath = System.getProperty("user.home") + File.separator + "Documents";
+//				String filePath = documentsPath + File.separator + "boardUpload" + File.separator;
 				logger.debug("filePath : {}", filePath);
 				File file = new File(filePath);
 				
@@ -221,6 +184,7 @@ public class FileServiceImpl implements FileService {
 		
 		return TempFile;
 	}
+
 
 	@Override
 	public void listDeleteByBoardNo(ArrayList<Integer> boardno) {
@@ -277,30 +241,6 @@ public class FileServiceImpl implements FileService {
 	@Override
 	public BoardFile getFileByFileNo(int fileNo) {
 		return fileDao.getFileByFileNo(fileNo);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
+	}	
 	
 }

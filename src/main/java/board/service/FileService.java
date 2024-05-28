@@ -17,11 +17,8 @@ public interface FileService {
 	 * 파일 정보 DB에 삽입
 	 * @param board - 게시글 번호
 	 * @param file - MultipartFile 객체
-	 * @return 
 	 */
-	public void filesave(Board board, MultipartFile file); // 기존 단일 파일 저장 메서드 유지
-	
-	public List<String> filesave(Board board, List<MultipartFile> files); // 다중 파일 저장 메서드 추가
+	public void filesave(Board board, MultipartFile file);
 
 	public int getFileCnt(int boardno);
 

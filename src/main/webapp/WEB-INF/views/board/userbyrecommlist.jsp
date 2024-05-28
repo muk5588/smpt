@@ -1,12 +1,23 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Seungjin
+  Date: 2024-05-17
+  Time: 오전 10:24
+  To change this template use File | Settings | File Templates.
+--%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
-<link rel="stylesheet" type="text/css" href="/resources/css/board/boardList.css">
-<title>전체 게시판</title>
 
+
+<link rel="stylesheet" type="text/css" href="/resources/css/board/boardList.css">
+<link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
+<style type="text/css">
+
+</style>
 <script type="text/javascript">
     $(function () {
 
@@ -53,7 +64,7 @@
 // 				console.log(res)
 
                     $(function () {
-                        $(location).attr('href', './list?categoryNo=${param.categoryNo}&curPage=${curPage}')
+                        $(location).attr('href', './list?curPage=${curPage}')
                     })
 
                 }
@@ -75,20 +86,21 @@
 </head>
 <body>
 <c:import url="/WEB-INF/views/layout/header.jsp"/>
-<jsp:include page="/WEB-INF/views/layout/boardmenu.jsp"/>
+<c:import url="/WEB-INF/views/layout/boardmenu.jsp"/>
+
 <!-- wrap 때문에 container가 반응형 X로 바뀜 -->
 <div class="wrap mx-auto">
 
 
     <div class="container">
 
-        <h1>${name } 게시판</h1>
+        <h1>내 추천글</h1>
         <div class="title">
             <div class="write">
                 <a href="/">
                     <button class="go_main">Home</button>
                 </a>
-                <c:if test="${(isLogin > 0 && categoryNo < dto1.gradeno)||(dto1.gradeno == 0 || dto1.gradeno == 5000)}">
+                <c:if test="${isLogin > 0}">
                     <form action="./write" method="get">
                         <button id="btnWrite" me>글쓰기</button>
                     </form>
@@ -108,75 +120,61 @@
                 </form>
             </div>
         </div>
-        <hr style="clear:both; margin-bottom: 10px">
-
+        <hr>
 
         <table>
 
-            <%-- <colgroup> --%>
-            <%-- 	<col style="width: 10%;"> --%>
-            <%-- 	<col style="width: 45%;"> --%>
-            <%-- 	<col style="width: 15%;"> --%>
-            <%-- 	<col style="width: 10%;"> --%>
-            <%-- 	<col style="width: 20%;"> --%>
-            <%-- </colgroup> --%>
+            <%--<colgroup>
+                <col style="width: 5%;">
+                <col style="width: 7%;">
+                <col style="width: 50%;">
+                <col style="width: 15%;">
+                <col style="width: 8%;">
+                <col style="width: 15%;">
+            </colgroup>--%>
             <tr>
-                <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
-                    <th><input type="checkbox" id="checkboxAllCheck"></th>
-                </c:if>
+                <th><input type="checkbox" id="checkboxAllCheck"></th>
                 <th>글 번호</th>
                 <th>제목</th>
                 <th>작성자 닉네임</th>
                 <th>조회수</th>
                 <th>최초작성일</th>
-                <th>추천수</th>
+
             </tr>
             <c:choose>
-                <c:when test="${not empty list }">
-                    <c:forEach var="board" items="${list }">
+                <c:when test="${not empty list2 }">
+                    <c:forEach var="board" items="${list2 }">
                         <tr>
-                            <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
-                                <td class="checkbox"><input type="checkbox" value="${board.boardNo }" name="deleteNum"
-                                                            class="delCheckBox"></td>
-                            </c:if>
+                            <td class="checkbox"><input type="checkbox" value="${board.boardNo }" name="deleteNum"
+                                                        class="delCheckBox"></td>
                             <td class="no">${board.boardNo }</td>
                             <td class="title">
-                                <c:if test="${not empty param.categoryNo }">
-                                    <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
-                                </c:if>
-                                <c:if test="${empty param.categoryNo }">
-                                    <a href="./view?&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
-                                </c:if>
+                                <a href="./view?boardNo=${board.boardNo }&curPage=${curPage}">${board.title }</a>
                             </td>
                             <td class="nick">${board.nickName }</td>
                             <td class="hit">${board.boardView }</td>
                             <td class="date">
                                 <fmt:formatDate value="${board.createDate }" pattern="yyyy-MM-dd"/>
                             </td>
-                            <c:forEach items="${totalrecomm }" var="recommList">
-                                <c:if test="${recommList.BOARDNO eq board.boardNo }">
-                                    <td><a id="totalRecommend">${recommList.GOOD }</a></td>
-                                </c:if>
-                            </c:forEach>
                         </tr>
                     </c:forEach>
                 </c:when>
-                <c:when test="${empty list }">
-                    <td colspan="7">
-                        게시글이 존재하지 않습니다
-                    </td>
+                <c:when test="${empty list2}">
+                    <tr>
+                        <td class="title" rowspan="6">게시글이 존재하지 않습니다
+                        </td>
+                    </tr>
                 </c:when>
             </c:choose>
-
         </table>
-        <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
-            <button id="deleteBtn">체크 삭제</button>
-        </c:if>
+
+        <button id="deleteBtn">체크 삭제</button>
     </div>
     <!-- .container End -->
-
-
-    <c:import url="/WEB-INF/views/layout/boardPaging.jsp"/>
 </div>
-
+<c:import url="/WEB-INF/views/layout/boardPaging.jsp"/>
+<br>
+<hr>
 <c:import url="/WEB-INF/views/layout/footer.jsp"/>
+</body>
+</html>

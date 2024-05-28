@@ -1,29 +1,46 @@
  package board.controller;
 
- import board.dto.*;
- import board.service.BoardService;
- import board.service.FileService;
- import comment.dto.Comment;
- import org.slf4j.Logger;
- import org.slf4j.LoggerFactory;
- import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.stereotype.Controller;
- import org.springframework.ui.Model;
- import org.springframework.web.bind.annotation.*;
- import org.springframework.web.multipart.MultipartFile;
- import user.dto.User;
- import util.Paging;
- import vo.GoodVO;
-
- import javax.servlet.ServletContext;
- import javax.servlet.http.HttpServletRequest;
- import javax.servlet.http.HttpServletResponse;
- import javax.servlet.http.HttpSession;
  import java.util.ArrayList;
- import java.util.List;
- import java.util.Map;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-@Controller
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
+
+import board.dto.Board;
+import board.dto.BoardFile;
+import board.dto.Category;
+import board.dto.Good;
+import board.dto.RecommendRes;
+import board.service.BoardService;
+import board.service.FileService;
+import comment.dto.Comment;
+import report.dto.BoardReport;
+import report.dto.CommReport;
+import report.service.ReportService;
+import user.dto.User;
+import util.Paging;
+import vo.GoodVO;
+
+ @Controller
 @RequestMapping("/board")
 public class BoardController {
 	
@@ -31,6 +48,7 @@ public class BoardController {
 	@Autowired private BoardService boardService;
 	@Autowired private FileService fileService;
 	@Autowired private ServletContext servletContext;
+	@Autowired private ReportService reportService;
 	
 	@GetMapping("/list")
 	public String list(
@@ -88,11 +106,26 @@ public class BoardController {
 	        list = boardService.listByCategory(paging);
 	        recommList = boardService.getuserRecommendRes(list);
 			name = boardService.getCategoryName(categoryNo);
+			int categoryno = boardService.category(categoryNo);
+			model.addAttribute("categoryNo", categoryno);
 	    } else {
 	        list = boardService.list(paging);
 	        recommList = boardService.getuserRecommendRes(list);
 			name = "전체";
 	    }
+		List<BoardReport> reportlist = reportService.reportboardlist();
+		Iterator<Board> iterator = list.iterator();
+
+		while (iterator.hasNext()) {
+			Board board = iterator.next();
+			for (BoardReport report : reportlist) {
+				if (report.getBoardNo() == board.getBoardNo()) {
+					iterator.remove();
+					break; // 현재 보드가 삭제되었으므로 내부 루프 종료
+				}
+			}
+		}
+
 
 //	    logger.debug("list : {}", list);
 //	    logger.debug("recommList : {}", recommList);
@@ -108,6 +141,7 @@ public class BoardController {
 	    model.addAttribute("paging", paging);
 	    model.addAttribute("list", list);
 		model.addAttribute("name", name);
+
 		return URL;
 	}
 	
@@ -138,10 +172,19 @@ public class BoardController {
 			logger.info("isRecomm : {}", good.getIsRecomm());
 			recomm = good.getTotalRecomm();
 		}
-		List<BoardFile> files = fileService.getFilesByBoardNo(boardno); // 파일 리스트 조회 추가 : 이미지 출력
-		model.addAttribute("files", files); // 모델에 파일 리스트 추가 : 이미지 출력
-		
 		List<Comment> comment = boardService.commentList(board);
+//		신고된 댓글 블러 처리
+		List<CommReport> reportlist = reportService.reportcommlist();
+		Iterator<Comment> iterator = comment.iterator();
+		while (iterator.hasNext()) {
+			Comment comment2 = iterator.next();
+			for (CommReport report : reportlist) {
+				if (report.getCommNo() == comment2.getCommNo()) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
 		model.addAttribute("comment", comment);
 		model.addAttribute("recomm", recomm);
 		logger.info("recomm : {}", recomm);
@@ -161,7 +204,7 @@ public class BoardController {
 			HttpSession session
 			, Board board
 			, @RequestParam("categoryNo") int categoryNo
-			, @RequestParam("files") List<MultipartFile> files	//다중 이미지 첨부 
+			, @RequestAttribute(required = false)MultipartFile file
 			) {
 		logger.debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 		User user = (User) session.getAttribute("dto1");
@@ -183,9 +226,8 @@ public class BoardController {
 		logger.info("originNames Ȯ�� : {}", originNames);
 		List<String> storedNames = fileService.extractStoredName(content, originNames);
 		logger.info("storedNames Ȯ�� : {}", storedNames);
-		
 		if (originNames != null && storedNames != null && originNames.size() == storedNames.size() && !originNames.isEmpty() && !storedNames.isEmpty()) {
-			ArrayList<BoardFile> filesList = new ArrayList<>();
+			ArrayList<BoardFile> files = new ArrayList<>();
 			logger.info("�̹��� ���� ó���� :%%%%%%%%%%%%%%%%%%%%%%%%%%" );
 		    for (int i = 0; i < originNames.size(); i++) {
 		        String originName = originNames.get(i);
@@ -195,29 +237,25 @@ public class BoardController {
 		            bf.setBoardNo(board.getBoardNo());
 		            bf.setOriginName(originName);
 		            bf.setStoredName(storedName);
-		            filesList.add(bf);
+		            files.add(bf);
 		        }
 		    }
-		    fileService.setFile(filesList);
+		    fileService.setFile(files);
 		}
         
 		logger.info("board �� Ȯ�� : {}", board);
 		
-		
-		// 다중 이미지 출력
-		 for (MultipartFile file : files) {
-		 if (file != null && !file.isEmpty()) { 
-			 fileService.filesave(board, file);  //이미지 출력
-		 
-		 }
+		if( null == file ) {
+			logger.debug("÷�� ���� ����");
+		}else if( file.getSize() <= 0 ){
+			logger.debug("������ ũ�Ⱑ 0");
+		}else { 
+//			for( )
+			fileService.filesave(board,file);
 		}
-		
 		
 		return "redirect:/board/list";
 	}
-	
-	
-	
 	
 	@ResponseBody
 	@PostMapping("/fileupload")
@@ -242,33 +280,31 @@ public class BoardController {
 		return files;
 	}
 	
-	 @GetMapping("/update")
-	    public void update(
-	            @RequestParam("boardNo") int boardNo
-	            , Model model
-	            ) {
-	        logger.info("게시물 번호: {}",boardNo);
-	        Board board = boardService.boardView(boardNo);
-	        model.addAttribute("board", board);
-	    }
-
-	    @PostMapping("/update")
-	    public String updateProc(
-	            Board board,
-	            @RequestParam("file") MultipartFile file,
-	            HttpSession session) {
-	        logger.info("게시물 업데이트: {}", board);
-
-	        int res = boardService.boardUpdate(board);
-
-	        if (res > 0) {
-	            if (file != null && !file.isEmpty()) {
-	                fileService.filesave(board, file);
-	            }
-	            return "redirect:./list";
-	        }
-	        return "./list";
-	    }
+	@GetMapping("/update")
+	public void update(
+			int boardNo
+			, Model model
+			) {
+		logger.info("{}",boardNo);
+		List<Category> categorylist = boardService.categoryList();
+		Board board = boardService.boardView(boardNo);
+		model.addAttribute("categorylist", categorylist);
+		model.addAttribute("board", board);
+	}
+	
+	@PostMapping("/update")
+	public String updateProc(
+			Board board
+			) {
+		logger.info("{}", board);
+		board.setUpdateDate(new Date());
+		int res = boardService.boardUpdate(board);
+		
+		if ( res > 0) {
+			return "redirect:/board/list";
+		}
+		return "./list";
+	}
 	
 	@RequestMapping("/delete")
 	public String delete(@RequestParam("boardNo") int boardno) {
@@ -396,7 +432,7 @@ public class BoardController {
 	}
 
 	@RequestMapping("/userbyrecommlist")
-	public void userbyRecommList(@SessionAttribute(value = "dto1", required = false) User login,
+	public String userbyRecommList(@SessionAttribute(value = "dto1", required = false) User login,
 								 @RequestParam(defaultValue ="0") int curPage, Model model
 								,@RequestParam(value="search",required = false) String search
 								,@RequestParam(value="searchKind", required = false ) String searchKind){
@@ -407,12 +443,13 @@ public class BoardController {
 		paging.setSearch(search);
 		paging.setSearchKind(searchKind);
 		if(null !=  search && !"".equals(search)) {
-			paging = boardService.getPagingByUserNo(curPage,paging,login);
+			paging = boardService.getPagingByUserNoGood(curPage,paging,login);
 		}else {
-			paging = boardService.getPagingByUserNo(curPage,paging,login);
+			paging = boardService.getPagingByUserNoGood(curPage,paging,login);
 		}
 		//게시글 없는 경우
 		if( paging == null ) {
+			paging = new Paging();
 			paging.setSearch(search);
 			paging.setSearchKind(searchKind);
 			paging.setUserno(login.getUserno());
@@ -421,9 +458,17 @@ public class BoardController {
 		paging.setSearchKind(searchKind);
 		paging.setUserno(login.getUserno());
 		List<Board> list2 = boardService.userbyrecommList(paging);
-
+		if( list2 == null ) {
+			model.addAttribute("curPage", curPage);
+			model.addAttribute("paging", paging);
+			model.addAttribute("param", login);
+			logger.debug("paramparamparamparam: {}", login);
+			return "board/userbyboardlist";
+		}
 		model.addAttribute("list2", list2);
 		model.addAttribute("paging", paging);
+		model.addAttribute("curPage", curPage);
+	return "board/userbyrecommlist";
 	}
 	
 	@RequestMapping("/fileDown")
