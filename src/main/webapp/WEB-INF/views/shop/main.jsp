@@ -107,25 +107,22 @@
         </div>
     </div>
 </div>
+
 <div class="filter">
-    <!-- 검색 필터 폼 -->
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">검색 필터</h5>
             <form action="" method="get" id="filterForm">
-                <!-- 필터 요소 -->
                 <div class="mb-3">
-				    <label for="priceRange">가격대</label>
-				    <input type="text" id="minPrice" name="minPrice" placeholder="최소 가격" class="form-control">
-				    <input type="text" id="maxPrice" name="maxPrice" placeholder="최대 가격" class="form-control">
-				</div>
-                <!-- 카테고리 필터 -->
+                    <label for="priceRange">가격대</label>
+                    <input type="text" id="minPrice" name="minPrice" placeholder="최소 가격" class="form-control">
+                    <input type="text" id="maxPrice" name="maxPrice" placeholder="최대 가격" class="form-control">
+                </div>
                 <button type="submit" class="btn btn-primary">필터 적용</button>
             </form>
         </div>
     </div>
 </div>
-
 
 <div class="wrap mx-auto mt-3">
     <div class="container">
@@ -141,44 +138,46 @@
         </div>
         <hr>
         
-        <c:set var="imgFiles" value="${files }"/>
-        <div id="itemwarp">
-            <div class="row">
-			           <c:forEach var="item" items="${item}">
-			    <div class="col-md-4 col-sm-6 mb-4">
-			        <div class="card h-100">
-			            <a href="./detail?itemNo=${item.itemNo}" class="text-decoration-none">
-			                <div class="itemImg card-img-top">
-			                    <c:choose>
-			                        <c:when test="${not empty Files}">
-			                            <c:forEach items="${Files}" var="file">
-			                                <c:if test="${item.itemNo eq file.itemNo}">
-			                                    <img alt="ItemImg" src="/resources/img/shop/upload/${file.storedName}" class="img-fluid">
-			                                </c:if>
-			                            </c:forEach>
-			                        </c:when>
-			                        <c:otherwise>
-			                            <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
-			                        </c:otherwise>
-			                    </c:choose>
-			                </div>
-			                <div class="card-body">
-			                    <h5 class="card-title">${item.itemName}</h5>
-			                    <p class="card-text">
-			                        <fmt:setLocale value="ko_KR"/>
-			                        <fmt:formatNumber type="currency" value="${item.price}" />
-			                    </p>
-			                </div>
-			            </a>
-			        </div>
-			    </div>
-			</c:forEach>
-	
+        <c:set var="imgFiles" value="${files}"/>
+<div id="itemwarp">
+    <div class="row">
+        <c:forEach var="item" items="${item}">
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                    <a href="./detail?itemNo=${item.itemNo}" class="text-decoration-none">
+                        <div class="itemImg card-img-top">
+                            <!-- 이미지를 표시하는 부분 시작 -->
+                            <c:if test="${not empty imgFiles}">
+                                <c:forEach items="${files}" var="imgFile">
+                                    <c:if test="${item.itemNo eq imgFile.itemNo}">
+                                        <img alt="ItemImg" src="/resources/itemUpload/${imgFile.storedName}" class="img-fluid">
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${empty imgFiles}">
+                                <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
+                            </c:if>
+                            <!-- 이미지를 표시하는 부분 종료 -->
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${item.itemName}</h5>
+                            <p class="card-text">
+                                <fmt:setLocale value="ko_KR"/>
+                                <fmt:formatNumber type="currency" value="${item.price}" />
+                            </p>
+                        </div>
+                    </a>
+                </div>
             </div>
-        </div>
+        </c:forEach>
     </div>
-    <!-- .container End -->
-    <jsp:include page="/WEB-INF/views/layout/shopPaging.jsp" />
-   
 </div>
-<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+
+
+    </div>
+    <jsp:include page="/WEB-INF/views/layout/shopPaging.jsp"/>
+</div>
+
+<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
+</body>
+</html>

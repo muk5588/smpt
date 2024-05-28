@@ -145,21 +145,21 @@ $(function(){
         <div class="row">
             <div class="col-md-4">
                 <!-- 상품 이미지 -->
-                <c:choose>
-                    <c:when test="${not empty files}">
-                        <c:forEach items="${files}" var="file">
-                            <c:if test="${not empty file}">
-                                <img alt="ItemImg" src="/resources/img/shop/upload/${file.storedName}" class="img-fluid">
-                            </c:if>
-                            <c:if test="${empty files.itemNo}">
-                                <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
-                            </c:if>
-                        </c:forEach>
-                    </c:when>
-                    <c:when test="${empty imgFiles}">
-                        <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
-                    </c:when>
-                </c:choose>
+
+					<c:choose>
+					    <c:when test="${empty files}">
+					        <!-- 이미지 파일이 없는 경우 -->
+					        <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
+					    </c:when>
+					    <c:otherwise>
+					        <!-- 이미지 파일이 있는 경우 -->
+					        <c:forEach items="${files}" var="file">
+					            <!-- 상품 이미지 파일 경로 -->
+					            <img src="/resources/itemUpload/${file.storedName}" alt="ItemImg" class="img-fluid">
+					        </c:forEach>
+					    </c:otherwise>
+					</c:choose>
+
             </div>
             <div class="col-md-8">
                 <!-- 상품 정보 -->

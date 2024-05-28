@@ -68,12 +68,13 @@
 </insert>
 
 <insert id="inserttitleImgFile" parameterType="dto.ItemFile">
-	<selectKey keyProperty="">
-	SELECT itemfile_seq.nextval FROM dual
-	</selectKey>
-	INSERT into itemfile(fileNo,itemNo,originName,storedName)
-    VALUES(#{fileNo},#{itemNo},#{originName},#{storedName}})
+    <selectKey keyProperty="itemNo" order="BEFORE" resultType="int">
+        SELECT itemfile_seq.nextval FROM dual
+    </selectKey>
+    INSERT INTO itemfile (fileNo, itemNo, origin_name, stored_name)
+    VALUES (#{fileNo}, #{itemNo}, #{originName}, #{storedName})
 </insert>
+
 
 <update id="updatetitleImgFile" parameterType="dto.ItemFile">
 	UPDATE item
