@@ -25,7 +25,7 @@ public class ShopController {
 
     @Autowired private ShopService shopService;
     @Autowired private ShopFileService shopFileService;
-   // @Autowired private util.ExchangeRateUtils exchangeRateUtils;
+    @Autowired private util.ExchangeRateUtils exchangeRateUtils;
 
     @RequestMapping("/main")
     public String shopMain() {
@@ -72,14 +72,15 @@ public class ShopController {
 
         // 대표 이미지 파일 정보 조회 및 모델에 추가
         List<ItemFile> files = shopFileService.getTitleImgs();
-        //BigDecimal[] exchangeRates = exchangeRateUtils.getExchangeRate();
+        // 환율 정보
+        BigDecimal[] exchangeRates = exchangeRateUtils.getExchangeRate();
         
         logger.debug("Title IMG files: {}", files);
         logger.debug("Item Check: {}", items);
         
         model.addAttribute("files", files);
         model.addAttribute("item", items);
-        //model.addAttribute("exchangeRates", exchangeRates);
+        model.addAttribute("exchangeRates", exchangeRates);
         
         return "/shop/main";
     }

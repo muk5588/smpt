@@ -144,36 +144,36 @@
         <c:set var="imgFiles" value="${files }"/>
         <div id="itemwarp">
             <div class="row">
-                <c:forEach var="item" items="${item }">
-      <div class="col-md-4 col-sm-6 mb-4">
-			    <div class="card h-100">
-			        <a href="./detail?itemNo=${item.itemNo}" class="text-decoration-none">
-			            <div class="itemImg card-img-top">
-			                <c:choose>
-			                    <c:when test="${not empty imgFiles}">
-			                        <c:forEach items="${files}" var="files">
-			                            <c:if test="${not empty files.itemNo and item.itemNo eq files.itemNo}">
-			                                <img alt="ItemImg" src="/resources/img/shop/upload/${files.storedName}" class="img-fluid">
-			                            </c:if>
-			                        </c:forEach>
-			                    </c:when>
-			                    <c:otherwise>
-			                        <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
-			                    </c:otherwise>
-			                </c:choose>
-			            </div>
-			            <div class="card-body">
-			                <h5 class="card-title">${item.itemName}</h5>
-			                <p class="card-text">
-			                    <fmt:setLocale value="ko_KR"/>
-			                    <fmt:formatNumber type="currency" value="${item.price}" />
-			                </p>
-			            </div>
-			        </a>
+			           <c:forEach var="item" items="${item}">
+			    <div class="col-md-4 col-sm-6 mb-4">
+			        <div class="card h-100">
+			            <a href="./detail?itemNo=${item.itemNo}" class="text-decoration-none">
+			                <div class="itemImg card-img-top">
+			                    <c:choose>
+			                        <c:when test="${not empty Files}">
+			                            <c:forEach items="${Files}" var="file">
+			                                <c:if test="${item.itemNo eq file.itemNo}">
+			                                    <img alt="ItemImg" src="/resources/img/shop/upload/${file.storedName}" class="img-fluid">
+			                                </c:if>
+			                            </c:forEach>
+			                        </c:when>
+			                        <c:otherwise>
+			                            <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
+			                        </c:otherwise>
+			                    </c:choose>
+			                </div>
+			                <div class="card-body">
+			                    <h5 class="card-title">${item.itemName}</h5>
+			                    <p class="card-text">
+			                        <fmt:setLocale value="ko_KR"/>
+			                        <fmt:formatNumber type="currency" value="${item.price}" />
+			                    </p>
+			                </div>
+			            </a>
+			        </div>
 			    </div>
-			</div>
-
-                </c:forEach>
+			</c:forEach>
+	
             </div>
         </div>
     </div>
