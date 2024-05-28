@@ -2,6 +2,7 @@ package comment.dao;
 
 import board.dto.Board;
 import comment.dto.Comment;
+import Story.dto.Story;
 
 import java.util.List;
 
@@ -20,4 +21,10 @@ public interface CommentDao {
 	public Comment commentByBoardNo(int commno);
 	
 	public List<Comment> selectCommentByBoardNo(QandA qanda);
+
+	public List<Comment> selectCommentByBoardNo(Story story);
+
+	
+
+	
 }
