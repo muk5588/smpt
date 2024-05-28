@@ -100,7 +100,7 @@
 			<include refid="selectBoard" />
 			<where>
 				<include refid="searchAND"/>
-	           	<if test="categoryNo != null and !categoryNo.equals('')">
+	           	<if test="categoryNo != null and !categoryNo.equals('') and categoryNo != 0">
 	   				AND categoryNo = #{categoryNo}
 				</if>
 	        </where>
@@ -173,12 +173,12 @@
 			<if test="content != null and !content.equals('')">
 				content = #{content},
 			</if>
+			updatedate = #{updateDate}
 		</set>
 		<where>
-			AND boardno = #{boardNo}
+			boardno = #{boardNo} <!-- AND는 제거하고 바로 조건 설정 -->
 		</where>
 	</update>
-
 	<delete id="deleteBoard" parameterType="Board">
 		DELETE BOARD
 		WHERE BOARDNO = #{boardNo}
@@ -256,10 +256,14 @@
 	</delete>
 
 	<select id="categoryList" resultType="Category">
-		select CATEGORYNAME, CATEGORYNO from CATEGORY order by CATEGORYNO
+		select CATEGORYNAME, CATEGORYNO from CATEGORY
+		<where>
+			AND CATEGORYNO <![CDATA[ <>  61 ]]>
+		</where>
+		order by CATEGORYNO
 	</select>
 
-	<select id="selectLogCntAll" resultType="int" parameterType="util.Paging">
+	<select id="selectLogCntAll" resultType="int" parameterType="util.UserPaging">
 		SELECT count(*) FROM (
 		    select ACCESSNO, USERNO, ACCESSDATE from ACCESSHISTORY
 		)
@@ -268,6 +272,7 @@
 	<select id="selectAdminCntAll" resultType="int" parameterType="util.Paging">
 		select count(*) from (
 								 select USERNO from USERTB
+								 where userno is not null
 							 )
 	</select>
 
@@ -413,11 +418,22 @@
 		<where>
 			and g.boardno = b.boardno
 			and g.userno = #{userno}
+			<if test="search != null and searchKind != null">
+				<choose>
+					<when test="searchKind.equals('title')">
+						AND title Like '%${search}%'
+					</when>
+					<when test="searchKind.equals('content')">
+						AND content Like '%${search}%'
+					</when>
+				</choose>
+			</if>
 		</where>
 		order by createdate desc) A )
 		<where>
 			and rnum between #{startNo} and #{endNo}
 		</where>
+
 	</select>
 	
 
@@ -441,5 +457,36 @@
         </where>
     )
 </select>
-	
+
+	<select id="selectCntByUserNoGood" resultType="int" parameterType="map">
+		select count(*) from (
+        select g.USERNO, g.BOARDNO, b.TITLE, b.BOARDVIEW, b.NICKNAME, b.CREATEDATE
+        from good g
+        left outer join BOARD B on B.BOARDNO = g.BOARDNO
+		<where>
+			<if test="user != null">
+				g.userno = #{user.userno}
+			</if>
+			<if test="paging.search != null and paging.searchKind != null">
+				<choose>
+					<when test="paging.searchKind.equals('title')">
+						AND title Like '%${paging.search}%'
+					</when>
+					<when test="paging.searchKind.equals('content')">
+						AND content Like '%${paging.search}%'
+					</when>
+				</choose>
+			</if>
+		</where>
+		)
+	</select>
+	<select id="category" parameterType="Integer" resultType="int">
+		select GRADENO from CATEGORY
+		<where>
+		    and CATEGORYNO = #{categoryNo}
+			AND CATEGORYNO <![CDATA[ <>  61 ]]>
+		</where>
+		order by CATEGORYNO
+	</select>
+
 </mapper>

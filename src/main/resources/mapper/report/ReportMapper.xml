@@ -4,7 +4,15 @@
 	<select id="reportType" resultType="BoardReportType">
 		select REPORTTYPENO, REPORTTYPE from BOARDREPORTTYPE order by REPORTTYPENO
 	</select>
-
+	<select id="reportboardlist" resultType="BoardReport">
+		select BOARDNO from BOARDREPORT
+	</select>
+	<select id="reportcommlist" resultType="CommReport">
+		select COMMNO from COMMREPORT
+	</select>
+	<select id="reportitemlist" resultType="ItemReport">
+		select ITEMNO from ITEMREPORT
+	</select>
 	<insert id="reportBoard" parameterType="BoardReport">
 		insert into BOARDREPORT(boardreportno, boardno, userno, reporttypeno, reportcontent, reportdate)
 		values (BOARDREPORT_SEQ.nextval,#{boardNo},#{userNo},#{reportTypeNo},#{reportContent},sysdate + 9/24)
@@ -36,5 +44,43 @@
 	</delete>
 	<delete id="deleteCommReport" parameterType="int">
 		delete COMMREPORT where COMMREPORTNO = #{commReportNo}
+	</delete>
+	<select id="getItemReportType" resultType="report.dto.ItemReportType">
+		SELECT ITEMREPORTNO, ITEMREPORT FROM ItemReportType
+	</select>
+	<select id="getItemByItemNo" parameterType="int" resultType="dto.Item">
+	  SELECT i.itemno as itemNo, i.itemName , i.price, i.itemComm,
+	    i.remain,
+	    i.titleImg,
+	    it.fileno,
+	    it.stored_Name,
+	    it.origin_Name
+	FROM 
+	    item i 
+	LEFT JOIN 
+	    itemfile it 
+	ON 
+	    i.itemno = it.itemno
+	WHERE 
+	    i.itemno = #{itemNo}
+	</select>
+	<insert id="insertItemReport" parameterType="report.dto.ItemReport">
+		<selectKey order="BEFORE" resultType="int" keyProperty="reportNo">
+			SELECT itemreport_seq.nextval FROM dual
+		</selectKey>
+		INSERT INTO ITEMREPORT(reportno, itemno, userno, itemReportNo, reportContent)
+		VALUES(#{reportNo}, #{itemNo}, #{userNo}, #{itemReportNo}, #{reportContent})
+	</insert>
+	<select id="itemlist" resultType="report.dto.ItemReport">
+		SELECT ir.reportno, ir.itemno, ir.userno, ir.reportDate
+		, irt.itemReportNo, ir.reportContent,
+		irt.ITEMREPORT , itemname, nickname
+		FROM item i, ITEMREPORT ir, ITEMREPORTTYPE irt, usertb u
+		WHERE i.ITEMNO = ir.ITEMNO 
+		AND irt.ITEMREPORTNO = ir.ITEMREPORTNO 
+		AND ir.USERNO  = u.USERNO 
+	</select>
+	<delete id="deleteItemReport" parameterType="int">
+		delete itemreport where reportno = #{reportno}
 	</delete>
 </mapper>

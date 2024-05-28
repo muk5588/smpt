@@ -1,6 +1,10 @@
 package report.dao;
 
 import org.springframework.stereotype.Repository;
+
+import dto.Item;
+import report.dto.ItemReport;
+import report.dto.ItemReportType;
 import report.dto.BoardReport;
 import report.dto.BoardReportType;
 import report.dto.CommReport;
@@ -23,4 +27,20 @@ public interface ReportDao {
     public void deleteReport(int reportno);
 
     public void deleteCommReport(int reportno);
+
+	public List<ItemReportType> getItemReportType();
+
+	public Item getItemByItemNo(int itemNo);
+
+	public int insertItemReport(ItemReport itemReport);
+
+	public List<ItemReport> itemlist();
+
+	public void deleteItemReport(int reportno);
+
+    public List<BoardReport> reportboardlist();
+
+    public List<CommReport> reportcommlist();
+
+    public List<ItemReport> reportitemlist();
 }

@@ -2,6 +2,10 @@ package report.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import dto.Item;
+import report.dto.ItemReport;
+import report.dto.ItemReportType;
 import report.dao.ReportDao;
 import report.dto.BoardReport;
 import report.dto.BoardReportType;
@@ -50,5 +54,45 @@ ReportDao reportDao;
     @Override
     public void deleteCommReport(int reportno) {
         reportDao.deleteCommReport(reportno);
+    }
+
+	@Override
+	public List<ItemReportType> getItemReportType() {
+		return reportDao.getItemReportType();
+	}
+
+	@Override
+	public Item getItemByItemNo(int itemNo) {
+		return reportDao.getItemByItemNo(itemNo);
+	}
+
+	@Override
+	public int insertItemReport(ItemReport itemReport) {
+		return reportDao.insertItemReport(itemReport);
+	}
+
+	@Override
+	public List<ItemReport> itemlist() {
+		return reportDao.itemlist();
+	}
+
+	@Override
+	public void deleteItemReport(int reportno) {
+		reportDao.deleteItemReport(reportno);
+	}
+
+    @Override
+    public List<BoardReport> reportboardlist() {
+        return reportDao.reportboardlist();
+    }
+
+    @Override
+    public List<CommReport> reportcommlist() {
+        return reportDao.reportcommlist();
+    }
+
+    @Override
+    public List<ItemReport> reportitemlist() {
+        return reportDao.reportitemlist();
     }
 }
