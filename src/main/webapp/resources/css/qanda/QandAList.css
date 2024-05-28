@@ -24,12 +24,6 @@ body {
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 6px;
-    display: flex;
-    justify-content: center; /* Center align the content */
-}
-
-.inner-container {
-    width: 100%;
 }
 
 button {
@@ -94,6 +88,7 @@ th {
     margin-left: 1em;
 }
 
+
 button[onclick*="신고하기"] {
     background: #f44336;
 }
@@ -122,7 +117,7 @@ h1 {
     margin-bottom: 5px;
 }
 
-#btnWrite, #searchBtn {
+#btnWrite, #searchBtn{
     margin-top: 5px;
 }
 
@@ -154,48 +149,4 @@ td a {
 
 td a:hover {
     text-decoration: underline;
-}
-
-/* Styles specific to qandalist */
-.qandalist {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-}
-
-.qandalist th {
-    background-color: #f4f4f4;
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-
-.qandalist td {
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-
-.qandalist tbody tr:hover {
-    background-color: #f9f9f9;
-}
-
-.qandalist th:first-child, .qandalist td:first-child {
-    width: 5%;
-}
-
-.qandalist th:nth-child(2), .qandalist td:nth-child(2) {
-    width: 50%;
-    text-align: left;
-    padding-left: 20px;
-}
-
-.qandalist th:nth-child(3), .qandalist td:nth-child(3) {
-    width: 15%;
-}
-
-.qandalist th:nth-child(4), .qandalist td:nth-child(4) {
-    width: 10%;
-}
-
-.qandalist th:nth-child(5), .qandalist td:nth-child(5) {
-    width: 20%;
 }

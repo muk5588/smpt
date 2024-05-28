@@ -30,8 +30,8 @@ import board.service.BoardService;
  import java.util.Map;
 
 @Controller
-@RequestMapping("/qanda")
-public class QandAController {
+@RequestMapping("/Free")
+public class FreeController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired private BoardService boardService;
@@ -47,11 +47,11 @@ public class QandAController {
 	    @RequestParam(value="searchKind", required = false) String searchKind,
 	    @RequestParam(value="categoryNo", required = false) Integer categoryNo) {
 
-	    logger.info("/QandA/list [GET]");
-	    logger.info("/QandA/list search : {}", search);
-	    logger.info("/QandA/list searchKind : {}", searchKind);
-	    logger.info("/QandA/list categoryNo : {}", categoryNo);
-		String URL = "/qanda/list";
+	    logger.info("/Free/list [GET]");
+	    logger.info("/Free/list search : {}", search);
+	    logger.info("/Free/list searchKind : {}", searchKind);
+	    logger.info("/Free/list categoryNo : {}", categoryNo);
+		String URL = "/Free/list";
 	    // 페이징 계산
 	    Paging paging = new Paging();
 	    paging.setSearch(search);
@@ -221,7 +221,7 @@ public class QandAController {
 		}
 		
 		
-		 return "redirect:/qanda/list?categoryNo=" + categoryNo; // 글작성 시 선택한 카테고리 목록으로 이동.
+		 return "redirect:/Free/list?categoryNo=" + categoryNo; // 글작성 시 선택한 카테고리 목록으로 이동.
 	}
 	
 	

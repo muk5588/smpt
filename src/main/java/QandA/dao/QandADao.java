@@ -1,65 +1,105 @@
 package QandA.dao;
 
+import QandA.dto.*;
+import user.dto.User;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import board.dto.Category;
+import board.dto.Good;
+import board.dto.RecommendRes;
+import util.Paging;
+import vo.GoodVO;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import QandA.dto.QandACategory;
-import QandA.dto.Criteria;
-import QandA.dto.SearchCriteria;
-import QandA.dto.QandaVO;
-
+@Repository("QandADao")
 public interface QandADao {
 
-	// 게시물 목록 조회 + 페이징
-	public List<QandaVO> list(SearchCriteria scri) throws Exception;
+	/**
+	 * 게시판의 전체 게시글을 DB에서 조회
+	 * 
+	 * @param paging - 페이징 정보 객체
+	 * @return 게시글 전체 리스트
+	 */
+	public List<QandA> selectAll(Paging paging);
+	/**
+	 * 전체 개수 조회
+	 * @param paging 
+	 * @return
+	 */
+	public int selectCntAll(Paging paging);
 
-	// 게시글 목록 + 페이징 + 검색
-	// public List<StoryVO> listSearch(SearchCriteria scri) throws Exception;
+	public QandA select(int boardno);
 
-	// 검색 결과 갯수
-	public int countSearch(SearchCriteria scri) throws Exception;
+	public void hit(int boardno);
 
-	// 게시물 총 개수(페이징)
-	public int listCount() throws Exception;
+	public int write(QandA qanda);
 
-	// 게시물 작성
-	public void create(QandaVO vo) throws Exception;
+	public QandA selectQandAByBoardNo(int boardNo);
 
-	// 게시물 조회
-	public QandaVO detail(int boardNo) throws Exception;
+	public int updateQandA(QandA qanda);
 
-	// 게시물 수정
-	public void update(QandaVO vo) throws Exception;
+	/**
+	 * 게시글을 삭제 한다
+	 * @param deleteStory - 삭제하려는 게시글 번호를 가진 DTO 객체
+	 */
+	public void deleteQandA(QandA deleteQandA);
 
-	// 게시뮬 삭제
-	public void delete(int boardNo) throws Exception;
+	/**
+	 * 추천
+	 * @param conn
+	 * @param Good
+	 */
+	public void insertRecommend(Good good);
 
-	///////////////////////////////////////////////////////////////////////////////////////
+	public int isRecomm(Good good);
 
-	// 추천 수 증가
-	public void incrementRecommendCount(int boardNo) throws Exception;
+	public void deleteRecommend(Good good);
 
-	// 추천 수 조회
-	public int getRecommendCount(int boardNo) throws Exception;
+	public RecommendRes getRecommendRes(Good good);
 
-	// 중복 추천 여부 확인
-	public int hasRecommended(Map<String, Object> params) throws Exception;
+	public List<Map<String, Object>> selectAllRecomm(Paging paging);
 
-	// 추천 기록 추가
-	public void addRecommendRecord(Map<String, Object> params) throws Exception;
-	
-	
-	//추천 기록 삭제(RECOMMEND_RECORD의 boardNo가 story테이블의 boardNo가 외래키 참조되있어서 먼저 삭제해야 게시글 지워짐)
-	public void deleteRecommendRecords(int boardNo) throws Exception;
+	public int getRecommend(int boardno);
 
-	///////////////////////////////////////////////////////////////////////////////////////
+	public int selectCntTitleBySearch(String search);
 
-	// 조회수 증가
-	public void incrementViewCount(int boardNo) throws Exception;
-	
-	
-	//게시판 분류 목록 조회
-	public List<QandACategory> getCategoryList() throws Exception;
-	
+	public List<QandA> selectBySearch(Paging paging);
 
+	public int listDeleteByBoardNo(@Param("arr")ArrayList<Integer> boardno);
+
+
+    public List<Category> categoryList();
+
+	public List<QandA> QandAList(@Param("userNo")int userNo);
+
+	public int selectLogCntAll(Paging paging);
+
+    public int selectAdminCntAll(Paging paging);
+
+    public List<QandA> userByQandAList(Paging paging);
+
+	public List<QandA> userrecommList(int userno);
+
+	public void deleteComment(@Param("arr")ArrayList<Integer> boardno);
+
+	public void deleteGood(@Param("arr")ArrayList<Integer> boardno);
+
+	public GoodVO getRecommendVO(Good paramGood);
+
+	public List<QandA> listByCategory(Paging paging);
+
+    public List<Map<String, Object>> getuserRecommendRes(@Param("arr")List<QandA> list);
+
+	public String getCategoryName(int categoryNo);
+
+    public List<QandA> list();
+
+	public List<QandA> userbyrecommList(Paging paging);
+
+	public int selectCntByUserNo(@Param("paging")Paging paging, @Param("user")User login);
 }
