@@ -14,86 +14,70 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script>
-        function DaumPostcode() {
-            new daum.Postcode({
-                oncomplete: function (data) {
-                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    function DaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
 
-                    // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                    var addr = ''; // 주소 변수
-                    var extraAddr = ''; // 참고항목 변수
-
-                    //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                        addr = data.roadAddress;
-                    } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                        addr = data.jibunAddress;
-                    }
-
-                    // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-                    if (data.userSelectedType === 'R') {
-                        // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                        // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                        if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-                            extraAddr += data.bname;
-                        }
-                        // 건물명이 있고, 공동주택일 경우 추가한다.
-                        if (data.buildingName !== '' && data.apartment === 'Y') {
-                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                        }
-                        // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-                        if (extraAddr !== '') {
-                            extraAddr = ' (' + extraAddr + ')';
-                        }
-                        // 조합된 참고항목을 해당 필드에 넣는다.
-                        document.getElementById("extraAddress").value = extraAddr;
-
-                    } else {
-                        document.getElementById("extraAddress").value = '';
-                    }
-
-                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                    document.getElementById('postCode').value = data.zonecode;
-                    document.getElementById("address").value = addr;
-                    // 커서를 상세주소 필드로 이동한다.
-                    document.getElementById("detailAddress").focus();
+                if (data.userSelectedType === 'R') {
+                    addr = data.roadAddress;
+                } else {
+                    addr = data.jibunAddress;
                 }
-            }).open();
-        }
+
+                if (data.userSelectedType === 'R') {
+                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                        extraAddr += data.bname;
+                    }
+                    if (data.buildingName !== '' && data.apartment === 'Y') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if (extraAddr !== '') {
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    document.getElementById("extraAddress").value = extraAddr;
+                } else {
+                    document.getElementById("extraAddress").value = '';
+                }
+
+                document.getElementById('postCode').value = data.zonecode;
+                document.getElementById("address").value = addr;
+                document.getElementById("detailAddress").focus();
+            }
+        }).open();
+    }
 </script>        
 <% 
-	List<Item> items = (List<Item>)request.getAttribute("items");
-	String itemNames = "";
-	int i =0;
-	for(Item o: items){
-		itemNames += o.getItemName();
-		if( i != 0){
-			itemNames += " , ";
-		}
-		i++;
-	}
-	request.setAttribute("itemNames", itemNames);
-	String uuid = UUID.randomUUID().toString().split("-")[4];
-	uuid += UUID.randomUUID().toString().split("-")[4];
-	request.setAttribute("uuid", uuid);
+    List<Item> items = (List<Item>)request.getAttribute("items");
+    String itemNames = "";
+    int i =0;
+    for(Item o: items){
+        itemNames += o.getItemName();
+        if( i != 0){
+            itemNames += " , ";
+        }
+        i++;
+    }
+    request.setAttribute("itemNames", itemNames);
+    String uuid = UUID.randomUUID().toString().split("-")[4];
+    uuid += UUID.randomUUID().toString().split("-")[4];
+    request.setAttribute("uuid", uuid);
 %>
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <script type="text/javascript">
+    IMP.init('imp21765258')
 
-//window.IMP
-//가맹점 식별코드 초기화
-IMP.init('imp21765258')
-
-       var today = new Date();   
-        var hours = today.getHours(); // 시
-        var minutes = today.getMinutes();  // 분
-        var seconds = today.getSeconds();  // 초
-        var milliseconds = today.getMilliseconds();
-        var makeMerchantUid = '' +hours +  minutes + seconds + milliseconds;
+    var today = new Date();   
+    var hours = today.getHours(); // 시
+    var minutes = today.getMinutes();  // 분
+    var seconds = today.getSeconds();  // 초
+    var milliseconds = today.getMilliseconds();
+    var makeMerchantUid = '' +hours +  minutes + seconds + milliseconds;
         
+
 function requestPay() {
 	
 
@@ -191,141 +175,142 @@ IMP.request_pay({
     form.submit();
     }else{
     	alert('결제 오류 입니다 [원인] : ' + rsp.error_msg)
-    }
-    
-   
-});
- 
-}
 
+    }
 </script>
 <script type="text/javascript">
-$(function(){
-	$("#payBtn").click(function(){
-		console.log("결제버튼 클릭")
-		requestPay();
-	})
-	
-})
+    $(function(){
+        $("#payBtn").click(function(){
+            console.log("결제버튼 클릭")
+            requestPay();
+        });
+    });
 </script>
 <link rel="stylesheet" href="/resources/css/order/ordersheet.css">
 </head>
 <body>
 
-   <div class="container">
-
-        <h1>결제하기</h1>
-        <a href="/">
-            <button>메인 페이지로</button>
-        </a>
+<div class="container mt-5">
+    <h1 class="mb-4">결제하기</h1>
+    <a href="/">
+        <button class="btn btn-secondary mb-4">메인 페이지로</button>
+    </a>
+    
+    <div id="orderwrap">
+        <form method="post" action="./completed" id="orderForm" class="mb-4">
+            <div class="mb-3">
+                <label for="userName" class="form-label">주문자명</label>
+                <input type="text" class="form-control" name="userName" id="userName" value="${userOrder.userName }">
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">핸드폰번호</label>
+                <input type="text" class="form-control" name="phone" id="phone" value="${userOrder.phone }">
+            </div>
+            <div class="mb-3">
+                <label for="postCode" class="form-label">배송지 우편주소</label>
+                <input type="text" class="form-control" name="postCode" id="postCode" value="${userOrder.postCode }" readonly>
+                <button type="button" class="btn btn-outline-primary mt-2" onclick="DaumPostcode()">우편번호 찾기</button>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">주소</label>
+                <input type="text" class="form-control" name="address" id="address" value="${userOrder.address }" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="detailAddress" class="form-label">상세 주소</label>
+                <input type="text" class="form-control" name="detailAddress" id="detailAddress" value="${userOrder.detailAddress }">
+                <input type="text" class="form-control mt-2" name="extraAddress" id="extraAddress" value="${userOrder.extraAddress}" readonly>
+            </div>
+        </form>
         
-<div id="orderwrap">
-<form method="post" action="./completed" id="orderForm">
-<table>
-	<tr><td>주문자명<input type="text" name="userName" id="userName" value="${userOrder.userName }"></td></tr>
-	<tr><td>핸드폰번호<input type="text" name="phone" id="phone" value="${userOrder.phone }"></td></tr>
-	<tr><td>배송지 우편주소<input type="text" name="postCode" id="postCode" value="${userOrder.postCode }" readonly="readonly">
-		<input type="button" onclick="DaumPostcode()" value="우편번호 찾기">
-	</td></tr>
-	<tr><td>주소<input type="text" name="address" id="address" value="${userOrder.address }" readonly="readonly"></td></tr>
-	<tr><td><input type="text" name="detailAddress" id="detailAddress" value="${userOrder.detailAddress }">	
-		<input type="text" name="extraAddress" id="extraAddress"  value="${userOrder.extraAddress}" readonly="readonly">
-	</td></tr>
-</table>
-<table>
-	<tr>
-	    <th>상품명</th>
-	    <th>수량</th>
-	    <th>이미지</th>
-	    <th>가격</th>
-	</tr>
-	<c:choose>
-	<c:when test="${not empty baskets }">
-	<c:set var="sum" value="0"/>
-    <c:forEach items="${items }" var="item">
-    <c:forEach items="${baskets}" var="basket">
-    <c:if test="${item.itemNo eq basket.itemNo }">
-   		<tr>
-   			<td>${item.itemName }</td>
-   			<td>${basket.quantity }</td>
-   			<td>
-   			<c:choose>
-	    	<c:when test="${not empty imgFiles}">
-		    	<c:forEach items="${imgFiles}" var="files">
-		    	<c:if test="${not empty files.itemNo and item.itemNo eq  files.itemNo}">
-		    		<img alt="ItemImg" src="/resources/img/shop/upload/${files.storedName }">
-		    	</c:if>
-		    	<c:if test="${empty files.itemNo}">
-		    		<img src="/resources/img/shop/nullimg.jpg" alt="notready">
-		    	</c:if>
-		   		</c:forEach>
-	   		</c:when>
-	   		<c:when test="${empty imgFiles }">
-	    		<img src="/resources/img/shop/nullimg.jpg" alt="notready">
-	   		</c:when>
-   			</c:choose>
-   			</td>
-   			<td>${item.price * basket.quantity}
-   				<c:set var="i" value="${item.price * basket.quantity }"/>
-   			</td>
-			<c:set var="sum" value="${sum + i}"/>
-   		</tr>
-   	</c:if>
-   	</c:forEach>
-    </c:forEach>
-		<%-- <input type="hidden" id="basketNos" name="basketNos" value='${basketNos}'/> --%>
-		<c:forEach items="${orderDatas}" var="orderData">
-		    <input type="hidden" name="orderDatas" value="${orderData}" />
-		</c:forEach>
-    </c:when>
-    <c:when test="${empty baskets }">
-   	<c:set var="sum" value="0"/>
-    <c:forEach items="${items }" var="item">
-   		<tr>
-   			<td>${item.itemName }</td>
-   			<td>${quantity }</td>
-   			<td>
-   			<c:choose>
-	    	<c:when test="${not empty imgFiles}">
-		    	<c:forEach items="${imgFiles}" var="files">
-		    	<c:if test="${not empty files.itemNo and item.itemNo eq  files.itemNo}">
-		    		<img alt="ItemImg" src="/resources/img/shop/upload/${files.storedName }">
-		    	</c:if>
-		    	<c:if test="${empty files.itemNo}">
-		    		<img src="/resources/img/shop/nullimg.jpg" alt="notready">
-		    	</c:if>
-		   		</c:forEach>
-	   		</c:when>
-	   		<c:when test="${empty imgFiles }">
-	    		<img src="/resources/img/shop/nullimg.jpg" alt="notready">
-	   		</c:when>
-   			</c:choose>
-   			</td>
-   			<td>${item.price * quantity}
-   				<c:set var="i" value="${item.price * quantity }"/>
-   			</td>
-			<c:set var="sum" value="${sum + i}"/>
-   		</tr>
-    	<input name="itemNo" value="${item.itemNo }" hidden="hidden">
-    	<input name="quantity" value="${quantity }" hidden="hidden">
-    </c:forEach>
-    </c:when>
-    </c:choose>
-    <tr>
-    	<td>총계 : 
-    	  <td><fmt:setLocale value="ko_KR"/><fmt:formatNumber type="currency" value="${sum }"/>
-    	  <input hidden="hidden" name="totalPrice" id="totalPrice" value="${sum }">
-    	</td>
-    </tr>
-</table>
-<button onclick="requestPay();" type="button">결제하기</button>
-</form>
-</div>
-       
-
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>상품명</th>
+                    <th>수량</th>
+                    <th>이미지</th>
+                    <th>가격</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:choose>
+                    <c:when test="${not empty baskets}">
+                        <c:set var="sum" value="0"/>
+                        <c:forEach items="${items}" var="item">
+                            <c:forEach items="${baskets}" var="basket">
+                                <c:if test="${item.itemNo eq basket.itemNo}">
+                                    <tr>
+                                        <td>${item.itemName}</td>
+                                        <td>${basket.quantity}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${not empty imgFiles}">
+                                                    <c:forEach items="${imgFiles}" var="file">
+                                                        <c:if test="${file.itemNo eq item.itemNo}">
+                                                            <img alt="ItemImg" src="/resources/img/shop/upload/${file.storedName}" class="img-thumbnail" width="100">
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-thumbnail" width="100">
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            ${item.price * basket.quantity}
+                                            <c:set var="i" value="${item.price * basket.quantity}"/>
+                                        </td>
+                                        <c:set var="sum" value="${sum + i}"/>
+                                    </tr>
+                                </c:if>
+                            </c:forEach>
+                        </c:forEach>
+                        <c:forEach items="${orderDatas}" var="orderData">
+                            <input type="hidden" name="orderDatas" value="${orderData}"/>
+                        </c:forEach>
+                    </c:when>
+                    <c:when test="${empty baskets}">
+                        <c:set var="sum" value="0"/>
+                        <c:forEach items="${items}" var="item">
+                            <tr>
+                                <td>${item.itemName}</td>
+                                <td>${quantity}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty imgFiles}">
+                                            <c:forEach items="${imgFiles}" var="file">
+                                                <c:if test="${file.itemNo eq item.itemNo}">
+                                                    <img alt="ItemImg" src="/resources/itemUpload/${file.storedName}" class="img-thumbnail" width="100">
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-thumbnail" width="100">
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    ${item.price * quantity}
+                                    <c:set var="i" value="${item.price * quantity}"/>
+                                </td>
+                                <c:set var="sum" value="${sum + i}"/>
+                            </tr>
+                            <input name="itemNo" value="${item.itemNo}" hidden>
+                            <input name="quantity" value="${quantity}" hidden>
+                        </c:forEach>
+                    </c:when>
+                </c:choose>
+                <tr>
+                    <td>총계:</td>
+                    <td colspan="3">
+                        <fmt:setLocale value="ko_KR"/>
+                        <fmt:formatNumber type="currency" value="${sum}"/>
+                        <input type="hidden" name="totalPrice" id="totalPrice" value="${sum}">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="payBtn" class="btn btn-primary">결제하기</button>
     </div>
-    <!-- .container End -->
-
+</div>
 
 <c:import url="/WEB-INF/views/layout/footer.jsp"/>
-

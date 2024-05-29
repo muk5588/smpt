@@ -103,17 +103,17 @@ public class BasketController {
 
         return res;
     }
-	@ResponseBody
-	@RequestMapping("/buyBasket")
-	public int[] buyBasket(@RequestParam("basketNo[]")int[] no
-			, Model model) {
-		logger.debug("Ajax buyBasket : {}", no);
-//		Map<String, Object> orderMap = basketService.userorderProc(no);
-//		orderMap.put("basketNos", no);
-//		logger.debug("orderMap : {}",orderMap);
-//		model.addAttribute("orderMap", orderMap);
-		return no;
-	}
-	
+    
+ // 장바구니에서 상품 구매
+    @RequestMapping("/buy")
+    public String buyItems(@RequestParam("basketNos") List<Integer> basketNos, Model model) {
+        logger.debug("장바구니에서 상품 구매");
+
+        // 선택된 상품 번호를 결제 페이지로 전달
+        model.addAttribute("basketNos", basketNos);
+
+        return "forward:/order/ordersheet"; // ordersheet 페이지로 forward
+    }
+
 	
 }
