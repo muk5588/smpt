@@ -1,6 +1,7 @@
 package photo.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -181,11 +183,11 @@ public class PhotoController {
 			HttpSession session
 			, Photo photo
 			, @RequestParam("categoryNo") int categoryNo
-			, @RequestParam("files") List<MultipartFile> files	//다중 이미지 첨부 
+			, @RequestAttribute(required = false)MultipartFile file
 			) {
 		logger.debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 		User user = (User) session.getAttribute("dto1");
-		logger.info("board : {}", photo);
+		logger.info("photo : {}", photo);
 		logger.info("categoryNo : {}", categoryNo);
 		String categoryTitle =  "[";
 		categoryTitle += photoService.getCategoryName(categoryNo);
@@ -203,9 +205,8 @@ public class PhotoController {
 		logger.info("originNames Ȯ�� : {}", originNames);
 		List<String> storedNames = photofileService.extractStoredName(content, originNames);
 		logger.info("storedNames Ȯ�� : {}", storedNames);
-		
 		if (originNames != null && storedNames != null && originNames.size() == storedNames.size() && !originNames.isEmpty() && !storedNames.isEmpty()) {
-			ArrayList<PhotoFile> filesList = new ArrayList<>();
+			ArrayList<PhotoFile> files = new ArrayList<>();
 			logger.info("�̹��� ���� ó���� :%%%%%%%%%%%%%%%%%%%%%%%%%%" );
 		    for (int i = 0; i < originNames.size(); i++) {
 		        String originName = originNames.get(i);
@@ -215,25 +216,25 @@ public class PhotoController {
 		            bf.setBoardNo(photo.getBoardNo());
 		            bf.setOriginName(originName);
 		            bf.setStoredName(storedName);
-		            filesList.add(bf);
+		            files.add(bf);
 		        }
 		    }
-		    photofileService.setFile(filesList);
+		    photofileService.setFile(files);
 		}
         
 		logger.info("photo �� Ȯ�� : {}", photo);
 		
-		
-		// 다중 이미지 출력
-		 for (MultipartFile file : files) {
-		 if (file != null && !file.isEmpty()) { 
-			 photofileService.filesave(photo, file);  //이미지 출력
-		 
-		 }
+		if( null == file ) {
+			logger.debug("÷�� ���� ����");
+		}else if( file.getSize() <= 0 ){
+			logger.debug("������ ũ�Ⱑ 0");
+		}else { 
+//			for( )
+			photofileService.filesave(photo,file);
 		}
-		 return "redirect:/photo/list";
+		
+		return "redirect:/photo/list";
 	}
-	
 	@ResponseBody
 	@PostMapping("/fileupload")
 	public void fileupload(HttpServletResponse response
@@ -257,33 +258,31 @@ public class PhotoController {
 		return files;
 	}
 	
-	 @GetMapping("/update")
-	    public void update(
-	            @RequestParam("boardNo") int boardNo
-	            , Model model
-	            ) {
-	        logger.info("게시물 번호: {}",boardNo);
-	        Photo photo = photoService.boardView(boardNo);
-	        model.addAttribute("photo", photo);
-	    }
+	@GetMapping("/update")
+	public void update(
+			int boardNo
+			, Model model
+			) {
+		logger.info("{}",boardNo);
+		List<Category> categorylist = photoService.categoryList();
+		Photo photo = photoService.boardView(boardNo);
+		model.addAttribute("categorylist", categorylist);
+		model.addAttribute("photo", photo);
+	}
 	 
 	 @PostMapping("/update")
-	    public String updateProc(
-	            Photo photo,
-	            @RequestParam("file") MultipartFile file,
-	            HttpSession session) {
-	        logger.info("게시물 업데이트: {}", photo);
-
-	        int res = photoService.boardUpdate(photo);
-
-	        if (res > 0) {
-	            if (file != null && !file.isEmpty()) {
-	                photofileService.filesave(photo, file);
-	            }
-	            return "redirect:./list";
-	        }
-	        return "./list";
-	    }
+		public String updateProc(
+				Photo photo
+				) {
+			logger.info("{}", photo);
+			photo.setUpdateDate(new Date());
+			int res = photoService.boardUpdate(photo);
+			
+			if ( res > 0) {
+				return "redirect:/photo/list";
+			}
+			return "./list";
+		}
 	 
 	 @RequestMapping("/delete")
 		public String delete(@RequestParam("boardNo") int boardno) {
