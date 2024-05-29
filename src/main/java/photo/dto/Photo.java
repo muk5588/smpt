@@ -6,97 +6,82 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class Photo {
 
-	private int photono;
-	private int boardno;
-	private int categoryno;
-	private int userno;
+	private int boardNo;
+	private int categoryNo;
+	private int userNo;
+	private String nickName;
 	private String title;
 	private String content;
-	private String nickname;
-	private int boardview;
-	private Date createdate;
-	private Date updatedate;
-	private MultipartFile photoFile;
-	private String photoPath;
-	private String filename;
-	private String originalName;
-	private String storedName;
-	
+	private Date createDate;
+	private Date updateDate;
+	private int boardView;
+
 
 	public Photo() {
 		// TODO Auto-generated constructor stub
 	}
 
 
-	public Photo(int photono, int boardno, int categoryno, int userno, String title, String content, String nickname,
-			int boardview, Date createdate, Date updatedate, MultipartFile photoFile, String photoPath, String filename,
-			String originalName, String storedName) {
+	public Photo(int boardNo, int categoryNo, int userNo, String nickName, String title, String content,
+			Date createDate, Date updateDate, int boardView) {
 		super();
-		this.photono = photono;
-		this.boardno = boardno;
-		this.categoryno = categoryno;
-		this.userno = userno;
+		this.boardNo = boardNo;
+		this.categoryNo = categoryNo;
+		this.userNo = userNo;
+		this.nickName = nickName;
 		this.title = title;
 		this.content = content;
-		this.nickname = nickname;
-		this.boardview = boardview;
-		this.createdate = createdate;
-		this.updatedate = updatedate;
-		this.photoFile = photoFile;
-		this.photoPath = photoPath;
-		this.filename = filename;
-		this.originalName = originalName;
-		this.storedName = storedName;
+		this.createDate = createDate;
+		this.updateDate = updateDate;
+		this.boardView = boardView;
 	}
 
 
 	@Override
 	public String toString() {
-		return "Photo [photono=" + photono + ", boardno=" + boardno + ", categoryno=" + categoryno + ", userno="
-				+ userno + ", title=" + title + ", content=" + content + ", nickname=" + nickname + ", boardview="
-				+ boardview + ", createdate=" + createdate + ", updatedate=" + updatedate + ", photoFile=" + photoFile
-				+ ", photoPath=" + photoPath + ", filename=" + filename + ", originalName=" + originalName
-				+ ", storedName=" + storedName + "]";
+		return "Photo [boardNo=" + boardNo + ", categoryNo=" + categoryNo + ", userNo=" + userNo + ", nickName="
+				+ nickName + ", title=" + title + ", content=" + content + ", createDate=" + createDate
+				+ ", updateDate=" + updateDate + ", boardView=" + boardView + "]";
 	}
 
 
-	public int getPhotono() {
-		return photono;
+	public int getBoardNo() {
+		return boardNo;
 	}
 
 
-	public void setPhotono(int photono) {
-		this.photono = photono;
+	public void setBoardNo(int boardNo) {
+		this.boardNo = boardNo;
 	}
 
 
-	public int getBoardno() {
-		return boardno;
+	public int getCategoryNo() {
+		return categoryNo;
 	}
 
 
-	public void setBoardno(int boardno) {
-		this.boardno = boardno;
+	public void setCategoryNo(int categoryNo) {
+		this.categoryNo = categoryNo;
 	}
 
 
-	public int getCategoryno() {
-		return categoryno;
+	public int getUserNo() {
+		return userNo;
 	}
 
 
-	public void setCategoryno(int categoryno) {
-		this.categoryno = categoryno;
+	public void setUserNo(int userNo) {
+		this.userNo = userNo;
 	}
 
 
-	public int getUserno() {
-		return userno;
+	public String getNickName() {
+		return nickName;
 	}
 
 
-	public void setUserno(int userno) {
-		this.userno = userno;
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 
 
@@ -120,93 +105,33 @@ public class Photo {
 	}
 
 
-	public String getNickname() {
-		return nickname;
+	public Date getCreateDate() {
+		return createDate;
 	}
 
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 
 
-	public int getBoardview() {
-		return boardview;
+	public Date getUpdateDate() {
+		return updateDate;
 	}
 
 
-	public void setBoardview(int boardview) {
-		this.boardview = boardview;
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 	}
 
 
-	public Date getCreatedate() {
-		return createdate;
+	public int getBoardView() {
+		return boardView;
 	}
 
 
-	public void setCreatedate(Date createdate) {
-		this.createdate = createdate;
-	}
-
-
-	public Date getUpdatedate() {
-		return updatedate;
-	}
-
-
-	public void setUpdatedate(Date updatedate) {
-		this.updatedate = updatedate;
-	}
-
-
-	public MultipartFile getPhotoFile() {
-		return photoFile;
-	}
-
-
-	public void setPhotoFile(MultipartFile photoFile) {
-		this.photoFile = photoFile;
-	}
-
-
-	public String getPhotoPath() {
-		return photoPath;
-	}
-
-
-	public void setPhotoPath(String photoPath) {
-		this.photoPath = photoPath;
-	}
-
-
-	public String getFilename() {
-		return filename;
-	}
-
-
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
-
-
-	public String getOriginalName() {
-		return originalName;
-	}
-
-
-	public void setOriginalName(String originalName) {
-		this.originalName = originalName;
-	}
-
-
-	public String getStoredName() {
-		return storedName;
-	}
-
-
-	public void setStoredName(String storedName) {
-		this.storedName = storedName;
+	public void setBoardView(int boardView) {
+		this.boardView = boardView;
 	}
 	
 }
