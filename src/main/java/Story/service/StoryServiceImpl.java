@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import board.dto.Board;
 import board.dto.Category;
 import board.dto.Good;
 import board.dto.RecommendRes;
@@ -129,8 +130,8 @@ public class StoryServiceImpl implements StoryService {
 	}
 
 	@Override
-	public List<Comment> commentList(Story story) {
-		return commentDao.selectCommentByBoardNo(story);
+	public List<Comment> commentList(Board board) {
+		return commentDao.selectCommentByBoardNo(board);
 	}
 
 	@Override

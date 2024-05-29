@@ -154,7 +154,7 @@ public class TipController {
 		List<BoardFile> files = fileService.getFilesByBoardNo(boardno); // 파일 리스트 조회 추가 : 이미지 출력
 		model.addAttribute("files", files); // 모델에 파일 리스트 추가 : 이미지 출력
 		
-		List<Comment> comment = storyService.commentList(story);
+		List<Comment> comment = storyService.commentList(board);
 		model.addAttribute("comment", comment);
 		model.addAttribute("recomm", recomm);
 		logger.info("recomm : {}", recomm);
