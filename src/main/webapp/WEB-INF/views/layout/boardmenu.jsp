@@ -17,8 +17,8 @@
         <a href="/">여행지정보</a>
         <ul>
             <li><a href="/story/storylist?categoryNo=11&curPage=${curPage}">여행 이야기 공유</a></li>
-            <li><a href="/board/list?categoryNo=12&curPage=${curPage}">여행 팁 및 권고사항</a></li>
-            <li><a href="/board/list?categoryNo=13&curPage=${curPage}">다양한 여행 목적지 추천</a></li>
+            <li><a href="/tip/tiplist?categoryNo=12&curPage=${curPage}">여행 팁 및 권고사항</a></li>
+            <li><a href="/recomm/recommlist?categoryNo=13&curPage=${curPage}">다양한 여행 목적지 추천</a></li>
         </ul>
     </li>
     <li><a href="/board/list?categoryNo=21&curPage=${curPage}">사진 갤러리 - 여행지 사진</a></li>
