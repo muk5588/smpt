@@ -35,7 +35,7 @@ import java.util.List;
  import java.util.Map;
 
 @Controller
-@RequestMapping("/qanda")
+@RequestMapping("/Free")
 public class FreeController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -66,7 +66,7 @@ public class FreeController {
 	    if (categoryNo != null) {
 	        paging.setCategoryNo(categoryNo);
 	    }
-	    
+	    // 오류수정
 	    if (null !=  search && !"".equals(search)) {
 	        paging = qandaService.getPaging(curPage, paging);
 	    } 
