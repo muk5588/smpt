@@ -93,6 +93,16 @@ public class BasketController {
 		return "/user/userbasket";
 	}
 	
+    // 장바구니에서 상품 삭제
+    @ResponseBody
+    @RequestMapping("/delete")
+    public int deleteBasket(@RequestParam("basketNo") int basketNo) {
+        logger.debug("장바구니에서 상품 삭제");
+
+        int res = basketService.deleteBasket(basketNo);
+
+        return res;
+    }
 	@ResponseBody
 	@RequestMapping("/buyBasket")
 	public int[] buyBasket(@RequestParam("basketNo[]")int[] no
