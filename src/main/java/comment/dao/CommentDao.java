@@ -5,6 +5,8 @@ import comment.dto.Comment;
 
 import java.util.List;
 
+import QandA.dto.QandA;
+
 public interface CommentDao {
 
 	public List<Comment> selectCommentByBoardNo(Board board);
@@ -16,4 +18,5 @@ public interface CommentDao {
 	public void deleteCommentAll(Comment comment);
 
 	public Comment commentByBoardNo(int commno);
+
 }

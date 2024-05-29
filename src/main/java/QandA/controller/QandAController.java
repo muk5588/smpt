@@ -10,7 +10,10 @@ import board.dto.RecommendRes;
 import board.service.BoardService;
  import board.service.FileService;
  import comment.dto.Comment;
- import org.slf4j.Logger;
+import report.dto.CommReport;
+import report.service.ReportService;
+
+import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.stereotype.Controller;
@@ -26,7 +29,9 @@ import board.service.BoardService;
  import javax.servlet.http.HttpServletResponse;
  import javax.servlet.http.HttpSession;
  import java.util.ArrayList;
- import java.util.List;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
  import java.util.Map;
 
 @Controller
@@ -38,6 +43,7 @@ public class QandAController {
 	@Autowired private QandAService qandaService;
 	@Autowired private FileService fileService;
 	@Autowired private ServletContext servletContext;
+	@Autowired private ReportService reportService;
 	
 	@GetMapping("/list")
 	public String list(
@@ -100,7 +106,8 @@ public class QandAController {
 	        recommList = qandaService.getuserRecommendRes(list);
 			name = "전체";
 	    }
-
+	    
+	    
 //	    logger.debug("list : {}", list);
 //	    logger.debug("recommList : {}", recommList);
 	    for(QandA M : list) {
@@ -126,7 +133,6 @@ public class QandAController {
 	public void view(
 			@RequestParam("boardNo") int boardno
 			, Board board
-			, QandA qanda
 			, Model model
 			, HttpSession session
 			, @RequestParam(value="curPage", defaultValue="0") int curPage
@@ -134,7 +140,7 @@ public class QandAController {
 			, @RequestParam(value ="usrno", required = false, defaultValue = "0")int usrno
 			) {
 
-		qanda =  qandaService.viewByBoardNo(boardno);
+		board =  boardService.viewByBoardNo(boardno);
 		User user = (User)session.getAttribute("dto1");
 		int recomm = 0;
 		if( null == user) {
@@ -146,15 +152,24 @@ public class QandAController {
 			logger.info("isRecomm : {}", good.getIsRecomm());
 			recomm = good.getTotalRecomm();
 		}
-		List<BoardFile> files = fileService.getFilesByBoardNo(boardno); // 파일 리스트 조회 추가 : 이미지 출력
-		model.addAttribute("files", files); // 모델에 파일 리스트 추가 : 이미지 출력
-		
-		List<Comment> comment = qandaService.commentList(qanda);
+		List<Comment> comment = boardService.commentList(board);
+//		신고된 댓글 블러 처리
+		List<CommReport> reportlist = reportService.reportcommlist();
+		Iterator<Comment> iterator = comment.iterator();
+		while (iterator.hasNext()) {
+			Comment comment2 = iterator.next();
+			for (CommReport report : reportlist) {
+				if (report.getCommNo() == comment2.getCommNo()) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
 		model.addAttribute("comment", comment);
 		model.addAttribute("recomm", recomm);
 		logger.info("recomm : {}", recomm);
 		model.addAttribute("curPage", curPage);
-		model.addAttribute("qanda", qanda);
+		model.addAttribute("board", board);
 		model.addAttribute("usrno",usrno);
 	}
 	
@@ -164,12 +179,13 @@ public class QandAController {
 		model.addAttribute("categorylist", categorylist);
 	}
 	
+	///========좌표1
 	@PostMapping("/write")
 	public String writeProc(
 			HttpSession session
 			, Board board
 			, @RequestParam("categoryNo") int categoryNo
-			, @RequestParam("files") List<MultipartFile> files	//다중 이미지 첨부 
+			, @RequestAttribute(required = false)MultipartFile file	//다중 이미지 첨부 
 			) {
 		logger.debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 		User user = (User) session.getAttribute("dto1");
@@ -193,7 +209,7 @@ public class QandAController {
 		logger.info("storedNames Ȯ�� : {}", storedNames);
 		
 		if (originNames != null && storedNames != null && originNames.size() == storedNames.size() && !originNames.isEmpty() && !storedNames.isEmpty()) {
-			ArrayList<BoardFile> filesList = new ArrayList<>();
+			ArrayList<BoardFile> files = new ArrayList<>();
 			logger.info("�̹��� ���� ó���� :%%%%%%%%%%%%%%%%%%%%%%%%%%" );
 		    for (int i = 0; i < originNames.size(); i++) {
 		        String originName = originNames.get(i);
@@ -203,30 +219,29 @@ public class QandAController {
 		            bf.setBoardNo(board.getBoardNo());
 		            bf.setOriginName(originName);
 		            bf.setStoredName(storedName);
-		            filesList.add(bf);
+		            files.add(bf);
 		        }
 		    }
-		    fileService.setFile(filesList);
+		    fileService.setFile(files);
 		}
         
 		logger.info("board �� Ȯ�� : {}", board);
 		
-		
-		// 다중 이미지 출력
-		 for (MultipartFile file : files) {
-		 if (file != null && !file.isEmpty()) { 
-			 fileService.filesave(board, file);  //이미지 출력
-		 
-		 }
+		if( null == file ) {
+			logger.debug("÷�� ���� ����");
+		}else if( file.getSize() <= 0 ){
+			logger.debug("������ ũ�Ⱑ 0");
+		}else { 
+//			for( )
+			fileService.filesave(board,file);
 		}
-		
 		
 		 return "redirect:/qanda/list?categoryNo=" + categoryNo; // 글작성 시 선택한 카테고리 목록으로 이동.
 	}
 	
 	
 	
-	
+	///========좌표2
 	@ResponseBody
 	@PostMapping("/fileupload")
 	public void fileupload(HttpServletResponse response
@@ -250,33 +265,33 @@ public class QandAController {
 		return files;
 	}
 	
-	 @GetMapping("/update")
-	    public void update(
-	            @RequestParam("boardNo") int boardNo
-	            , Model model
-	            ) {
-	        logger.info("게시물 번호: {}",boardNo);
-	        Board board = boardService.boardView(boardNo);
-	        model.addAttribute("board", board);
-	    }
+	@GetMapping("/update")
+	public void update(
+			int boardNo
+			, Model model
+			) {
+		logger.info("{}",boardNo);
+		List<Category> categorylist = boardService.categoryList();
+		Board board = boardService.boardView(boardNo);
+		model.addAttribute("categorylist", categorylist);
+		model.addAttribute("board", board);
+	}
+	
+	///========좌표3
+	@PostMapping("/update")
+	public String updateProc(
+			Board board
+			) {
+		logger.info("{}", board);
+		board.setUpdateDate(new Date());
+		int res = boardService.boardUpdate(board);
+		
+		if ( res > 0) {
+			return "redirect:/board/list";
+		}
+		return "./list";
+	}
 
-	    @PostMapping("/update")
-	    public String updateProc(
-	            Board board,
-	            @RequestParam("file") MultipartFile file,
-	            HttpSession session) {
-	        logger.info("게시물 업데이트: {}", board);
-
-	        int res = boardService.boardUpdate(board);
-
-	        if (res > 0) {
-	            if (file != null && !file.isEmpty()) {
-	                fileService.filesave(board, file);
-	            }
-	            return "redirect:./list";
-	        }
-	        return "./list";
-	    }
 	
 	@RequestMapping("/delete")
 	public String delete(@RequestParam("boardNo") int boardno) {
@@ -404,7 +419,7 @@ public class QandAController {
 	}
 
 	@RequestMapping("/userbyrecommlist")
-	public void userbyRecommList(@SessionAttribute(value = "dto1", required = false) User login,
+	public String userbyRecommList(@SessionAttribute(value = "dto1", required = false) User login,
 								 @RequestParam(defaultValue ="0") int curPage, Model model
 								,@RequestParam(value="search",required = false) String search
 								,@RequestParam(value="searchKind", required = false ) String searchKind){
@@ -421,6 +436,7 @@ public class QandAController {
 		}
 		//게시글 없는 경우
 		if( paging == null ) {
+			paging = new Paging();
 			paging.setSearch(search);
 			paging.setSearchKind(searchKind);
 			paging.setUserno(login.getUserno());
@@ -429,9 +445,17 @@ public class QandAController {
 		paging.setSearchKind(searchKind);
 		paging.setUserno(login.getUserno());
 		List<Board> list2 = boardService.userbyrecommList(paging);
-
+		if( list2 == null ) {
+			model.addAttribute("curPage", curPage);
+			model.addAttribute("paging", paging);
+			model.addAttribute("param", login);
+			logger.debug("paramparamparamparam: {}", login);
+			return "board/userbyboardlist";
+		}
 		model.addAttribute("list2", list2);
 		model.addAttribute("paging", paging);
+		model.addAttribute("curPage", curPage);
+		return "board/userbyrecommlist";
 	}
 	
 	@RequestMapping("/fileDown")

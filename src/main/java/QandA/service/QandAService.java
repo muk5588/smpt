@@ -9,6 +9,7 @@ import vo.GoodVO;
 
 import javax.servlet.http.HttpSession;
 
+import board.dto.Board;
 import board.dto.Category;
 import board.dto.Good;
 import board.dto.RecommendRes;
@@ -70,7 +71,7 @@ public interface QandAService {
 
 	public int viewRecommend(int boardno);
 
-	public List<Comment> commentList(QandA qanda);
+	public List<Comment> commentList(Board board);
 
 	public int commentInsert(Comment comment);
 
