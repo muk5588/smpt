@@ -1,15 +1,10 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<c:import url="/WEB-INF/views/layout/header.jsp"/>
-    <link href="/resources/css/board/boardView.css" rel="stylesheet" type="text/css">
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+<link href="/resources/css/board/boardView.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <style type="text/css">
 
     /* .wrap {
@@ -68,18 +63,20 @@
 
 </style>
 <script type="text/javascript">
+
     $(function () {
 
         $(document).ready(function () {
             //HTML전체 로딩이 끝나면 댓글을 비동기통신으로 가져오기 위해.
 //             handleGetFile();
             handleFileChk();
+            handleCommentDelete();
             $("#commentRefresh").click()
             if (${empty isRecomm or isRecomm eq 0}) {
-               $(".cancle").toggle()
+                $(".cancle").toggle()
             }
             if (${not empty isRecomm and isRecomm eq 1}) {
-               $(".do").toggle()
+                $(".do").toggle()
             }
 
         })
@@ -110,11 +107,11 @@
                     $(".do").toggle()
                     $(".cancle").toggle()
 
-//                     if (res) {
-//                         $(function () {
-//                             $(location).attr('href', './view?boardNo=${board.boardNo }')
-//                         })
-//                     }
+                    if (res) {
+                        $(function () {
+                            $(location).attr('href', './view?categoryNo=${board.categoryNo}&boardNo=${photo.boardNo }')
+                        })
+                    }
                 }
                 , error: function () {
                     console.log("AJAX 실패")
@@ -144,7 +141,7 @@
                 , url: "/comment/insert"
                 , data: {
                     boardNo: ${photo.boardNo}
-                    , userno: $("#userid").val()
+                    , userNo: $("#userid").val()
                     , commContent: $("#commentContent").val()
                 }
                 , dataType: "json"
@@ -153,7 +150,7 @@
 
                     if (res) {
                         $(function () {
-                            $(location).attr('href', './view?categoryNo=${param.categoryNo}&boardNo=${photo.boardNo }')
+                            $(location).attr('href', './view?categoryNo=${photo.categoryNo}&boardNo=${photo.boardNo }')
                         })
                     }
 
@@ -164,118 +161,67 @@
             })
 
         })
-	
-	          function handleCommentDelete() {
-	       $(".commentDelete").click(function () {
-	        console.log(".commentDelete Click")
-	        var value = $(this).attr('value')
-	        console.log(".commentDelete Click", value)
-	
-	        $.ajax({
-	            type: "get",
-	            url: "../comment/delete",
-	            data: {   //수정완료
-	                commNo: value,
-	                boardNo: ${photo.boardNo}
-	            },
-	            dataType: "json",
-	            success: function (res) {
-	                console.log("AJAX 성공")
-	
-	                if (res) {
-	                    $(function () {
-	                        $(location).attr('href', './view?categoryNo=${param.categoryNo}&boardNo=${photo.boardNo}')
-	                    })
-	                }
-	            },
-	            error: function () {
-	                console.log("AJAX 실패")
-	            }
-	        })
-	    })
-	}
 
-      $(document).ready(function () {
-       handleCommentDelete();
-      })
-
-      
-    
-
-      
-  });
-      
-      
-      
-      
-	    
-      
-      
-      
-      
-        
-        function handleFileChk() {
-                console.log("handleFileChk")
+        function handleCommentDelete() {
+            $(".commentDelete").click(function () {
+                console.log(".commentDelete Click")
+                var value = $(this).attr('value')
+                console.log(".commentDelete Click", value)
 
                 $.ajax({
                     type: "get"
-                    , url: "./fileChk"
+                    , url: "/comment/delete"
                     , data: {
-                        boardno: ${photo.boardNo}
+                        boardNo: ${photo.boardNo}
+                        , commNo: value
                     }
                     , dataType: "json"
                     , success: function (res) {
                         console.log("AJAX 성공")
-                        console.log(res)
-                        console.log(res[0].fileNo)
-                        if( res.length > 0 ){
-                        var fileList = "";
-                        fileList += '<p>첨부파일</p><br>'
-                           for(var i=0;  res.length >i ; i++){
-                        fileList += '<a href="./fileDown?fileNo=' + res[i].fileNo + '">' + res[i].originName + '<br>';
-                           }
-                           
-                        $("#fileDown").html(fileList);
-                        }
 
+                        if (res) {
+                            $(function () {
+                                $(location).attr('href', './view?categoryNo=${param.categoryNo}&boardNo=${photo.boardNo }')
+                            })
+                        }
                     }
                     , error: function () {
                         console.log("AJAX 실패")
                     }
                 })
 
+            })
         }
 
-        
         function handleFileChk() {
-                console.log("handleFileChk")
+            console.log("handleFileChk")
 
-                $.ajax({
-                    type: "get"
-                    , url: "./fileChk"
-                    , data: {
-                        boardno: ${photo.boardNo}
-                    }
-                    , dataType: "json"
-                    , success: function (res) {
-                        console.log("AJAX 성공")
-                        console.log(res)
-                        console.log(res[0].fileNo)
-                        if( res.length > 0 ){
+            $.ajax({
+                type: "get"
+                , url: "./fileChk"
+                , data: {
+                    boardno: ${photo.boardNo}
+                }
+                , dataType: "json"
+                , success: function (res) {
+                    console.log("AJAX 성공")
+                    console.log(res)
+//                     console.log(res[0].fileNo)
+                    if (res.length > 0) {
                         var fileList = "";
-                        fileList += '<p>첨부파일</p><br>'
-	                        for(var i=0;  res.length >i ; i++){
-								fileList += '<a href="./fileDown?fileNo=' + res[i].fileNo + '">' + res[i].originName + '<br>';
-	                        }
-	                        
-	        			    $("#fileDown").html(fileList);
+                        fileList += '<p>첨부파일: '
+                        for (var i = 0; res.length > i; i++) {
+                            fileList += '<a href="./fileDown?fileNo=' + res[i].fileNo + '">' + res[i].originName + '<br>';
                         }
+                        fileList += '</p>'
+                        $("#fileDown").html(fileList);
+                    }
 
-                    }
-                    , error: function () {
-                        console.log("AJAX 실패")
-                    }
-                })
+                }
+                , error: function () {
+                    console.log("AJAX 실패")
+                }
+            })
 
         }
 
@@ -301,54 +247,39 @@
         }
 
 
-    
-    
-    
-    
-    
-    
-    $(function () {
-        // 게시물 공유 함수
-        function sharePost() {
-            var postUrl = ""; // 게시물 URL을 여기에 할당
-            var postTitle = ""; // 게시물 제목을 여기에 할당
-            if (navigator.share) {
-                navigator.share({
-                    title: postTitle,
-                    text: '게시물을 공유합니다.',
-                    url: postUrl
-                })
-                .then(() => console.log('게시물 공유됨'))
-                .catch((error) => console.error('게시물 공유 실패', error));
-            } else {
-                console.error('Web Share API를 지원하지 않습니다.');
-            }
-        }
-
-        // 페이지 로드 시 실행될 함수
-        $(document).ready(function () {
-            // 댓글 갱신 버튼 클릭
-            $("#commentRefresh").click();
-            // 추천 여부에 따라 버튼 표시 설정
-            if (${empty isRecomm or isRecomm eq 0}) {
-                $(".cancle").toggle();
-            }
-            if (${not empty isRecomm and isRecomm eq 1}) {
-                $(".do").toggle();
-            }
-        });
-
-        // 게시물 공유 버튼 클릭 시 sharePost() 함수 호출
-        $("#sharePostButton").click(function () {
-            sharePost();
-        });
-    });
-    
-    
-   
+    })
 </script>
+
+<script type="text/javascript">
+$(function () {
+    // 게시물 공유 함수
+    function sharePost() {
+    	  var postUrl = ""; // 게시물 URL을 여기에 할당
+          var postTitle = ""; // 게시물 제목을 여기에 할당
+        if (navigator.share) {
+            navigator.share({
+                title: postTitle,
+                text: '게시물을 공유합니다.',
+                url: postUrl
+            })
+            .then(() => console.log('게시물 공유됨'))
+            .catch((error) => console.error('게시물 공유 실패', error));
+        } else {
+            console.error('Web Share API를 지원하지 않습니다.');
+        }
+    }
+
+    // 게시물 공유 버튼 클릭 시 sharePost() 함수 호출
+    $("#sharePostButton").click(function () {
+        sharePost();
+    });
+});
+</script>
+
 </head>
 <body>
+<c:import url="/WEB-INF/views/layout/header.jsp"/>
+
 <!-- wrap 때문에 container가 반응형 X로 바뀜 -->
 <div class="wrap mx-auto">
 
@@ -359,57 +290,72 @@
     <div class="container">
 
         <h1>상세보기</h1>
-
-
-
-        <c:choose>
-            <c:when test="${usrno != 0 }">
-                <a href="./userbyboardlist?userno=${dto1.userno}">
-                    <button>목록으로</button>
-                </a>
-            </c:when>
-            <c:otherwise>
-                <a href="./list?categoryNo=${param.categoryNo}&curPage=${curPage}">
-                    <button>목록으로</button>
-                </a>
-            </c:otherwise>
-        </c:choose>
-        <c:if test="${isLogin > 0 and photo.userNo == dto1.userno }">
-            <a href="./update?boardNo=${photo.boardNo }">
-                <button id="btnUpdate">수정</button>
-            </a>
-            <a href="./delete?boardNo=${photo.boardNo }">
-                <button id="btnDelete">삭제</button>
-            </a>
-        </c:if>
-
+        <div class="tit">
+            <div>
+                <c:choose>
+                    <c:when test="${usrno != 0 }">
+                        <a href="./userbyboardlist?userno=${dto1.userno}">
+                            <button>목록으로</button>
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="./list?categoryNo=${param.categoryNo}&curPage=${curPage}">
+                            <button>목록으로</button>
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+                <c:if test="${photo.userNo == dto1.userno }">
+                    <a href="./update?boardNo=${photo.boardNo }">
+                        <button id="btnUpdate">수정</button>
+                    </a>
+                    <a href="./delete?boardNo=${photo.boardNo }">
+                        <button id="btnDelete">삭제</button>
+                    </a>
+                </c:if>
+            </div>
+            <div>
+                <c:if test="${isLogin > 0}">
+                    <div id="reBtn">
+                        <div class="recommendBtn doRedomm">
+                            <c:if test="${empty isRecomm or isRecomm eq 0 }">
+                                    <a class="doRecomm do"><img src="/resources/img/board/개추.png" height="13" width="15">${recomm }</a>
+                            </c:if>
+                            <c:if test="${not empty isRecomm and isRecomm eq 1 }">
+                                    <a class="doRecomm cancel" style="background: #1e73be; color: white; border: none; padding: 0.5em 1em; text-align: center"><img src="/resources/img/board/개추.png" height="15" width="15">${recomm }</a>
+                            </c:if>
+                            <button onclick="location.href='../report/boardReport?categoryNo=${param.categoryNo}&boardno=${photo.boardNo}'">
+                                신고하기
+                            </button>
+                        </div>
+                    </div>
+                </c:if>
+            </div>
+        </div>
         <hr>
         
-           <div class="share-button">
-            <button id="sharePostButton">게시물 공유하기</button>
-        </div>
+         
+      <div class="share-button">
+    	<button id="sharePostButton">게시물 공유하기</button>
+		</div>
 
         <div id="file"></div>
-        <table class="table table-striped table-hover table-sm">
+        <table class="table">
+            <tr>
+                <td colspan="6">
+                    <div id="fileDown"></div>
+                </td>
+            </tr>
             <tr>
                 <th>글 번호</th>
                 <th>제목</th>
-                <th>본문</th>
-                <th>작정자닉네임</th>
+                <th>작성자</th>
                 <th>조회수</th>
-                <th>최초작성일</th>
+                <th>작성일</th>
                 <th>추천수</th>
             </tr>
-
-            <tr>
-            	<td>
-            		<div id="fileDown"></div>
-            	</td>
-            </tr>
-            <tr>
+            <tr class="con">
                 <td class="no">${photo.boardNo }</td>
                 <td class="title">${photo.title }</td>
-                <td class="content">${photo.content }</td>
                 <td class="nick">${photo.nickName }</td>
                 <td class="hit">${photo.boardView }</td>
                 <td class="date">
@@ -417,27 +363,17 @@
                 </td>
                 <td><a id="totalRecommend">${recomm }</a></td>
             </tr>
+            <tr>
+                <th colspan="6">본문</th>
+            </tr>
+            <tr class="con">
+                <td class="content" colspan="6">${photo.content }</td>
+            </tr>
         </table>
-        <c:if test="${isLogin > 0}">
-            <div id="reBtn">
-                <div class="recommendBtn doRedomm">
-                <c:if test="${empty isRecomm or isRecomm eq 0 }">
-                    <a>
-                        <button class="doRecomm do">추천하기</button>
-                    </a>
-                </c:if>
-                <c:if test="${not empty isRecomm and isRecomm eq 1 }">
-                    <a>
-                        <button class="doRecomm cancel">추천취소하기</button>
-                    </a>
-                </c:if>
-                </div>
-            </div>
-            <button onclick="location.href='../report/boardReport?categoryNo=${param.categoryNo}&boardno=${photo.boardNo}'"> 신고하기</button>
-        </c:if>
+
         <hr>
         <div class="comment">
-            <table border="1px" style="width: 80%; text-align: center;">
+            <table>
                 <tr>
                     <th>댓글 순번</th>
                     <th>작성자</th>
@@ -446,50 +382,65 @@
                     <c:if test="${isLogin > 0}">
                         <th>신고하기</th>
                     </c:if>
-                    <th>삭제</th>
+                    <c:if test="${photo.userNo == dto1.userno }">
+                        <th>삭제</th>
+                    </c:if>
                 </tr>
-                <c:forEach var="comment" items="${comment }">
-                    <tr>
-                        <td class="no">${comment.commNo}</td>
-                        <td>${comment.nickName }</td>
-                        <td>${comment.commContent }</td>
-                        <td>
-                            <fmt:formatDate value="${comment.commDate }" pattern="yyyy-MM-dd"/>
+                <c:choose>
+                    <c:when test="${not empty comment }">
+                        <c:forEach var="comment" items="${comment }">
+                            <tr>
+                                <td class="no">${comment.commNo}</td>
+                                <td>${comment.nickName }</td>
+                                <td>${comment.commContent }</td>
+                                <td>
+                                    <fmt:formatDate value="${comment.commDate }" pattern="yyyy-MM-dd"/>
+                                </td>
+                                <c:if test="${isLogin > 0}">
+                                    <td class="rpt">
+                                        <a href='../report/commentReport?commno=${comment.commNo}'>
+                                            <img src="/resources/img/board/신고.jpg" height="30" width="30">
+                                        </a>
+                                    </td>
+                                </c:if>
+                                <c:if test="${dto1.userno == comment.userNo }">
+                                    <td>
+                                        <button class="commentDelete" value="${comment.commNo}">삭제</button>
+                                    </td>
+                                </c:if>
+                            </tr>
+                        </c:forEach>
+
+                    </c:when>
+                    <c:when test="${empty comment }">
+                        <td colspan="7">
+                            댓글이 존재하지 않습니다
                         </td>
-                        <c:if test="${isLogin > 0}">
-                            <td><a href='../report/commentReport?commno=${comment.commNo}'><button> 댓글신고하기</button></a></td>
-                        </c:if>
-                       <c:if test="${isLogin > 0 and photo.userNo == comment.userNo }">
-                            <td>
-                                <button class="commentDelete" value="${comment.commNo}">삭제</button>
-                            </td>
-                        </c:if>
-                    </tr>
-                </c:forEach>
+                    </c:when>
+                </c:choose>
             </table>
         </div>
+        <hr>
+        <br>
         <c:if test="${isLogin > 0}">
             <div id="commentInput">
-                <hr>
-                <br>
                 <table>
+                    <tr hidden="hidden">
+                        <td><input type="text" value="${dto1.userno }" id="userid" name="userid"></td>
+                    </tr>
                     <tr>
-                        <th></th>
                         <th>닉네임</th>
                         <th>댓글내용</th>
                     </tr>
                     <tr>
-                        <td><input type="hidden" value="${dto1.userno }" id="userid" name="userid"></td>
                         <td><input class="form-control" type="text" value="${dto1.nickname }" id="commentWriter"
                                    aria-label="Disabled input example" disabled style="text-align: center;"></td>
                         <td>
                             <input name="commentContent" id="commentContent">
                         </td>
-                        <td>
-                            <button id="insertBtn"> 댓글 작성</button>
-                        </td>
                     </tr>
                 </table>
+                <button id="insertBtn"> 댓글 작성</button>
             </div>
         </c:if>
         <!-- 	  - 로그인아이디, 댓글 입력 창, 입력 버튼 생성 -->
@@ -502,4 +453,3 @@
 
 
 <c:import url="/WEB-INF/views/layout/footer.jsp"/>
-
