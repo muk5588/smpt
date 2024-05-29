@@ -3,6 +3,8 @@ package shop.service.face;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.ui.Model;
+
 import dto.Basket;
 import dto.Item;
 import dto.ItemFile;
@@ -45,5 +47,11 @@ public interface BasketService {
 	public Map<String, Object> userorderProc(int[] no);
 
 	public int deleteBasket(int basketNo);
+    /**
+     * 장바구니에서 선택된 상품들을 구매 처리하는 메서드
+     * @param basketNos 선택된 장바구니 번호 목록
+     * @return 구매 처리 결과
+     */
+    public String buyItems(List<Integer> basketNos, Model model);
 
 }
