@@ -21,7 +21,7 @@
             <li><a href="/board/list?categoryNo=13&curPage=${curPage}">다양한 여행 목적지 추천</a></li>
         </ul>
     </li>
-    <li><a href="/board/list?categoryNo=21&curPage=${curPage}">사진 갤러리 - 여행지 사진</a></li>
+    <li><a href="/photo/list?categoryNo=21&curPage=${curPage}">사진 갤러리 - 여행지 사진</a></li>
     <li class="menu">
         <a href="/board/list?categoryNo=31&curPage=${curPage}">지역별 여행</a>
         <ul>
