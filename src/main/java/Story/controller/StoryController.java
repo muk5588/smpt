@@ -105,9 +105,12 @@ public class StoryController {
 
 //	    logger.debug("list : {}", list);
 //	    logger.debug("recommList : {}", recommList);
-	    for(Story M : list) {
-//			logger.debug("!!@!@!@M : {}", M); 
+	    // 각 스토리에 이미지 출력: 파일 리스트를 추가
+	    for (Story story : list) {
+	        List<BoardFile> files = fileService.getFilesByBoardNo(story.getBoardNo());
+	        story.setFiles(files);
 	    }
+
 	    for(Map<String, Object> M : recommList) {
 //	        logger.debug("M : {}", M.toString());
 	    }
