@@ -11,18 +11,19 @@
 	width: 55px;
 	height: 55px;
 	cursor: pointer;
+	margin-top: 21px;
 }
-
+ 
 .Header-Name{
 	width: 100%;
-	height: 150px;
+	height: 95px;
 	text-align: center;
-	margin-top: 25px;
+	margin-top: 50px;
 	margin-bottom: 25px;
 }
 
 img.site-Img{
-	margin-top:35px;
+	margin-top:5px;
 }
 
 .Site-Name{
@@ -142,6 +143,7 @@ img.site-Img{
     text-align: center;
     padding: 50px 0;
     border-radius: 12px;
+    border: 1px solid black;
     float: right;
 }
 .login-button{
@@ -158,7 +160,7 @@ img.site-Img{
     clear: both;
     float: right;
     width: 300px;
-    height: 200px;
+    height: 205px;
 }
 .icon {
     float: left; /* 왼쪽 정렬 */

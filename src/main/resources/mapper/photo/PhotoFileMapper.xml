@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="photo.dao.PhotoFileDao">
+
+
+	<insert id="insert" parameterType="photo.dto.PhotoFile">
+		<selectKey resultType="int" order="BEFORE" keyProperty="fileNo">
+			SELECT boardfile_seq.nextval FROM dual
+		</selectKey>
+		INSERT INTO boardfile( fileno, boardno, origin_name, stored_name)
+		VALUES( #{fileNo}, #{boardNo}, #{originName}, #{storedName})
+	</insert>
+	
+	
+	<insert id="setFile" parameterType="java.util.ArrayList">
+        INSERT into boardfile(fileno, boardno, origin_name, stored_name)
+        SELECT boardfile_seq.nextval, D.* FROM ( 
+        <foreach collection="files" item="file" separator="UNION ALL ">
+        <![CDATA[
+        	SELECT
+            #{file.boardNo} AS boardNo
+            ,#{file.originName} AS origin_name
+            ,#{file.storedName} AS stored_name
+        FROM DUAL]]>
+        </foreach>
+        ) D
+	</insert>
+
+	<select id="getFileList" parameterType="int" resultType="PhotoFile">
+	SELECT FILENO,BOARDNO,ORIGIN_NAME,STORED_NAME FROM BOARDFILE 
+	WHERE BOARDNO = #{boardNo}
+	</select>
+
+	<delete id="listDeleteByBoardNo" parameterType="java.util.ArrayList">
+		DELETE FROM boardFILE
+		<where>
+		BOARDNO in 
+		<foreach collection="arr" item="data" open="(" close=")" separator="," >
+			#{data}
+		</foreach>
+		</where>
+	</delete>
+	
+	<select id="getFilesByBoardNo" parameterType="int" resultType="PhotoFile">
+		SELECT FILENO,BOARDNO,origin_name, stored_name
+		FROM boardfile
+		WHERE  BOARDNO = #{boardno}
+	</select>
+	
+	<select id="getFileByFileNo" parameterType="int" resultType="PhotoFile">
+	SELECT FILENO,BOARDNO,ORIGIN_NAME,STORED_NAME FROM BOARDFILE 
+	WHERE FILENO = #{fileNo}
+	</select>
+
+	<select id="getFileCnt" parameterType="int" resultType="int">
+		SELECT count(*) FROM
+		(
+			SELECT FILENO,BOARDNO,origin_name, stored_name
+			FROM boardfile
+			WHERE  BOARDNO = #{boardno}
+		)
+	</select>
+	
+	<select id="getFile" parameterType="int" resultType="int">
+		SELECT FILENO,BOARDNO,origin_name, stored_name
+		FROM boardfile
+		WHERE  BOARDNO = #{boardno}
+	</select>
+
+</mapper>

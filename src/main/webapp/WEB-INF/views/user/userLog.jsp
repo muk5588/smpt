@@ -19,7 +19,6 @@
     <style type="text/css">
         /* 전체 페이지 스타일 */
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
@@ -132,6 +131,8 @@
     </style>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+
 <div class="container">
     <div class="table-container">
         <div class="table-wrapper">
@@ -156,7 +157,8 @@
                     </tr>
                 </c:forEach>
             </table>
-            <c:import url="/WEB-INF/views/layout/userLogPaging.jsp"/>
+<%--             <c:import url="/WEB-INF/views/layout/userLogPaging.jsp"/> --%>
+	           <c:import url="/WEB-INF/views/layout/adminPaging.jsp" />
         </div>
     </div>
 </div>

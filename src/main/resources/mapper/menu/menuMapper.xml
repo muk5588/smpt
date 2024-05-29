@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="menu.dao.MenuDao">
+
+<sql id="search">
+<if test="search != null and searchKind != null">
+	<choose>
+	 <when test="searchKind.equals('nickName')">
+		AND nickName Like '%' || #{search} || '%'
+	 </when>
+	 <when test="searchKind.equals('userno')">
+		AND TO_CHAR(userno) Like '%${search}%'
+	 </when>
+	</choose>
+</if>
+</sql>
+
     <select id="menuList" resultType="Menu">
         select userno, nickname, g.gradename, g.comm
         from usertb u
@@ -20,7 +34,7 @@
     <update id="menuUpdate" parameterType="User">
         UPDATE usertb
         SET GRADENO = #{gradeno}
-        WHERE userno = #{userno }
+        WHERE userno = #{userno}
     </update>
     <select id="categoryList" resultType="Menu">
         select CATEGORYNO, CATEGORYNAME, g.gradename, g.comm
@@ -43,6 +57,48 @@
         SET GRADENO = #{gradeNo}
         WHERE CATEGORYNO = #{categoryNo }
     </update>
+    
+    <select id="getPaging" parameterType="util.UserPaging" resultType="int">
+		select count(*) from (
+			SELECT userno, nickname FROM usertb
+			<where>
+				<include refid="search" />
+				and gradeno <![CDATA[ < 5000 ]]>
+			</where>
+		)
+    </select>
+    
+   	<select id="menuListByPaging" parameterType="util.UserPaging" resultType="menu.dto.Menu">
+        SELECT *
+        FROM (
+        SELECT rownum AS rnum, u.*
+        FROM (
+        SELECT userno,
+        userid,
+        name,
+        NICKNAME,
+        GENDER,
+        gradeno,
+        black,
+        (SELECT GRADENAME FROM GRADE g WHERE u.gradeno = g.GRADENO) AS GRADENAME,
+        (SELECT COMM FROM GRADE g WHERE u.gradeno = g.GRADENO) AS COMM
+        FROM usertb u
+	        <where>
+	            and gradeno <![CDATA[ < 5000 ]]>
+				<include refid="search" />
+	        </where>
+			order by userno
+			)u
+		)
+		<where>
+			and rnum between #{startNo} and #{endNo}
+		</where>
+	</select>
+	
+	
+	
+	
+	
 </mapper>
 
 

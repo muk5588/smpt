@@ -6,6 +6,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import user.dao.UserDao;
 import user.dto.User;
+import util.UserPaging;
 
 import javax.mail.internet.MimeMessage;
 import java.util.List;
@@ -41,12 +42,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void userDelete(User dto) {
         userDao.userDelete(dto);
-    }
-
-    @Override
-    public int passChk(User dto) {
-        int result = userDao.passChk(dto);
-        return result;
     }
 
     @Override
@@ -120,6 +115,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void whiteUser(Long no) {
 		userDao.whiteUser(no);
+	}
+
+	@Override
+	public UserPaging getUserListPaging(UserPaging paging, int curPage) {
+		int totalCount = userDao.getUserListPaging(paging);
+		UserPaging pagingres = new UserPaging(totalCount, curPage);
+		return pagingres;
+	}
+
+	@Override
+	public List<User> userPagingList(UserPaging paging) {
+		return userDao.userPagingList(paging);
 	}
 
 

@@ -2,53 +2,371 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="photo.dao.PhotoDao">
 
-     <sql id="selectPhotoColumns">
-        photoNo, title, content, nickname, boardView, createDate, updateDate
-    </sql>
+     
+  <sql id="selectPhoto">
+		SELECT 
+			boardno, userno,  title, content, nickname, createdate, boardview, CATEGORYNO
+		FROM board
+	</sql>
+		
+	<sql id="search">
+				<if test="search != null and searchKind != null">
+				<choose>
+				 <when test="searchKind.equals('title')">
+					WHERE title Like '%${search}%'
+				 </when>
+				 <when test="searchKind.equals('content')">
+					WHERE content Like '%${search}%'
+				 </when>
+				</choose>
+				</if>
+	</sql>
+	
+	<sql id="searchAND">
+				<if test="search != null and searchKind != null">
+				<choose>
+				 <when test="searchKind.equals('title')">
+					AND title Like '%${search}%'
+				 </when>
+				 <when test="searchKind.equals('content')">
+					AND content Like '%${search}%'
+				 </when>
+				</choose>
+				</if>
+	</sql>
+	
+	<select id="boardList" parameterType="int" resultType="Photo">
+		SELECT C.* FROM(
+		SELECT b.*, rownum rnum FROM (
+		SELECT * FROM board
+		WHERE userNo = #{userNo}
+		ORDER BY boardNo desc
+		)b
+		)C
+		WHERE rnum BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectAll" resultType="Photo" parameterType="util.Paging">
+		SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				<include refid="selectPhoto" />
+				<include refid="search"/>
+				ORDER BY boardno DESC
+			) B
+		)
+		<where>
+			AND rnum BETWEEN #{startNo } AND #{endNo}
+		</where>
+		
+	</select>
+	
+	<select id="selectCntAll" resultType="int" parameterType="util.Paging">
+		SELECT count(*) FROM (
+			<include refid="selectPhoto" />
+			<where>
+				<include refid="searchAND"/>
+	           	<if test="categoryNo != null and !categoryNo.equals('')">
+	   				AND categoryNo = #{categoryNo}
+				</if>
+	        </where>
+		)
+	</select>
+	
+	<select id="listByCategory" parameterType="util.Paging" resultType="photo.dto.Photo">
+    SELECT * FROM (
+    SELECT rownum rnum, B.* FROM (
+    <include refid="selectPhoto"/>
+    <where>
+        AND categoryno = #{categoryNo}
+        <choose>
+            <when test="searchKind != null and searchKind.equals('title')">
+                AND TITLE Like '%${search}%'
+            </when>
+            <when test="searchKind != null and searchKind.equals('content')">
+                AND CONTENT Like '%${search}%'
+            </when>
+        </choose>
+    </where>
+    ORDER BY boardno DESC
+    ) B
+    )
+    <where>
+        AND rnum BETWEEN #{startNo } AND #{endNo}
+    </where>
+</select>
 
-    <select id="selectAll" resultType="Photo" parameterType="util.Paging">
-        SELECT * FROM (
-            SELECT rownum AS rnum, p.* FROM (
-                SELECT 
-                    <include refid="selectPhotoColumns"/>
-                FROM photo
-                ORDER BY photono DESC
-            ) p
-        )
-        WHERE rnum BETWEEN #{startNo} AND #{endNo}
-    </select>
-
-    <select id="selectCntAll" resultType="int">
-        SELECT count(*) FROM photo
-    </select>
-
-    <insert id="insert" parameterType="photo.dto.Photo">
-    INSERT INTO photo (photono, title, content, nickname, boardview, createDate, updateDate)
-    VALUES (photo_seq.nextval, #{title}, #{content}, #{nickname}, #{boardview}, sysdate, sysdate)
-</insert>
-
-    <delete id="delete" parameterType="int">
-        DELETE FROM photo WHERE photono = #{photono}
-    </delete>
-
-    <select id="selectByPhotoNo" resultType="Photo" parameterType="int">
-        SELECT 
-            <include refid="selectPhotoColumns"/>
-        FROM photo
-        WHERE photono = #{photoNo}
-    </select>
-
-  <update id="update" parameterType="photo.dto.Photo">
-    UPDATE photo
-    SET title = #{title}, nickname = #{nickname}, content = #{content}, boardview = #{boardview}, updatedate = sysdate, original_name = #{originalName}, stored_name = #{storedName}
-    WHERE photoNo = #{photono}
-</update>
-
-    <update id="incrementViewCount" parameterType="int">
-        UPDATE photo
-        SET boardview = boardview + 1
-        WHERE photono = #{photoNo}
-    </update>
+<select id="getuserRecommendRes" resultType="HashMap" parameterType="util.Paging">
+		SELECT b.*, NVL(good, 0) good FROM
+	(SELECT * FROM board
+	
+	) b
+	left OUTER join
+	(SELECT BOARDNO, COUNT(BOARDNO) as good
+	    FROM GOOD
+	    GROUP BY BOARDNO
+	    ORDER BY boardno DESC) g
+	ON b.boardno = g.boardno
+	ORDER BY b. boardNo DESC
+	</select>
 
 
+<select id="getCategoryName" parameterType="int" resultType="String">
+	SELECT CATEGORYNAME FROM CATEGORY
+	WHERE CATEGORYno = #{categoryNo}
+</select>
+
+<select id="categoryList" resultType="Category">
+		select CATEGORYNAME, CATEGORYNO from CATEGORY order by CATEGORYNO
+	</select>
+	
+	<insert id="write" parameterType="Photo" >
+	<selectKey resultType="int" order="BEFORE" keyProperty="boardNo">
+		SELECT board_seq.nextval FROM DUAL
+	</selectKey>
+		INSERT INTO BOARD (boardno, title, content, userno, nickname, categoryno)
+		VALUES( #{boardNo}, #{title}, #{content}, #{userNo}, #{nickName}, #{categoryNo} )
+	</insert>
+	
+	<update id="updateBoard" parameterType="Photo">
+		UPDATE board
+		<set>
+			<if test="title != null and !title.equals('')">
+				title = #{title},
+			</if>
+			<if test="content != null and !content.equals('')">
+				content = #{content},
+			</if>
+		</set>
+		<where>
+			AND boardno = #{boardNo}
+		</where>
+	</update>
+	
+	<delete id="deleteBoard" parameterType="Photo">
+		DELETE BOARD
+		WHERE BOARDNO = #{boardNo}
+	</delete>
+	
+	<select id="getRecommendRes" parameterType="Good" resultType="RecommendRes">
+		SELECT * FROM (
+			SELECT count(*) totalRecommend FROM (
+				SELECT * FROM GOOD
+				WHERE boardno = #{boardNo}
+				)
+			) ,(
+			SELECT count(*) isRecommend FROM (
+				SELECT * FROM GOOD
+				WHERE boardno = #{boardNo}
+				AND userno = #{userNo}
+				)
+			)
+	</select>
+	
+	
+	<delete id="deleteRecommend" parameterType="Good">
+		DELETE GOOD
+		<where>
+			AND userno = #{userNo}
+			AND boardno = #{boardNo}
+		</where>
+	</delete>
+	
+	<select id="isRecomm" parameterType="Good">
+		SELECT count(*)
+		FROM (
+			SELECT * FROM GOOD
+			<where>
+				AND userno = #{userNo}
+				AND boardno = #{boardNo}
+			</where>
+		)
+	</select>
+	
+	
+	<insert id="insertRecommend" parameterType="Good">
+		INSERT INTO GOOD (USERNO, boardno)
+    	VALUES (#{userNo}, #{boardNo})
+	</insert>
+	
+	<delete id="deleteComment" parameterType="java.util.ArrayList">
+		DELETE FROM commenttb
+		<where>
+		BOARDNO in 
+		<foreach collection="arr" item="data" open="(" close=")" separator="," >
+			#{data}
+		</foreach>
+		</where>
+	</delete>
+	
+	<delete id="deleteGood" parameterType="java.util.ArrayList">
+		DELETE FROM GOOD
+		<where>
+		BOARDNO in 
+		<foreach collection="arr" item="data" open="(" close=")" separator="," >
+			#{data}
+		</foreach>
+		</where>
+	</delete>
+	
+	
+	<delete id="listDeleteByBoardNo" parameterType="java.util.ArrayList">
+		DELETE FROM board
+		<where>
+		BOARDNO in 
+		<foreach collection="arr" item="data" open="(" close=")" separator="," >
+			#{data}
+		</foreach>
+		</where>
+	</delete>
+	
+	<update id="hit" >
+		UPDATE board
+		set boardView = boardView + 1
+		<where>
+			and boardno = #{boardNo}
+		</where>
+	</update>
+	
+	<select id="select" parameterType="int" resultType="Photo">
+		<include refid="selectPhoto"/>
+		<where>
+			boardno = #{boardNo}
+		</where>
+	</select>
+	
+		<select id="getRecommend" parameterType="int" resultType="int">
+		SELECT count(*) recomm FROM (
+			SELECT * FROM GOOD
+			WHERE boardno = #{boardNo}
+			)
+	</select>
+	
+	<select id="getRecommendVO" parameterType="Good" resultType="vo.GoodVO">
+		SELECT totalRecomm, isRecomm  FROM (
+			SELECT count(*) totalRecomm FROM(
+				SELECT boardno, userno FROM GOOD
+				WHERE boardno = #{boardNo})
+			) B, 
+		(	SELECT count(*) isRecomm FROM(
+				SELECT * FROM GOOD
+				WHERE boardno = #{boardNo}
+				AND userno=#{userNo}
+				)
+			) A
+	</select>
+	
+	<select id="userByBoardList" resultType="Photo" parameterType="util.Paging">
+		select * from (
+		select rownum rnum, A.* from (
+		<include refid="selectPhoto" />
+		<where>
+			<include refid="searchAND" />
+			and userno = #{userno}
+		</where>
+			order by boardno desc) A )
+		<where>
+			and rnum between #{startNo} and #{endNo}
+		</where>
+
+
+	</select>
+	
+	<select id="selectCntByUserNo" resultType="int" parameterType="map">
+    SELECT count(*) FROM (
+        <include refid="selectPhoto" />
+        <where>
+            <if test="user != null">
+                AND userno = #{user.userno}
+            </if>
+            <if test="paging.search != null and paging.searchKind != null">
+                <choose>
+                    <when test="paging.searchKind.equals('title')">
+                        AND title Like '%${paging.search}%'
+                    </when>
+                    <when test="paging.searchKind.equals('content')">
+                        AND content Like '%${paging.search}%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+    )
+	</select>
+	
+	<select id="userbyrecommList" resultType="Photo" parameterType="util.Paging">
+		select * from (
+		    select rownum rnum, A.* from
+		(SELECT
+		g.boardno, b.title, b.content, b.nickname, b.createdate, b.boardview
+		FROM good g, board b
+		<where>
+			and g.boardno = b.boardno
+			and g.userno = #{userno}
+		</where>
+		order by createdate desc) A )
+		<where>
+			and rnum between #{startNo} and #{endNo}
+		</where>
+	</select>
+	
+	<select id="selectBoardByBoardNo" parameterType="int" resultType="Photo">
+		<include refid="selectPhoto"/>
+		<where>
+			boardno = #{boardNo}
+		</where>
+	</select>
+
+	<select id="list" resultType="Photo">
+		SELECT TITLE, NICKNAME, BOARDNO, CATEGORYNO, CREATEDATE
+		FROM (
+		SELECT TITLE, NICKNAME, BOARDNO, CATEGORYNO, CREATEDATE,
+		ROW_NUMBER() OVER (PARTITION BY CATEGORYNO ORDER BY CREATEDATE) AS row_num
+		FROM BOARD
+		) ranked
+		WHERE row_num <![CDATA[ <= 10 ]]>
+		ORDER BY CATEGORYNO, CREATEDATE
+	</select>
+	
+	<select id="selectCntTitleBySearch" parameterType="int" resultType="int">
+		SELECT count(*) FROM (
+			<include refid="selectPhoto" />
+			<where>
+<!-- 				AND CONTENT Like '%${search}%' -->
+				AND TITLE Like  '%${search}%'
+			</where>
+		)
+	</select>
+
+	<select id="selectBySearch" resultType="Photo" parameterType="util.Paging">
+		SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				<include refid="selectPhoto" />
+				<where>
+<!-- 				AND CONTENT Like '%${search}%' -->
+				AND TITLE Like  '%${search}%'
+				</where>
+				ORDER BY boardno DESC
+			) B
+		)
+		<where>
+			AND rnum BETWEEN #{startNo } AND #{endNo}
+		</where>
+	</select>
+	
+	<select id="selectLogCntAll" resultType="int" parameterType="util.Paging">
+		SELECT count(*) FROM (
+		    select ACCESSNO, USERNO, ACCESSDATE from ACCESSHISTORY
+		)
+	</select>
+	
+	<select id="selectAdminCntAll" resultType="int" parameterType="util.Paging">
+		select count(*) from (
+								 select USERNO from USERTB
+							 )
+	</select>
+	
+	
+	
+	
+	
+	
 </mapper>

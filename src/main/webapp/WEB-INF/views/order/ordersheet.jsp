@@ -77,34 +77,105 @@
     var milliseconds = today.getMilliseconds();
     var makeMerchantUid = '' +hours +  minutes + seconds + milliseconds;
         
-    function requestPay() {
-        IMP.request_pay({
-            pg: "html5_inicis",                  
-            pay_method: "card",                   
-            merchant_uid: '${uuid}' + makeMerchantUid,
-            amount: 1,       
-            name: '${itemNames}',              
-            buyer_email: '${dto1.email}',       
-            buyer_name: document.getElementById("userName").value,                  
-            buyer_tel: document.getElementById("phone").value,               
-            buyer_addr: document.getElementById("address").value,    
-            buyer_postcode: document.getElementById("postCode").value                  
-        }, function (rsp) {
-            var imp_uid = rsp.imp_uid
-            if( rsp.success && imp_uid ){
-                var form = $("#orderForm");
-                $("<input>").attr({ type:"text", name:"impUid", value: rsp.imp_uid }).appendTo(form);
-                $("<input>").attr({ type:"text", name:"method", value: rsp.pay_method }).appendTo(form);
-                $("<input>").attr({ type:"text", name:"pay", value: "Y" }).appendTo(form);
-                $("<input>").attr({ type:"text", name:"userNo", value: ${dto1.userno} }).appendTo(form);
-                $("<input>").attr({ type:"text", name:"merchantUid", value: rsp.merchant_uid }).appendTo(form);
-                $("<input>").attr({ type:"text", name:"paraMount", value: rsp.paid_amount }).appendTo(form);
-                alert('결제를 완료 했습니다');
-                form.submit();
-            }else{
-                alert('결제 오류 입니다 [원인] : ' + rsp.error_msg);
-            }
-        });
+
+function requestPay() {
+	
+
+IMP.request_pay({
+	
+	pg: "html5_inicis",						//pg 모듈 설정
+	
+	pay_method: "card",						//결제 수단 (필수)
+// 	merchant_uid: ${userOrder.orderNo}+makeMerchantUid,	// 고유 주문번호(필수) (unique)
+	merchant_uid: '${uuid}' + makeMerchantUid,	// 고유 주문번호(필수) (unique)
+// 	amount: document.getElementById("totalPrice").value,		// 결제 금액 (필수)
+	amount: 1,		// 결제 금액 (필수)
+	
+	name: '${itemNames}',				//주문 상품 이름
+	
+	buyer_email: '${dto1.email}',		// 주문자 정보들
+	buyer_name: document.getElementById("userName").value,					// 주문자 정보들
+	buyer_tel: document.getElementById("phone").value,				// 주문자 정보들
+	buyer_addr: document.getElementById("address").value,	// 주문자 정보들
+	buyer_postcode: document.getElementById("postCode").value					// 주문자 정보들
+	
+}, function (rsp) { // callback
+   //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+	
+    console.log( rsp )
+    console.log( rsp.imp_uid )
+    //rsp.imp_uid -> 결제 실패시 null 반환
+    var imp_uid = rsp.imp_uid
+    if( rsp.success && imp_uid ){
+    var form = $("#orderForm");
+
+    $("<input>")
+    .append(
+    	$("<input>")
+    	.attr({
+    		type:"text"
+    		, name:"impUid"
+    		, value: rsp.imp_uid
+    	}) )
+    .appendTo(form)
+    
+    $("<input>")
+    .append(
+    	$("<input>")
+    	.attr({
+    		type:"text"
+    		, name:"method"
+    		, value: 'card'
+    	}) )
+    .appendTo(form)
+    
+    $("<input>")
+    .append(
+    	$("<input>")
+    	.attr({
+    		type:"text"
+    		, name:"pay"
+    		, value: "Y"
+    	}) )
+    .appendTo(form)
+    
+    $("<input>")
+    .append(
+    	$("<input>")
+    	.attr({
+    		type:"text"
+    		, name:"userNo"
+    		, value: ${dto1.userno}
+    	}) )
+    .appendTo(form)
+    
+    $("<input>")
+    .append(
+    	$("<input>")
+    	.attr({
+    		type:"text"
+    		, name:"merchantUid"
+    		, value: rsp.merchant_uid
+    	}) )
+    .appendTo(form)
+    
+    $("<input>")
+    .append(
+    	$("<input>")
+    	.attr({
+    		type:"text"
+    		, name:"paraMount"
+    		, value: rsp.paid_amount
+    	}) )
+    .appendTo(form)
+    
+    
+   	alert('결제를 완료 했습니다')
+   	
+    form.submit();
+    }else{
+    	alert('결제 오류 입니다 [원인] : ' + rsp.error_msg)
+
     }
 </script>
 <script type="text/javascript">
@@ -115,6 +186,7 @@
         });
     });
 </script>
+<link rel="stylesheet" href="/resources/css/order/ordersheet.css">
 </head>
 <body>
 
