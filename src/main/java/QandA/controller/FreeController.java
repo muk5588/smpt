@@ -66,7 +66,7 @@ public class FreeController {
 	    if (categoryNo != null) {
 	        paging.setCategoryNo(categoryNo);
 	    }
-	    
+	    // 오류수정
 	    if (null !=  search && !"".equals(search)) {
 	        paging = qandaService.getPaging(curPage, paging);
 	    } 
