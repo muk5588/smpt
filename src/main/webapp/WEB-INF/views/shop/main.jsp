@@ -9,15 +9,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <jsp:include page="/WEB-INF/views/layout/boardmenu.jsp" />
+
+<link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
 <style type="text/css">
     .wrap {
         width: 1100px;
     }
 
     .itemImg img {
-        max-width: 100%;
+        max-width: 80%;
         height: auto;
         transition: transform 0.3s ease; /* Smooth transition for the image scaling */
     }
@@ -140,8 +141,9 @@
         
         <c:set var="imgFiles" value="${files}"/>
 <div id="itemwarp">
+	
     <div class="row">
-        <c:forEach var="item" items="${item}">
+        <c:forEach var="item" items="${item }" >
             <div class="col-md-4 col-sm-6 mb-4">
                 <div class="card h-100">
                     <a href="./detail?itemNo=${item.itemNo}" class="text-decoration-none">
@@ -172,6 +174,7 @@
         </c:forEach>
     </div>
 </div>
+
 
 
     </div>
