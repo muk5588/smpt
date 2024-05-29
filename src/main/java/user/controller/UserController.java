@@ -19,6 +19,7 @@ import user.dto.EmailCheck;
 import user.dto.User;
 import user.service.UserService;
 import util.Paging;
+import util.UserPaging;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Autowired
@@ -45,11 +46,17 @@ public class UserController {
     //관리자페이지
     @RequestMapping("/adminPage")
     public String adminPage(Model model, @RequestParam(defaultValue ="0") int curPage){
+    	String URL = "/user/adminPage";
         Paging paging = new Paging();
         paging = boardService.getAdminPaging(curPage, paging);
-
+        logger.debug("admin paging : {}", paging);
+        
         List<AccessHistory> list2  = loginService.loginHistory(paging);
+        logger.debug("AccessHistory : {}", list2);
         List<Grade> list3 = gradeService.gradeList();
+        logger.debug("Grade : {}", list3);
+        logger.debug("admin paging : {}", paging);
+        model.addAttribute("URL", URL);
         model.addAttribute("list2", list2);
         model.addAttribute("list3", list3);
         model.addAttribute("paging", paging);
@@ -63,19 +70,59 @@ public class UserController {
 
     @RequestMapping("/userList")
     //유저전체리스트 페이지
-    public String userList( Model model) {
-        List<User> list = service.userList();
+    public String userList( Model model,@RequestParam(defaultValue ="0") int curPage
+    		,@RequestParam(required = false,name = "searchKind") String searchKind
+    		,@RequestParam(required = false, name = "search") String search) {
+    	String url = "/user/userList";
+    	UserPaging paging = new UserPaging();
+    	if( search != null && searchKind != null ) {
+    		logger.debug("@!#!@@@@@@");
+    		paging.setSearch(search);
+    		paging.setSearchKind(searchKind);
+    		logger.debug("paging1 : {}", paging);
+    	}
+    	paging = service.getUserListPaging(paging,curPage);
+    	if( search != null && searchKind != null ) {
+    		paging.setSearch(search);
+    		paging.setSearchKind(searchKind);
+    		logger.debug("paging3 : {}", paging);
+    	}
+        List<User> list = service.userPagingList(paging);
         model.addAttribute("list", list);
-        return "user/userList";
+        model.addAttribute("paging", paging);
+        model.addAttribute("URL", url);
+        return url;
     }
 
     @RequestMapping("/userBlack")
     //유저블랙리스트 페이지
-    public String userBlack( Model model, String searchVal) {
-        List<User> list = service.userList();
+    public String userBlack( Model model,@RequestParam(defaultValue ="0") int curPage
+    		,@RequestParam(required = false,name = "searchKind") String searchKind
+    		,@RequestParam(required = false, name = "search") String search) {
+    	String URL = "/user/userBlack";
+    	UserPaging paging = new UserPaging();
+    	logger.debug("@!#!@");
+    	if( search != null && searchKind != null ) {
+    		logger.debug("@!#!@@@@@@");
+    		paging.setSearch(search);
+    		paging.setSearchKind(searchKind);
+    		logger.debug("paging1 : {}", paging);
+    	}
+    	logger.debug("@!#!@@@@@@####");
+    	paging = service.getUserListPaging(paging,curPage);
+    	logger.debug("paging2 : {}", paging);
+    	if( search != null && searchKind != null ) {
+    		paging.setSearch(search);
+    		paging.setSearchKind(searchKind);
+    		logger.debug("paging3 : {}", paging);
+    	}
+    	List<User> list = service.userPagingList(paging);
+    	logger.debug("paging4 : {}", paging);
+    	logger.debug("list : {}", list);
         model.addAttribute("list", list);
-        model.addAttribute("searchVal", searchVal);
-        return "user/userBlack";
+        model.addAttribute("paging", paging);
+        model.addAttribute("URL", URL);
+        return URL;
     }
     
     //수정 페이지
@@ -158,23 +205,19 @@ public class UserController {
 	}
 	
     @RequestMapping("/deleteUser")
-    public String deleteUser(User dto) {
+    public String deleteUser(User dto, HttpSession session) {
         service.userDelete(dto);
+        session.invalidate();
         return "redirect: /";
     }
-    
-    @ResponseBody
-    @RequestMapping("/passChk")
-    public int passChk(User dto) throws Exception {
-        int res = service.passChk(dto);
-        return res;
-    }
+
     @ResponseBody
     @RequestMapping("/idChk")
     public int idChk(User dto) throws Exception {
         int res = service.idChk(dto);
         return res;
     }
+
     @RequestMapping("/idckeck")
     public String idckeck(User dto) throws Exception {
         int res = service.idChk(dto);
@@ -259,7 +302,8 @@ public class UserController {
     }
     @RequestMapping("/userLog")
     public String userLog(Model model,@RequestParam(defaultValue ="0") int curPage){
-        Paging paging = new Paging();
+        UserPaging paging = new UserPaging();
+        String URL = "/user/userLog";
 
         paging = boardService.getLogPaging(curPage,paging);
 
@@ -267,6 +311,7 @@ public class UserController {
         List<AccessHistory> list = loginService.history(paging);
         model.addAttribute("list",list);
         model.addAttribute("paging", paging);
+        model.addAttribute("URL", URL);
         return "user/userLog";
     }
     

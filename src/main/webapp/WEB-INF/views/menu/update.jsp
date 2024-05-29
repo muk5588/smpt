@@ -10,8 +10,13 @@
 <html>
 <head>
     <title>Title</title>
+    <link rel="stylesheet" href="/resources/css/menu/update.css">
+
 </head>
 <body>
+<c:import url="/WEB-INF/views/layout/header.jsp"/>
+<div class="container">
+
 <button onclick="location.href='../menu/menuList'">목록으로</button>
 <table class='w-pct60'>
     <tr>
@@ -36,26 +41,11 @@
                 </select>
             </td>
             <td>
-                <button onclick="location.href='/menu/menuUpdate?userno=${dto.userno}'">수정</button>
+                <button onclick="location.href='/menu/menuUpdate'">수정</button>
             </td>
         </tr>
     </form>
 </table>
-<div>
-    <table>
-        <tr>
-            <th>등급명</th>
-            <th>등급번호</th>
-            <th>추가사항</th>
-        </tr>
-        <c:forEach var="Menu" items="${list}">
-            <tr>
-                <td>${Menu.gradename}</td>
-                <td>${Menu.gradeno}</td>
-                <td>${Menu.comm}</td>
-            </tr>
-        </c:forEach>
-    </table>
 </div>
 
 </body>

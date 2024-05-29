@@ -7,10 +7,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Insert title here</title>
+    <link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript">
         $(function(){
-
+            $(".fold").hide(); // 페이지 로드시 fold 클래스 숨기기
+            
+            $(".view").click(function(){
+                // clickedView.next(".fold").toggle(); // 오류를 일으키는 원래 코드
+                $(this).next(".fold").toggle(); // 정정된 코드
+            });
+                
             $("#checkboxAllCheck").click(function(){
                 //attr => 속성값, prop해서 변경해야함
                 $(".delCheckBox").prop("checked", $(this).prop("checked"));
@@ -98,17 +105,27 @@
 <body>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 
-<h1>보낸 메일함</h1>
+<h1>보낸 쪽지함</h1>
 <hr>
 <div id="content">
-    <a href="./list">
-        <button>받은 쪽지함</button>
-    </a>
-    <button id="popupsendForm">쪽지쓰기</button>
-    <a href="/">
-        <button>홈으로</button>
-    </a>
-    <button id="deleteBtn" class="deletebutton">삭제하기</button>
+    <div class="tit">
+        <div>
+            <a href="./list">
+            <button>받은 쪽지함</button>
+            </a>
+            <button id="popupsendForm">쪽지쓰기</button>
+            <a href="/">
+            <button>홈으로</button>
+             </a>
+        </div>
+    <div>
+        <form action="" method="get" id="searchForm">
+            <input type="text" name="search" id="search" placeholder="검색하실 내용을 작성해 주세요" value="${paging.search }">
+            <input hidden="hidden" name="curPage" value="${curPage}">
+            <button id="serchBtn">검색</button>
+        </form>
+    </div>
+    </div>
     <table>
         <tr>
             <th><input type="checkbox" id="checkboxAllCheck"></th>
@@ -118,7 +135,7 @@
             <th>읽음</th>
         </tr>
         <c:forEach items="${list}" var="list">
-            <tr>
+            <tr class="view">
                 <td class="checkbox"><input type="checkbox" value="${list.messageNo }" name="deleteNum"
                                             class="delCheckBox"></td>
                 <td class="sender">${list.sender}</td>
@@ -128,8 +145,16 @@
                 </td>
                 <td class="read">${list.read}</td>
             </tr>
+            <tr class="fold">
+                <td colspan="5">
+                    <div class="fold-content">${list.content}</div>
+                </td>
+            </tr>
         </c:forEach>
     </table>
+    <button id="deleteBtn" class="deletebutton">삭제하기</button>
+         <c:import url="/WEB-INF/views/layout/adminPaging.jsp" />
+    
     <br><br><br><br>
 
 

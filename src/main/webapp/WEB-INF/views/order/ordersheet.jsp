@@ -141,7 +141,7 @@ IMP.request_pay({
     	.attr({
     		type:"text"
     		, name:"method"
-    		, value: rsp.pay_method
+    		, value: 'card'
     	}) )
     .appendTo(form)
     
@@ -208,6 +208,7 @@ $(function(){
 	
 })
 </script>
+<link rel="stylesheet" href="/resources/css/order/ordersheet.css">
 </head>
 <body>
 
@@ -219,8 +220,8 @@ $(function(){
         </a>
         
 <div id="orderwrap">
-<table>
 <form method="post" action="./completed" id="orderForm">
+<table>
 	<tr><td>주문자명<input type="text" name="userName" id="userName" value="${userOrder.userName }"></td></tr>
 	<tr><td>핸드폰번호<input type="text" name="phone" id="phone" value="${userOrder.phone }"></td></tr>
 	<tr><td>배송지 우편주소<input type="text" name="postCode" id="postCode" value="${userOrder.postCode }" readonly="readonly">

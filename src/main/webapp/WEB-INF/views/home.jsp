@@ -54,7 +54,7 @@
                 if (!isLogin) {
                     event.preventDefault(); // 기본 동작 중지 (페이지 이동 취소)
                     alert('로그인이 필요합니다.'); // 사용자에게 알림 표시
-                    return false;
+                    location.href= '/login';
                 } else {
                     // 로그인된 경우에만 페이지 이동
                     location.href = '/calendar';
@@ -63,71 +63,11 @@
         });
 
     </script>
-    <style type="text/css">
-        @import url('https://webfontworld.github.io/NexonMaplestory/NexonMaplestory.css');
-
-        * {
-            font-family: 'NexonMaplestory';
-            font-weight: 300;
-            font-style: normal;
-        }
-
-        a {
-            color: black;
-            text-decoration-line: none;
-        }
-
-        .logout {
-            border-radius: 15px;
-            background-color: white;
-            border: 1px solid #ccc;
-            padding-top: 4px;
-        }
-
-        .logout img {
-            vertical-align: middle;
-        }
-
-        .usernick {
-            font-size: 24px;
-            margin-right: 1rem;
-        }
-
-        #calendar_home {
-            clear: both;
-            float: right;
-            width: 300px;
-            height: 463px;
-        }
-
-        .logoutdiv {
-            width: auto;
-            height: 60%;
-        }
-
-        .email {
-            height: 20%;
-            margin-bottom: 10%;
-        }
-        .mypage{
-            width: 100%;
-            height: 30%;
-            margin: 0 auto;
-        }
-        .mypage a{
-            margin: 10px;
-            text-align: center;
-        }
-        .blank{
-            width: 100%;
-            height: 10%;
-        }
-
-    </style>
+    <link href="/resources/css/mainPage/home.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+<jsp:include page="/WEB-INF/views/layout/smallheader.jsp"/>
 <jsp:include page="/WEB-INF/views/layout/boardmenu.jsp"/>
 
 
@@ -135,31 +75,32 @@
 
     <div class="mySlides fade">
         <div class="numbertext">1 / 3</div>
-        <img src="/resources/img/mainPage/japan_01.jpg" style="width:100%">
+        <img src="/resources/img/mainPage/6167574.jpg" style="width:100%">
     </div>
 
     <div class="mySlides fade">
         <div class="numbertext">2 / 3</div>
-        <img src="/resources/img/mainPage/japan_02.jpg" style="width:100%">
+        <img src="/resources/img/mainPage/7013717.jpg" style="width:100%">
     </div>
 
     <div class="mySlides fade">
         <div class="numbertext">3 / 3</div>
-        <img src="/resources/img/mainPage/japan_03.jpg" style="width:100%">
+        <img src="/resources/img/mainPage/9660088.jpg" style="width:100%">
     </div>
 
     <!-- 다음 & 이전 버튼 -->
     <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
     <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    
+	<!-- 이미지 밑 점들 -->
+	<div class="dot-container" style="text-align:center">
+    	<span class="dot" onclick="currentSlide(1)"></span>
+    	<span class="dot" onclick="currentSlide(2)"></span>
+    	<span class="dot" onclick="currentSlide(3)"></span>
+	</div>
 </div>
 <br>
 
-<!-- 이미지 밑 점들 -->
-<div style="text-align:center">
-    <span class="dot" onclick="currentSlide(1)"></span>
-    <span class="dot" onclick="currentSlide(2)"></span>
-    <span class="dot" onclick="currentSlide(3)"></span>
-</div>
 
 <div id="login" class="login">
     <c:if test="${empty isLogin }">
@@ -202,31 +143,30 @@
         </ul>
     </c:if>
 </div>
-<div>
+<div class="weather">
     <jsp:include page="layout/weather.jsp"></jsp:include>
 </div>
 
 <a class="calendar_link">
     <div id="calendar_home"></div>
 </a>
-<P> The time on the server is ${serverTime}. </P>
-<div class="board-pre">
+<%--<P> The time on the server is ${serverTime}. </P>--%>
+<%--<div class="board-pre">--%>
 
-</div>
+<%--</div>--%>
 
-<%--<button><a href="login">로그인</a></button>--%>
-<%--<button><a href="/user/insertUser">가입</a></button>--%>
-<button><a href="/user/adminPage">가입</a></button>
-<button onclick="location.href = '/grade/gradeList'">권한조회</button>
-<button onclick="location.href = '/menu/menuList'">권한부여상황</button>
-<button onclick="location.href = '/user/userList'">유저조회</button>
-<button onclick="location.href = '/board/list'">게시물조회</button>
-<button onclick="location.href = '/message/'">메세지 테스트</button>
-<button onclick="location.href = '/basket/userbasket'">장바구니</button>
-<button onclick="location.href = '/calendar'">캘린더</button>
-<button onclick="location.href = '/shop/'">상품</button>
-<button onclick="location.href = '/order/history'">주문목록</button>
-<button onclick="location.href = '/photo/list'">사진</button>
+<%--&lt;%&ndash;<button><a href="login">로그인</a></button>&ndash;%&gt;--%>
+<%--&lt;%&ndash;<button><a href="/user/insertUser">가입</a></button>&ndash;%&gt;--%>
+<%--<button><a href="/user/adminPage">가입</a></button>--%>
+<%--<button onclick="location.href = '/grade/gradeList'">권한조회</button>--%>
+<%--<button onclick="location.href = '/menu/menuList'">권한부여상황</button>--%>
+<%--<button onclick="location.href = '/user/userList'">유저조회</button>--%>
+<%--<button onclick="location.href = '/board/list'">게시물조회</button>--%>
+<%--<button onclick="location.href = '/message/'">메세지 테스트</button>--%>
+<%--<button onclick="location.href = '/basket/userbasket'">장바구니</button>--%>
+<%--<button onclick="location.href = '/calendar'">캘린더</button>--%>
+<%--<button onclick="location.href = '/shop/'">상품</button>--%>
+<%--<button onclick="location.href = '/order/history'">주문목록</button>--%>
 
 
 <%--<c:if test="${empty isLogin}">--%>
@@ -235,7 +175,7 @@
 <%--</c:if>--%>
 
 <jsp:include page="/WEB-INF/views/layout/boardPreview.jsp"/>
-<div class="blank"></div>
+<%--<div class="blank"></div>--%>
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 </body>
 </html>

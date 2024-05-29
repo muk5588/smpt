@@ -105,8 +105,8 @@
             </div>
             <div id="genderbox">
                 <label>성별</label>
-                <input type="radio" name="gender" value="남" checked/>남
-                <input type="radio" name="gender" value="여"/>여<br>
+                <input type="radio" name="gender" value="M" checked/>남
+                <input type="radio" name="gender" value="F"/>여<br>
             </div>
             <br>
             <div id=emailbox">
@@ -129,7 +129,7 @@
                 <label for="detailAddress">주소</label>
                 <input type="text" name="address" id="address"  readonly value="${dto.address}" ><br>
                 <input type="text" name="detailAddress" id="detailAddress" value="${dto.detailAddress}">
-                <input type="text" name="extralAddress" id="extraAddress" value="${dto.extraAddress}"><br>
+                <input type="text" name="extraAddress" id="extraAddress" value="${dto.extraAddress}"><br>
             </div>
             <div id="phonebox">
                 <label for="phone">전화번호</label>

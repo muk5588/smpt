@@ -1,11 +1,10 @@
 package login.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import board.dto.Board;
+import board.service.BoardService;
+import login.service.KakaoService;
+import login.service.LoginService;
+import login.service.SocialService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +12,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
-
-import board.dto.Board;
-import board.service.BoardService;
-import login.service.KakaoService;
-import login.service.LoginService;
-import login.service.SocialService;
 import user.dto.User;
-import util.Paging;
+
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class LoginController {
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private LoginService loginService;
     @Autowired
@@ -48,6 +44,7 @@ public class LoginController {
             //유저 정보
 //            dto.setUserno(isLogin);
             User login = loginService.info(dto);
+            isLogin = login.getUserno();
             logger.info("login : {}", login);
 
             loginService.insertAccessHistory(login);
@@ -108,7 +105,7 @@ public class LoginController {
 
     //    마이페이지
     @RequestMapping("/user/userDetail")
-    public void mypage(HttpSession session
+    public String mypage(HttpSession session
             , Model model
             ,@RequestParam(defaultValue ="0", required =false) int curPage) {
     	User login = (User) session.getAttribute("dto1");
@@ -116,12 +113,18 @@ public class LoginController {
         int userno = login.getUserno();
         //작성한 게시물 조회
         List<Board> list = boardService.boardList(userno);
+        logger.debug("list : {}", list);
+        if( list == null || list.isEmpty()) {
+        	model.addAttribute("dto1", login);
+        	model.addAttribute("userno", userno);
+        	return "user/userDetail";
+        }
+        logger.debug("list : {}", list);
         //추천한 게시물 조회
         List<Board> list2 = boardService.userrecommList(userno);
-
+        model.addAttribute("list2", list2);
         model.addAttribute("dto1", login);
         model.addAttribute("list", list);
-        model.addAttribute("list2", list2);
         model.addAttribute("userno", userno);
         
         //작성, 추천 게시글 병합
@@ -141,6 +144,7 @@ public class LoginController {
         }
         model.addAttribute("totalrecomm", recommList);
 //        model.addAttribute("totalrecomm", recommList);
+        return "user/userDetail";
     }
 
     //유저 수정하기
