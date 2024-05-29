@@ -16,49 +16,49 @@
     } */
 
     /* <!-- body { --> */
-    /* <!-- 	width: 1500px; --> */
-    /* <!-- 	margin: 0 auto; --> */
+    /* <!--    width: 1500px; --> */
+    /* <!--    margin: 0 auto; --> */
     /* <!-- } --> */
 
     /* <!-- h1 { --> */
-    /* <!-- 	text-align: center; --> */
+    /* <!--    text-align: center; --> */
     /* <!-- } --> */
 
     /* <!-- table { --> */
-    /* <!-- 	border: 1px solid black; --> */
-    /* <!-- 	margin: 0 auto; --> */
+    /* <!--    border: 1px solid black; --> */
+    /* <!--    margin: 0 auto; --> */
     /* <!-- } --> */
 
     /* <!-- tr, th, td { --> */
-    /* <!-- 	border: 1px solid black; --> */
+    /* <!--    border: 1px solid black; --> */
     /* <!-- } --> */
 
     /* <!-- th { --> */
-    /* <!-- 	background-color: #ccc; --> */
+    /* <!--    background-color: #ccc; --> */
     /* <!-- } --> */
 
     /* <!-- td.no, .title, .id, .nick, .hit, .date { --> */
-    /* <!-- 	text-align: center; --> */
+    /* <!--    text-align: center; --> */
     /* <!-- } --> */
 
     /* <!-- td.title { --> */
-    /* <!-- 	width: 200px; --> */
+    /* <!--    width: 200px; --> */
     /* <!-- } --> */
 
     /* <!-- td.content { --> */
-    /* <!-- 	width: 500px; --> */
+    /* <!--    width: 500px; --> */
     /* <!-- } --> */
 
     /* <!-- td.id, .nick { --> */
-    /* <!-- 	width: 150px; --> */
+    /* <!--    width: 150px; --> */
     /* <!-- } --> */
 
     /* <!-- td.hit { --> */
-    /* <!-- 	width: 50px; --> */
+    /* <!--    width: 50px; --> */
     /* <!-- } --> */
 
     /* <!-- td.date { --> */
-    /* <!-- 	width: 200px; --> */
+    /* <!--    width: 200px; --> */
     /* <!-- } --> */
 
 </style>
@@ -248,25 +248,32 @@
 
 
     })
-    
-     $(function () {
-        // 게시물 공유 함수
-        function sharePost() {
-            var postUrl = ""; // 게시물 URL을 여기에 할당
-            var postTitle = ""; // 게시물 제목을 여기에 할당
-            if (navigator.share) {
-                navigator.share({
-                    title: postTitle,
-                    text: '게시물을 공유합니다.',
-                    url: postUrl
-                })
-                .then(() => console.log('게시물 공유됨'))
-                .catch((error) => console.error('게시물 공유 실패', error));
-            } else {
-                console.error('Web Share API를 지원하지 않습니다.');
-            }
+</script>
+<script type="text/javascript">
+$(function () {
+    // 게시물 공유 함수
+    function sharePost() {
+    	  var postUrl = ""; // 게시물 URL을 여기에 할당
+          var postTitle = ""; // 게시물 제목을 여기에 할당
+        if (navigator.share) {
+            navigator.share({
+                title: postTitle,
+                text: '게시물을 공유합니다.',
+                url: postUrl
+            })
+            .then(() => console.log('게시물 공유됨'))
+            .catch((error) => console.error('게시물 공유 실패', error));
+        } else {
+            console.error('Web Share API를 지원하지 않습니다.');
         }
-        
+    }
+
+    // 게시물 공유 버튼 클릭 시 sharePost() 함수 호출
+    $("#sharePostButton").click(function () {
+        sharePost();
+    });
+});
+
 </script>
 </head>
 <body>
@@ -324,6 +331,10 @@
             </div>
         </div>
         <hr>
+        
+      <div class="share-button">
+    	<button id="sharePostButton">게시물 공유하기</button>
+		</div>
 
         <div id="file"></div>
         <table class="table">
@@ -357,15 +368,15 @@
                 <td class="content" colspan="6">${board.content }</td>
             </tr>
         </table>
-	
-	
-		 <div class="share-button">
-            	<button id="sharePostButton">게시물 공유하기</button>
-        		</div>
-        		
-        		
+   
+   
+       <div class="share-button">
+               <button id="sharePostButton">게시물 공유하기</button>
+              </div>
+              
+              
         <hr>
-        <div class="comment">
+           <div class="comment">
             <table>
                 <tr>
                     <th>댓글 순번</th>
@@ -379,7 +390,6 @@
                         <th>삭제</th>
                     </c:if>
                 </tr>
-               
                 <c:choose>
                     <c:when test="${not empty comment }">
                         <c:forEach var="comment" items="${comment }">
@@ -447,3 +457,4 @@
 
 
 <c:import url="/WEB-INF/views/layout/footer.jsp"/>
+     

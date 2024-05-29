@@ -144,10 +144,10 @@ public class QandAController {
 		User user = (User)session.getAttribute("dto1");
 		int recomm = 0;
 		if( null == user) {
-			recomm = qandaService.viewRecommend(boardno);
+			recomm = boardService.viewRecommend(boardno);
 		}else {
 			Good paramGood = new Good(user.getUserno(), boardno);
-			GoodVO good = qandaService.getRecommendVO(paramGood);
+			GoodVO good = boardService.getRecommendVO(paramGood);
 			model.addAttribute("isRecomm", good.getIsRecomm());
 			logger.info("isRecomm : {}", good.getIsRecomm());
 			recomm = good.getTotalRecomm();
@@ -156,6 +156,7 @@ public class QandAController {
 //		신고된 댓글 블러 처리
 		List<CommReport> reportlist = reportService.reportcommlist();
 		Iterator<Comment> iterator = comment.iterator();
+		
 		while (iterator.hasNext()) {
 			Comment comment2 = iterator.next();
 			for (CommReport report : reportlist) {
