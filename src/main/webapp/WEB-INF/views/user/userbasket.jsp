@@ -59,31 +59,14 @@ $(document).ready(function() {
                 success: function (response) {
                     // 삭제 후 화면 새로고침
                     location.reload();
-<script>
-    $(function () {
-        $(".decrement-button").click(function () {
-            var quantityElement = $(this).siblings(".quantity");
-            var currentValue = parseInt(quantityElement.text());
-            if (currentValue > 1) {
-                quantityElement.text(currentValue - 1);
-            }
-        });
-
-        $(".increment-button").click(function () {
-            var quantityElement = $(this).siblings(".quantity");
-            var currentValue = parseInt(quantityElement.text());
-            var remain = parseInt($(this).closest("tr").find(".max-quantity").text().split(":")[1].trim()); // 최대 재고량 가져오기
-            if (!isNaN(remain)) { // 최대 재고량이 숫자인지 확인
-                if (currentValue < remain) {
-                    quantityElement.text(currentValue + 1);
-                } else {
-                    alert("남은 재고를 초과할 수 없습니다.");
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
-            } else {
-                alert("최대 재고량이 올바르게 표시되지 않았습니다.");
-            }
-        });
+            });
+        }
     });
+});
 </script>
 <script type="text/javascript">
     $(function () {
@@ -236,4 +219,3 @@ $(document).ready(function() {
 
 
 <c:import url="/WEB-INF/views/layout/footer.jsp"/>
-
