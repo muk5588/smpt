@@ -52,7 +52,7 @@
 	    	<c:when test="${not empty imgFiles}">
 		    	<c:forEach items="${imgFiles}" var="files">
 		    	<c:if test="${not empty files.itemNo and item.itemNo eq  files.itemNo}">
-		    		<img alt="ItemImg" src="/resources/img/shop/upload/${files.storedName }">
+		    		<img alt="" src="/resources/img/shop/upload/${files.storedName }">
 		    	</c:if>
 		    	<c:if test="${empty files.itemNo}">
 		    		<img src="/resources/img/shop/nullimg.jpg" alt="notready">
@@ -104,7 +104,6 @@
 </div>
     <!-- .container End -->
 
-    <c:import url="/WEB-INF/views/layout/shopPaging.jsp"/>
 
 <c:import url="/WEB-INF/views/layout/footer.jsp"/>
 

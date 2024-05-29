@@ -131,17 +131,6 @@
     <div class="table-container">
         <div class="table-wrapper">
             <h3>전체 회원 목록</h3>
-
-    
-          
-            
-    
-
-          
-          Expand Down
-    
-    
-  
             <table class="table table-striped table-hover table-sm">
                 <tr>
                     <th class='w-px60'>회원번호</th>
@@ -149,7 +138,7 @@
                     <th>닉네임</th>
                     <th>성별</th>
                     <th>최근 접속 시간</th>
-                    <th>로그인 횟수</th>
+                    <th>누적 접속일</th>
                 </tr>
                 <!-- for(꺼낸 배열 변수를 담을 새로운 변수 (String x) : 배열 변수(list)) -->
                 <!-- items : 배열 변수 -->
