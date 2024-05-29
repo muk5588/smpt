@@ -2,6 +2,7 @@ package photo.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,11 +31,14 @@ import board.dto.Category;
 import board.dto.Good;
 import board.dto.RecommendRes;
 import board.service.BoardService;
+import board.service.FileService;
 import comment.dto.Comment;
 import photo.dto.Photo;
 import photo.dto.PhotoFile;
 import photo.service.face.PhotoFileService;
 import photo.service.face.PhotoService;
+import report.dto.CommReport;
+import report.service.ReportService;
 import user.dto.User;
 import util.Paging;
 import vo.GoodVO;
@@ -48,6 +52,10 @@ public class PhotoController {
 	@Autowired private PhotoFileService photofileService;
 	@Autowired private ServletContext servletContext;
 	@Autowired private BoardService boardService;
+	@Autowired private ReportService reportService;
+	@Autowired private FileService fileService;
+
+
 	
 	@GetMapping("/list")
 	public String list(Model model,
@@ -60,7 +68,7 @@ public class PhotoController {
 		logger.info("/photo/list search : {}", search);
 	    logger.info("/photo/list searchKind : {}", searchKind);
 	    logger.info("/photo/list categoryNo : {}", categoryNo);
-		String URL = "photo/list";
+		String URL = "/photo/list";
 		
 		 Paging paging = new Paging();
 		    paging.setSearch(search);
@@ -158,10 +166,20 @@ public class PhotoController {
 			logger.info("isRecomm : {}", good.getIsRecomm());
 			recomm = good.getTotalRecomm();
 		}
-		List<PhotoFile> files = photofileService.getFilesByBoardNo(boardno);
-		model.addAttribute("files", files); // 모델에 파일 리스트 추가 : 이미지 출력
-		
 		List<Comment> comment = boardService.commentList(board);
+		
+		List<CommReport> reportlist = reportService.reportcommlist();
+		Iterator<Comment> iterator = comment.iterator();
+		while (iterator.hasNext()) {
+			Comment comment2 = iterator.next();
+			for (CommReport report : reportlist) {
+				if (report.getCommNo() == comment2.getCommNo()) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
+		
 		model.addAttribute("comment", comment);
 		model.addAttribute("recomm", recomm);
 		logger.info("recomm : {}", recomm);
@@ -233,7 +251,7 @@ public class PhotoController {
 			photofileService.filesave(photo,file);
 		}
 		
-		return "redirect:/photo/list";
+		return "redirect:/photo/list?categoryNo=" + categoryNo;
 	}
 	@ResponseBody
 	@PostMapping("/fileupload")
@@ -245,7 +263,7 @@ public class PhotoController {
 			) {
 		logger.debug("/fileupload&&&&&&&&&&&&&&&&&&&&&&&&");
 //		logger.debug("file : {}", file);
-		PhotoFile file =photofileService.fileTempSave(request,response); 
+		BoardFile file =fileService.fileTempSave(request,response); 
 		logger.debug("!@$#!@#!@#!@#!@#!files : {}", file);
 		
 	}
@@ -443,7 +461,7 @@ public class PhotoController {
 	 
 	 @RequestMapping("/fileDown")
 	 public String fileDown(int fileNo, Model model) {
-		 PhotoFile file = photofileService.getFileByFileNo(fileNo);
+		 BoardFile file = fileService.getFileByFileNo(fileNo);
 		 logger.info("���� �ٿ�ε� : {}", file);
 			
 		model.addAttribute("downFile", file);
