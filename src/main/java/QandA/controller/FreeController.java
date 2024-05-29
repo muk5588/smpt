@@ -35,7 +35,7 @@ import java.util.List;
  import java.util.Map;
 
 @Controller
-@RequestMapping("/qanda")
+@RequestMapping("/Free")
 public class FreeController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
