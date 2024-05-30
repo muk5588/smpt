@@ -307,7 +307,7 @@ $(function () {
                     <a href="./update?boardNo=${board.boardNo }">
                         <button id="btnUpdate">수정</button>
                     </a>
-                    <a href="./delete?boardNo=${board.boardNo }">
+                  	<a href="./delete?boardNo=${board.boardNo}&categoryNo=${param.categoryNo}">
                         <button id="btnDelete">삭제</button>
                     </a>
                 </c:if>
@@ -369,11 +369,6 @@ $(function () {
             </tr>
         </table>
    
-   
-       <div class="share-button">
-               <button id="sharePostButton">게시물 공유하기</button>
-              </div>
-              
               
         <hr>
            <div class="comment">

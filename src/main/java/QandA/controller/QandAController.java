@@ -295,18 +295,19 @@ public class QandAController {
 
 	
 	@RequestMapping("/delete")
-	public String delete(@RequestParam("boardNo") int boardno) {
-		logger.debug("delete ���� : {}",boardno);
-		
-		Board deleteBoard = new Board();
-		Comment comment	= new Comment();
-		deleteBoard.setBoardNo(boardno);
-		comment.setBoardNo(boardno);
-		boardService.commentDeleteAll(comment);
-		boardService.boardDelete(deleteBoard);
-		
-		return "redirect:./list";
-	}
+	   public String delete(@RequestParam("boardNo") int boardno, @RequestParam("categoryNo") int categoryNo) {
+	      logger.debug("delete      : {}",boardno);
+	      
+	      Board deleteBoard = new Board();
+	      Comment comment   = new Comment();
+	      deleteBoard.setBoardNo(boardno);
+	      comment.setBoardNo(boardno);
+	      boardService.commentDeleteAll(comment);
+	      boardService.boardDelete(deleteBoard);
+	      
+	       return "redirect:/qanda/list?categoryNo=" + categoryNo;
+	   }
+
 	
 	@RequestMapping("/recommend")
 	public @ResponseBody RecommendRes recommend(
