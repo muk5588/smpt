@@ -1,5 +1,6 @@
 package shop.controller;
 
+import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dto.Basket;
 import dto.Item;
 import dto.ItemFile;
 import dto.OrderItem;
 import dto.UserOrder;
 import shop.service.face.OrderService;
 import user.dto.User;
-import util.Paging;
 import util.ShopPaging;
 
 @Controller
@@ -34,18 +34,25 @@ public class OrderController {
 	@Autowired HttpSession session;
 	
 	@RequestMapping("/ordersheet")
-	public void ordersheet(@RequestParam(value="res", required = false)String[] orderDatas
+	public void ordersheet(@RequestParam(value="basketNo", required = false)String[] orderDatas
+			, @RequestParam(value = "quantity", required = false) String[] quantities
 			, Model model
 			, HttpSession session
 			, @RequestParam(value="itemNo", required = false)String STitemNo
 			, @RequestParam(value="quantity", required = false)String STquantity) {
-		logger.debug("컨트롤러 itemNo : {}", STitemNo);
-		logger.debug("컨트롤러 quantity : {}", STquantity);
-		logger.debug("컨트롤러 orderDatas : {}", Arrays.toString(orderDatas));
-		if(orderDatas != null && STitemNo == null && STquantity == null) {
-		    int[] orderNumbers = orderService.getItemNosByorderDatas(orderDatas);
-			Map<String, Object> orderMap = orderService.userorderProc(orderNumbers);
-		    
+		logger.debug("컨트롤러 basketNo : {}", Arrays.toString(orderDatas));
+		logger.debug("컨트롤러 quantities : {}",  Arrays.toString(quantities));
+		logger.debug("컨트롤러 STitemNo : {}", STitemNo);
+		logger.debug("컨트롤러 STquantity : {}", STquantity);
+		if(orderDatas != null ) {
+			logger.debug("컨트롤러 orderDatas : {}", orderDatas);
+			logger.debug("컨트롤러 quantities : {}", quantities);
+			logger.debug("컨트롤러 orderDatas : {}", Arrays.toString(orderDatas));
+		    List<Basket> baskets = orderService.getItemNosByorderDatas(orderDatas,quantities);
+		    logger.debug("baskets : {}",baskets);
+			Map<String, Object> orderMap = orderService.userorderProc(baskets);
+		    logger.debug("baskets : {}",baskets);
+		    logger.debug("orderMap : {}",orderMap);
 		    model.addAttribute("baskets", orderMap.get("baskets"));
 		    model.addAttribute("items",orderMap.get("items"));
 		    model.addAttribute("imgFiles",orderMap.get("imgFiles"));
@@ -53,6 +60,7 @@ public class OrderController {
 		    logger.debug("userOrder check : {}", userOrder);
 		    model.addAttribute("userOrder", userOrder);
 		    model.addAttribute("orderDatas", orderDatas);
+		    model.addAttribute("quantities",quantities);
 		}else if(orderDatas == null && STquantity != null && STitemNo != null) {
 			int itemNo , quantity;
 			itemNo = Integer.parseInt(STitemNo);
@@ -79,42 +87,53 @@ public class OrderController {
 	public String orderCompleted(
 		HttpServletRequest req
 		,@RequestParam(value="orderDatas", required = false)String orderDatas
+		,@RequestParam(value="quantities", required = false)String quantities
 		,UserOrder userOrder
 		, Model model
-		, @RequestParam(value="itemNo", required = false)String STitemNo
-		, @RequestParam(value="quantity", required = false)String STquantity
+		, @RequestParam(value="itemNo", required = false)String[] STitemNo
+		, @RequestParam(value="quantity", required = false)String[] STquantity
 		) {
 		logger.debug("결제 완료 페이지");
+		logger.debug("결제 완료 페이지 userOrder:{}",userOrder);
+		logger.debug("결제 완료 페이지 orderDatas:{}",orderDatas);
+		logger.debug("결제 완료 페이지 quantities:{}",quantities);
 		logger.debug("결제 완료 페이지 STitemNo:{}",STitemNo);
 		logger.debug("결제 완료 페이지 STquantity:{}",STquantity);
 		User user = (User) session.getAttribute("dto1");
 		if(user == null ) {
 			return "redirect:/";
 		}
+		logger.debug("orderDatas 확인 : {}", orderDatas);
 		logger.debug("userOrder 확인1 : {}", userOrder);
 		
-		//상품 단일 구매의 경우
 		if(orderDatas == null) {
+			logger.debug("!@#@!#!@!orderDatas = null ");
 			int resUserOr = orderService.insertUserOrder(userOrder);
+			logger.debug("userOrder 확인2 : {}", userOrder);
 			
 			if(resUserOr > 0) {
 				logger.debug("resUserOrresUserOr: {}", resUserOr);
-				OrderItem orderItem = new OrderItem();
-				int itemNo,quantity;
-				itemNo = Integer.parseInt(STitemNo);
-				quantity = Integer.parseInt(STquantity);
-				orderItem.setItemNo(itemNo);
-				orderItem.setOrderQuantity(quantity);
-				orderItem.setOrderNo(userOrder.getOrderNo());
-				int resa= orderService.insertOrderItem(orderItem);
-				logger.debug("orderItem : {}",orderItem);
-				if(resa > 0) {
-					orderItem = orderService.selectByOrderItem(orderItem);
-					logger.debug("orderItem : {}",orderItem);
+				int orderNo = userOrder.getOrderNo();
+				List<OrderItem> orderItems = orderService.getOrderItemsByItemNosQuantitys(STitemNo,STquantity,orderNo);
+				List<Item> items= orderService.getItemsByOrderItems(orderItems);
+				List<ItemFile> files = orderService.getItemFilesByItemNos(items);
+				logger.debug("orderItemsorderItems: {}",orderItems);
+				int insertRes = orderService.insertOrderItemByListOrderItem(orderItems);
+				orderItems = orderService.getOrderItemsByUserOrder(userOrder);
+				if( insertRes > 0) {
+					int itemres = orderService.itemReaminReduction(orderItems);
+					logger.debug("itemresitemresitemres : {}",itemres);
+					int resa= orderService.deleteOverlappingBaskets(orderItems);
+					logger.debug("resa : {}",resa);
 				}
+				logger.debug("orderItems : {}",orderItems);
+				logger.debug("userOrder : {}",userOrder);
+				logger.debug("items : {}",items);
+				logger.debug("imgFiles : {}",files);
+				model.addAttribute("orderItems", orderItems);
 				model.addAttribute("userOrder", userOrder);
-				model.addAttribute("orderItem", orderItem);
-				logger.debug("orderItem : {}",orderItem);
+				model.addAttribute("items", items);
+				model.addAttribute("imgFiles", files);
 				return "/order/orderresult";
 				
 			}else {
@@ -122,8 +141,8 @@ public class OrderController {
 			}
 			
 		}
+		logger.debug("!@#@!#!@!orderDatas != null ");
 		
-//		logger.debug("orderItemNos 확인 : {}", orderItemNos);
 		logger.debug("orderDatas 확인 toString: {}", orderDatas.toString());
 		logger.debug("orderDatas 확인 : {}", orderDatas);
 		userOrder.setUserNo(user.getUserno());
@@ -136,7 +155,7 @@ public class OrderController {
 		}
 		
 		logger.debug("userOrder 확인2 : {}", userOrder);
-		List<OrderItem> resOrderItems = orderService.insertOrderItems(orderDatas,userOrder );
+		List<OrderItem> resOrderItems = orderService.insertOrderItems(quantities,orderDatas,userOrder );
 		logger.debug("resOrderItems : {}", resOrderItems);
 		
 		if( null == resOrderItems ) {
@@ -149,14 +168,13 @@ public class OrderController {
 		logger.debug("userOrder : {}", userOrder);
 		model.addAttribute("orderItems", resOrderItems);
 		logger.debug("orderItems : {}", resOrderItems);
-		
 		List<ItemFile> imgFiles = orderService.gettitleImg(resOrderItems);
 		logger.debug("imgFiles : {}", imgFiles);
 		model.addAttribute("imgFiles", imgFiles);
 		
 		return "/order/orderresult";
 		
-	}
+	}//completed
 	
 	@RequestMapping("/orderresult")
 	public void result() {}
@@ -165,6 +183,8 @@ public class OrderController {
 	public String history(Model model, ShopPaging shopPaging,
 			@RequestParam(defaultValue ="0") int curPage,
 			@RequestParam(value="search",required = false) String search) {
+		String URL = "/order/history";
+		model.addAttribute("URL", URL);
 		logger.debug("구매기록");
 		logger.debug("curPage : {}", curPage);
 		User user = (User) session.getAttribute("dto1");
@@ -184,30 +204,40 @@ public class OrderController {
 			shopPaging.setSearch(search);
 		}
 		logger.debug("Paging : {}", shopPaging);
+		if (shopPaging.getTotalCount() == 0){
 		model.addAttribute("paging", shopPaging);
 		model.addAttribute("curPage", curPage);
-		
-		logger.debug("구매기록 user : {}",user);
+		return "order/history";
+		}
+		model.addAttribute("paging", shopPaging);
+		model.addAttribute("curPage", curPage);
+
 		List<UserOrder> orders = orderService.selectUserOrderByUser(user,shopPaging);
-		logger.debug("구매기록 orders : {}",orders);
 		List<OrderItem> orderitems = orderService.selectOrderItemsByUserOrders(orders);
-		logger.debug("구매기록 orderitems : {}",orderitems);
 		List<Item> items = orderService.selectItemByUserOrderItems(orderitems);
+		List<ItemFile> imgFiles = orderService.gettitleImg(orderitems);
+		logger.debug("구매기록 user : {}",user);
+		logger.debug("구매기록 orders : {}",orders);
+		logger.debug("구매기록 orderitems : {}",orderitems);
 		logger.debug("구매기록 items : {}",items);
+		logger.debug("imgFiles : {}", imgFiles);
 		
 		model.addAttribute("orders", orders);
 		model.addAttribute("orderitems", orderitems);
 		model.addAttribute("items", items);
+		model.addAttribute("imgFiles", imgFiles);
 //		
 		
 		return null;
-	}
+	}//history
 	
 	@RequestMapping("/admin/list")
 	public String adminlist(Model model, ShopPaging shopPaging,
 			@RequestParam(defaultValue ="0") int curPage,
 			@RequestParam(value="search",required = false) String search) {
 		logger.debug("관리자 주문 목록");
+		String URL = "/order/admin/list";
+		model.addAttribute("URL", URL);
 		shopPaging.setCurPage(curPage);
 		if( search != null) {
 			shopPaging.setSearch(search);
@@ -237,17 +267,23 @@ public class OrderController {
 		return "/order/admin/list";
 	}
 	
-	@RequestMapping("/ordercancle")
-	public void ordercancle(@Param("orderNo")int orderNo) {
+	@RequestMapping("/admin/ordercancle")
+	public void ordercancle(UserOrder userOrder) {
 		logger.debug("주문 취소");
-		logger.debug("주문 취소 orderNo : {}",orderNo);
-		int res = orderService.updateUserOrderPayCancle(orderNo);
-//		logger.debug("주문 취소 : {} ",res);
-		
+		logger.debug("주문 취소 orderNo : {}",userOrder);
+		String token = orderService.getToken();
+		logger.debug("token : {}", token);
+		int res = 0;
+		res = orderService.updateUserOrderPayCancle(userOrder,token);
+		logger.debug("주문 취소 : {} ",res);
+		logger.debug("주문 취소 orderNo : {}",userOrder);
+		if( res == 1 ) {
+			//성공
+			orderService.updateUserOrderorderCancle(userOrder);
+		}
 		
 		
 	}
-	
 	
 	
 	

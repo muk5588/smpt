@@ -3,6 +3,7 @@ package shop.service.face;
 import java.util.List;
 
 import dto.Review;
+import dto.UserOrder;
 
 public interface ReviewService {
 
@@ -13,5 +14,11 @@ public interface ReviewService {
 	 */
 	public List<Review> selectByItemNo(int itemNo);
 
-	
+
+	public int writeReview(Review review);
+
+
+	public int updateReview(Review review);
+
+	public int deleteReview(Review review);
 }

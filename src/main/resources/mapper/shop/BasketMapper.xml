@@ -61,10 +61,11 @@
 		</foreach>
 		</where>
 	</select>
-	    <!-- 장바구니에서 상품 삭제 -->
-    <delete id="deleteBasket" parameterType="int">
-        DELETE basket
-        WHERE basketno = #{basketNo}
-    </delete>
+	
+	<delete id="deleteBybasketNo" parameterType="int">
+		delete basket
+		where basketNo = #{basketNo}
+	</delete>
+	
 	
 </mapper>

@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -93,27 +95,30 @@ public class BasketController {
 		return "/user/userbasket";
 	}
 	
-    // 장바구니에서 상품 삭제
-    @ResponseBody
-    @RequestMapping("/delete")
-    public int deleteBasket(@RequestParam("basketNo") int basketNo) {
-        logger.debug("장바구니에서 상품 삭제");
-
-        int res = basketService.deleteBasket(basketNo);
-
-        return res;
-    }
-    
- // 장바구니에서 상품 구매
-    @RequestMapping("/buy")
-    public String buyItems(@RequestParam("basketNos") List<Integer> basketNos, Model model) {
-        logger.debug("장바구니에서 상품 구매");
-
-        // 선택된 상품 번호를 결제 페이지로 전달
-        model.addAttribute("basketNos", basketNos);
-
-        return "forward:/order/ordersheet"; // ordersheet 페이지로 forward
-    }
-
+	@ResponseBody
+	@PostMapping("/buyBasket")
+	public List<Basket> buyBasket(@RequestBody(required = false) List<Basket> baskets
+			, Model model) {
+		if( baskets == null || baskets.isEmpty()) {
+			return null;
+		}
+		logger.debug("Ajax buyBasket : {}", baskets);
+//		Map<String, Object> orderMap = basketService.userorderProc(no);
+//		orderMap.put("basketNos", no);
+//		logger.debug("orderMap : {}",orderMap);
+//		model.addAttribute("orderMap", orderMap);
+        return baskets;
+//        return null;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/deleteBasket")
+	public int deleteBasket(int basketNo) {
+		logger.debug("basketNo : {}",basketNo);
+		int res = 0;
+		res = basketService.deleteBybasketNo(basketNo);
+		return res;
+	}
+	
 	
 }
