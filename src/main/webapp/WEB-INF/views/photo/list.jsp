@@ -121,7 +121,7 @@
             <%-- 	<col style="width: 20%;"> --%>
             <%-- </colgroup> --%>
             <tr>
-                <c:if test="${(isLogin > 0)||(dto1.gradeno == 0 || dto1.gradeno == 5000)}">
+                <c:if test="${(isLogin < 0)||(dto1.gradeno == 0 || dto1.gradeno == 5000)}">
                     <th><input type="checkbox" id="checkboxAllCheck"></th>
                 </c:if>
                 <th>글 번호</th>

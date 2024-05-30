@@ -246,6 +246,24 @@
             })
         }
 
+        $("#btnDelete").click(function (e) {
+            e.preventDefault();
+            if (confirm("정말 삭제하시겠습니까?")) {
+                $.ajax({
+                    type: "get",
+                    url: "./delete",
+                    data: {
+                        boardNo: ${photo.boardNo}
+                    },
+                    success: function () {
+                        $(location).attr('href', '/board/list');
+                    },
+                    error: function () {
+                        alert("삭제 실패");
+                    }
+                });
+            }
+        });
 
     })
 </script>
