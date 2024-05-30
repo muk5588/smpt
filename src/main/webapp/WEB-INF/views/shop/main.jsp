@@ -7,7 +7,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN6jIeHz"
         crossorigin="anonymous"></script>
 <jsp:include page="/WEB-INF/views/layout/boardmenu.jsp" />
 
@@ -91,6 +91,29 @@
             $("#search").val(searchTerm);
         });
     });
+    $(function () {
+        $("#filterForm").submit(function (e) {
+            // 폼 제출을 막습니다.
+            e.preventDefault();
+
+            // 최소 가격과 최대 가격을 가져옵니다.
+            var minPrice = $("#minPrice").val();
+            var maxPrice = $("#maxPrice").val();
+
+            // 유효성 검사: 최소 가격이 최대 가격보다 크면 제출을 중지합니다.
+            if (parseFloat(minPrice) > parseFloat(maxPrice)) {
+                alert("최소 가격이 최대 가격보다 큽니다.");
+                return;
+            }
+
+            // URL에 가격 필터 파라미터를 추가합니다.
+            var url = window.location.href.split('?')[0]; // 현재 URL에서 쿼리 문자열 제거
+            url += '?minPrice=' + minPrice + '&maxPrice=' + maxPrice;
+
+            // 새 URL로 리다이렉트합니다.
+            window.location.href = url;
+        });
+    });
 </script>
 
 </head>
@@ -112,7 +135,7 @@
 <div class="filter">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">검색 필터</h5>
+            <h5 class="card-title">가격 검색 필터</h5>
             <form action="" method="get" id="filterForm">
                 <div class="mb-3">
                     <label for="priceRange">가격대</label>
@@ -139,44 +162,38 @@
         </div>
         <hr>
         
-        <c:set var="imgFiles" value="${files}"/>
-<div id="itemwarp">
-	
-    <div class="row">
-        <c:forEach var="item" items="${item }" >
-            <div class="col-md-4 col-sm-6 mb-4">
-                <div class="card h-100">
-                    <a href="./detail?itemNo=${item.itemNo}" class="text-decoration-none">
-                        <div class="itemImg card-img-top">
-                            <!-- 이미지를 표시하는 부분 시작 -->
-                            <c:if test="${not empty imgFiles}">
-                                <c:forEach items="${files}" var="imgFile">
-                                    <c:if test="${item.itemNo eq imgFile.itemNo}">
-                                        <img alt="ItemImg" src="/resources/itemUpload/${imgFile.storedName}" class="img-fluid">
-                                    </c:if>
-                                </c:forEach>
-                            </c:if>
-                            <c:if test="${empty imgFiles}">
-                                <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
-                            </c:if>
-                            <!-- 이미지를 표시하는 부분 종료 -->
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${item.itemName}</h5>
-                            <p class="card-text">
-                                <fmt:setLocale value="ko_KR"/>
-                                <fmt:formatNumber type="currency" value="${item.price}" />
-                            </p>
-                        </div>
-                    </a>
+        <div id="itemwarp">
+            <div class="row">
+<c:forEach var="item" items="${item}">
+    <div class="col-md-4 col-sm-6 mb-4">
+        <div class="card h-100">
+            <a href="./detail?itemNo=${item.itemNo}" class="text-decoration-none">
+                <div class="itemImg card-img-top">
+                    <!-- 아이템 이미지 찾기 -->
+                    <c:set var="hasImage" value="false"/>
+                    <c:forEach items="${files}" var="imgFile">
+                        <c:if test="${item.itemNo eq imgFile.itemNo}">
+                            <c:set var="hasImage" value="true"/>
+                            <img alt="ItemImg" src="/resources/itemUpload/${imgFile.storedName}" class="img-fluid">
+                        </c:if>
+                    </c:forEach>
+                    <c:if test="${!hasImage}">
+                        <img src="<c:url value='/resources/img/shop/nullimg.jpg' />" alt="notready" class="img-fluid">
+                    </c:if>
                 </div>
-            </div>
-        </c:forEach>
+                <div class="card-body">
+                    <h5 class="card-title">${item.itemName}</h5>
+                    <p class="card-text">
+                        <fmt:setLocale value="ko_KR"/>
+                        <fmt:formatNumber type="currency" value="${item.price}" />
+                    </p>
+                </div>
+            </a>
+        </div>
     </div>
-</div>
-
-
-
+</c:forEach>
+            </div>
+        </div>
     </div>
     <jsp:include page="/WEB-INF/views/layout/shopPaging.jsp"/>
 </div>

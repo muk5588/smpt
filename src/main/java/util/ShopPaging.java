@@ -1,5 +1,7 @@
 package util;
 
+import java.math.BigDecimal;
+
 public class ShopPaging {
 	
 	private int curPage; // 현재 페이지 번호
@@ -14,6 +16,9 @@ public class ShopPaging {
 	private String search;	//검색어
 	private String searchKind;	//검색어종류 (사용x)
 	private int categoryNo;
+	private BigDecimal minPrice; // 최소 가격
+	private BigDecimal maxPrice; // 최대 가격
+
 	
 	public int getCategoryNo() {
 		return categoryNo;
@@ -84,12 +89,16 @@ public class ShopPaging {
 		endNo = curPage * listCount;
 	}
 	
+
+	
+
 	@Override
 	public String toString() {
-		return "ShopPaging [curPage=" + curPage + ", totalCount=" + totalCount + ", listCount=" + listCount + ", totalPage="
-				+ totalPage + ", pageCount=" + pageCount + ", startPage=" + startPage + ", endPage=" + endPage
-				+ ", startNo=" + startNo + ", endNo=" + endNo + ", search=" + search 
-				+ "]";
+		return "ShopPaging [curPage=" + curPage + ", totalCount=" + totalCount + ", listCount=" + listCount
+				+ ", totalPage=" + totalPage + ", pageCount=" + pageCount + ", startPage=" + startPage + ", endPage="
+				+ endPage + ", startNo=" + startNo + ", endNo=" + endNo + ", search=" + search + ", searchKind="
+				+ searchKind + ", categoryNo=" + categoryNo + ", minPrice=" + minPrice + ", maxPrice=" + maxPrice
+				+ ", userno=" + userno + "]";
 	}
 
 	public void setCurPage(int curPage) {
@@ -175,4 +184,20 @@ public class ShopPaging {
 	public void setUserno(int userno) {
 		this.userno = userno;
 	}
+	
+	  public BigDecimal getMinPrice() {
+	        return minPrice;
+	    }
+
+	    public void setMinPrice(BigDecimal minPrice) {
+	        this.minPrice = minPrice;
+	    }
+
+	    public BigDecimal getMaxPrice() {
+	        return maxPrice;
+	    }
+
+	    public void setMaxPrice(BigDecimal maxPrice) {
+	        this.maxPrice = maxPrice;
+	    }
 }
