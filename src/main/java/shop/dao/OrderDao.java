@@ -17,9 +17,9 @@ public interface OrderDao {
 
 	public int insertUserorder(UserOrder userOrder);
 
-	public int insertOrderItem(OrderItem order);
+//	public int insertOrderItem(OrderItem order);
 
-	public List<Basket> basketListBybasketNos(@Param("basketNos")int[] orderNumbers);
+	public List<Basket> basketListBybasketNos(@Param("basketNos")List<Basket> baskets);
 
 	public List<Item> getItemByItemNos(@Param("baskets")List<Basket> baskets);
 
@@ -54,6 +54,28 @@ public interface OrderDao {
 	public List<UserOrder> selectUserOrderAll(ShopPaging shopPaging);
 
 	public UserOrder selectUserOrderByOrderNo(int orderNo);
+
+	public void updateUserOrderorderCancle(UserOrder userOrder);
+
+	public List<Basket> selectBasketByBaskets(@Param("baskets")List<Basket> basketList);
+
+	public List<Item> getItemsBySTitemNo(@Param("itemNos")String[] sTitemNo);
+
+	public List<Item> selectItemByOrderItems(@Param("orderItems")List<OrderItem> orderItems);
+
+	public List<Basket> getBasketsByUserNo(int userNo);
+
+	public int deleteOverlappingBaskets(@Param("baskets")List<Basket> baskets);
+
+	public List<Item> getItemsByOrderItems(@Param("orderItems")List<OrderItem> orderItems);
+
+	public List<ItemFile> getItemFilesByItemNos(@Param("items")List<Item> items);
+
+	public int insertOrderItemByListOrderItem(@Param("orderItems")List<OrderItem> orderItems);
+
+	public List<OrderItem> getOrderItemsByUserOrder(UserOrder userOrder);
+
+	public int itemReaminReduction(OrderItem orderItem);
 
 	
 }

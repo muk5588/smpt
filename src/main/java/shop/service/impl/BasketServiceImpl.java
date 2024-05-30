@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import dto.Basket;
 import dto.Item;
@@ -150,20 +149,10 @@ public class BasketServiceImpl implements BasketService {
 		
 	}//userorderProc(int[] )
 
-    @Override
-    public int deleteBasket(int basketNo) {
-        return basketDao.deleteBasket(basketNo);
-    }
-
-    @Override
-    public String buyItems(List<Integer> basketNos, Model model) {
-        logger.debug("장바구니에서 상품 구매");
-
-        // 선택된 상품 번호를 결제 페이지로 전달
-        model.addAttribute("basketNos", basketNos);
-
-        return "forward:/order/ordersheet"; // ordersheet 페이지로 forward
-    }
+	@Override
+	public int deleteBybasketNo(int basketNo) {
+		return basketDao.deleteBybasketNo(basketNo);
+	}
 	
 	
 	

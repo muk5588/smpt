@@ -22,6 +22,6 @@ public interface BasketDao {
 
 	public List<Item> getItemPriceByItemNos(@Param("baskets")List<Basket> baskets);
 
-	public int deleteBasket(int basketNo);
+	public int deleteBybasketNo(int basketNo);
 
 }
