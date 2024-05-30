@@ -33,7 +33,7 @@
 		// 업데이트된 에디터 내용 가져오기
 		var content = document.getElementById("ir1").value;
 		// 확인용으로 alert에 내용 출력
-		alert(content);
+		// alert(content);
 		// 숨겨진 input 요소에 내용 설정
 		document.getElementById("content").value = content;
 		// form 제출
@@ -92,7 +92,7 @@
 	<div class="container">
 		<div class="title">
 			<h1>수정 페이지</h1>
-			<a href="./list" class="btn">
+			<a href="./list?categoryNo=21&curPage=${curPage}" class="btn">
 				게시판으로
 			</a>
 		</div>
