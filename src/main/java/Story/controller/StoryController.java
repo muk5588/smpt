@@ -288,8 +288,8 @@ public class StoryController {
 		int res = boardService.boardUpdate(board);
 		
 		if ( res > 0) {
-			return "redirect:/board/list";
-		}
+			return "redirect:/story/list?categoryNo=" + board.getCategoryNo();		
+			}
 		return "./list";
 	}
 
