@@ -14,6 +14,7 @@ import dto.Item;
 import shop.dao.ShopDao;
 import shop.service.face.ShopService;
 import util.Paging;
+import util.ShopPaging;
 
 @Service
 public class ShopServiceImpl implements ShopService {
@@ -22,23 +23,21 @@ public class ShopServiceImpl implements ShopService {
     @Autowired private ShopDao shopDao;
 
     @Override
-    public Paging getPagging(Paging shopPaging) {
+    public ShopPaging getPagging(ShopPaging shopPaging) {
         int totalCount = shopDao.selectCntAll(shopPaging);
-        return new Paging(totalCount, shopPaging.getCurPage());
+        return new ShopPaging(totalCount, shopPaging.getCurPage());
     }
 
     @Override
-    public List<Item> list(Paging shopPaging) {
+    public List<Item> list(ShopPaging shopPaging) {
         return shopDao.getList(shopPaging);
     }
 
     @Override
-    public List<Item> listByPriceRange(BigDecimal minPrice, BigDecimal maxPrice, Paging shopPaging) {
+    public List<Item> listByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
         Map<String, Object> params = new HashMap<>();
         params.put("minPrice", minPrice);
         params.put("maxPrice", maxPrice);
-        params.put("startNo", shopPaging.getStartNo()); // 페이징 시작 번호
-        params.put("endNo", shopPaging.getEndNo()); // 페이징 종료 번호
         return shopDao.getListByPriceRange(params);
     }
 

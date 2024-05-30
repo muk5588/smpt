@@ -7,19 +7,19 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import dto.Item;
-import util.Paging;
+import util.ShopPaging;
 
 @Repository("ShopDao")
 public interface ShopDao {
 
-    List<Item> getList(Paging shopPaging);
+	public List<Item> getList(ShopPaging shopPaging);
 
-    int selectCntAll(Paging shopPaging);
+	public int selectCntAll(ShopPaging shopPaging);
 
-    Item getItemByItemNo(int itemNo);
+	public Item getItemByItemNo(int itemNo);
 
-    List<Item> selectBySearch(String search);
+	public List<Item> selectBySearch(String search);
 
-    List<Item> getListByPriceRange(Map<String, Object> params);
+	public List<Item> getListByPriceRange(Map<String, Object> params);
 
 }

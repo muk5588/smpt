@@ -8,7 +8,7 @@
             itemno, userno, itemname, createdate, price, itemcomm, remain, titleImg
         FROM ITEM
     </sql>
-    <select id="getList" parameterType="util.Paging" resultType="dto.Item">
+    <select id="getList" parameterType="util.ShopPaging" resultType="dto.Item">
         SELECT * FROM (
             SELECT rownum rnum, I.* FROM (
                 <include refid="selectItem"/>
@@ -20,34 +20,39 @@
         </where>
     </select>
 
-    <!-- 가격 범위로 리스트 조회 -->
-    <select id="getListByPriceRange" parameterType="util.Paging" resultType="dto.Item">
-        SELECT * FROM (
-            SELECT rownum rnum, I.*
-            FROM (
-                SELECT itemno, userno, itemname, createdate, price, itemcomm, remain, titleImg
-                FROM ITEM
-                <where>
-                    <if test="minPrice != null and maxPrice != null">
-                        price BETWEEN #{minPrice} AND #{maxPrice}
-                    </if>
-                </where>
-                ORDER BY itemno DESC
-            ) I
-        )
-        <where> rnum BETWEEN #{startNo} AND #{endNo}</where>
-    </select>
+ <!-- 가격 범위로 리스트 조회 -->
+<select id="getListByPriceRange" parameterType="map" resultType="dto.Item">
+    SELECT * FROM (
+        SELECT rownum rnum, I.*
+        FROM (
+            SELECT itemno, userno, itemname, createdate, price, itemcomm, remain, titleImg
+            FROM ITEM
+            <where>
+                <if test="minPrice != null and maxPrice != null">
+                    price BETWEEN #{minPrice} AND #{maxPrice}
+                </if>
+            </where>
+            ORDER BY itemno DESC
+        ) I
+    )
+    <!-- 페이징 부분 삭제 -->
+</select>
 
-    <!-- 총 아이템 수 조회 -->
-    <select id="selectCntAll" parameterType="util.Paging" resultType="int">
-        SELECT COUNT(*)
-        FROM ITEM
-        <where>
-            <if test="search != null">
-                itemname LIKE '%' || #{search} || '%'
-            </if>
-        </where>
-    </select>
+<!-- 총 아이템 수 조회 -->
+<select id="selectCntAll" parameterType="util.ShopPaging" resultType="int">
+    SELECT COUNT(*)
+    FROM ITEM
+    <where>
+        <!-- 검색어가 존재하는 경우 -->
+        <if test="search != null">
+            itemname LIKE '%' || #{search} || '%'
+        </if>
+        <!-- 최소 가격과 최대 가격이 존재하는 경우 -->
+        <if test="minPrice != null and maxPrice != null">
+            AND price BETWEEN #{minPrice} AND #{maxPrice}
+        </if>
+    </where>
+</select>
 
     <!-- 아이템 번호로 조회 -->
     <select id="getItemByItemNo" parameterType="int" resultType="dto.Item">
