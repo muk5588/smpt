@@ -291,10 +291,13 @@
                     <div id="reBtn">
                         <div class="recommendBtn doRedomm">
                             <c:if test="${empty isRecomm or isRecomm eq 0 }">
-                                    <a class="doRecomm do"><img src="/resources/img/board/개추.png" height="13" width="15">${recomm }</a>
+                                <a class="doRecomm do"><img src="/resources/img/board/개추.png" height="13"
+                                                            width="15">${recomm }</a>
                             </c:if>
                             <c:if test="${not empty isRecomm and isRecomm eq 1 }">
-                                    <a class="doRecomm cancel" style="background: #1e73be; color: white; border: none; padding: 0.5em 1em; text-align: center"><img src="/resources/img/board/개추.png" height="15" width="15">${recomm }</a>
+                                <a class="doRecomm cancel"
+                                   style="background: #1e73be; color: white; border: none; padding: 0.5em 1em; text-align: center"><img
+                                        src="/resources/img/board/개추.png" height="15" width="15">${recomm }</a>
                             </c:if>
                             <button onclick="location.href='../report/boardReport?categoryNo=${param.categoryNo}&boardno=${board.boardNo}'">
                                 신고하기
@@ -349,8 +352,6 @@
                     <th>작성일</th>
                     <c:if test="${isLogin > 0}">
                         <th>신고하기</th>
-                    </c:if>
-                    <c:if test="${board.userNo == dto1.userno }">
                         <th>삭제</th>
                     </c:if>
                 </tr>
@@ -366,16 +367,22 @@
                                 </td>
                                 <c:if test="${isLogin > 0}">
                                     <td class="rpt">
-                                        <a href='../report/commentReport?commno=${comment.commNo}'>
+                                        <a href='../report/commentReport?commno=${comment.commNo}&boardNo=${board.boardNo }&categoryNo=${param.categoryNo}'>
                                             <img src="/resources/img/board/신고.jpg" height="30" width="30">
                                         </a>
                                     </td>
                                 </c:if>
-                                <c:if test="${dto1.userno == comment.userNo }">
-                                    <td>
-                                        <button class="commentDelete" value="${comment.commNo}">삭제</button>
-                                    </td>
-                                </c:if>
+                                <c:choose>
+                                    <c:when test="${dto1.userno == comment.userNo }">
+                                        <td>
+                                            <button class="commentDelete" value="${comment.commNo}">삭제</button>
+                                        </td>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <td>
+                                        </td>
+                                    </c:otherwise>
+                                </c:choose>
                             </tr>
                         </c:forEach>
 

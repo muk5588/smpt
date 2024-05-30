@@ -5,7 +5,7 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/board/boardList.css">
-<title>전체 게시판</title>
+<title>${name }</title>
 
 <script type="text/javascript">
     $(function () {
@@ -88,9 +88,10 @@
                 <a href="/">
                     <button class="go_main">Home</button>
                 </a>
-                <c:if test="${(isLogin > 0 && categoryNo < dto1.gradeno)||(dto1.gradeno == 0 || dto1.gradeno == 5000)}">
+                <c:if test="${(isLogin > 0 && (gradeNo <= dto1.gradeno ))||(dto1.gradeno == 0 || dto1.gradeno == 5000)}">
                     <form action="./write" method="get">
                         <button id="btnWrite" me>글쓰기</button>
+                        <input hidden="hidden" name="categoryNo" value="${param.categoryNo}">
                     </form>
                 </c:if>
             </div>
