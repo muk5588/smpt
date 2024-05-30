@@ -31,11 +31,12 @@ var sUploadURL = '/board/fileupload';
         oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
         // 업데이트된 에디터 내용 가져오기
         var content = document.getElementById("ir1").value;
-        // 확인용으로 alert에 내용 출력
-        alert(content);
+        /* // 확인용으로 alert에 내용 출력
+        alert(content); */
         // 숨겨진 input 요소에 내용 설정
         document.getElementById("content").value = content;
         // form 제출
+        alert("작성되었습니다");
         document.getElementById('btnWrite').click();
     }
 
@@ -101,7 +102,9 @@ var sUploadURL = '/board/fileupload';
             <label for="categoryNo" class="form-label" style="margin-right: 30px">게시물 종류: </label>
             <select name="categoryNo" id="categoryNo" placeholder="종류를 선택해 주세요" class="form-option">
                 <c:forEach var="category" items="${categorylist}">
-                    <option value="${category.categoryNo}">${category.categoryName}</option>
+                    <c:if test="${category.categoryNo == 13}">
+                    	<option value="${category.categoryNo}">${category.categoryName}</option>
+                    </c:if>
                 </c:forEach>
             </select>
         </div>

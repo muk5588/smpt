@@ -46,7 +46,7 @@
 
     <ul class="nav">
         <li class="menu">
-            <a href="/board/list?categoryNo=11&curPage=${curPage}">
+            <a href="/story/list?categoryNo=11&curPage=${curPage}">
                 <img src="/resources/img/mainPage/information.png" class="menu-icon"/>
                 여행지정보
             </a>

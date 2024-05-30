@@ -295,7 +295,7 @@ public class StoryController {
 
 	
 	@RequestMapping("/delete")
-	public String delete(@RequestParam("boardNo") int boardno) {
+	public String delete(@RequestParam("boardNo") int boardno, @RequestParam("categoryNo") int categoryNo) {
 		logger.debug("delete ���� : {}",boardno);
 		
 		Board deleteBoard = new Board();
@@ -305,7 +305,7 @@ public class StoryController {
 		boardService.commentDeleteAll(comment);
 		boardService.boardDelete(deleteBoard);
 		
-		return "redirect:./list";
+		 return "redirect:./list?categoryNo=" + categoryNo;
 	}
 	
 	@RequestMapping("/recommend")
