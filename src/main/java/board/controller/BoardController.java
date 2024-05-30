@@ -91,24 +91,24 @@ public class BoardController {
 	        recommList = boardService.getuserRecommendRes(list);
 			name = boardService.getCategoryName(categoryNo);
 			int categoryno = boardService.category(categoryNo);
-			model.addAttribute("categoryNo", categoryno);
+			model.addAttribute("gradeNo", categoryno);
 	    } else {
 	        list = boardService.list(paging);
 	        recommList = boardService.getuserRecommendRes(list);
 			name = "전체";
 	    }
-		List<BoardReport> reportlist = reportService.reportboardlist();
+//		List<BoardReport> reportlist = reportService.reportboardlist();
 		Iterator<Board> iterator = list.iterator();
 
-		while (iterator.hasNext()) {
-			Board board = iterator.next();
-			for (BoardReport report : reportlist) {
-				if (report.getBoardNo() == board.getBoardNo()) {
-					iterator.remove();
-					break; // 현재 보드가 삭제되었으므로 내부 루프 종료
-				}
-			}
-		}
+//		while (iterator.hasNext()) {
+//			Board board = iterator.next();
+//			for (BoardReport report : reportlist) {
+//				if (report.getBoardNo() == board.getBoardNo()) {
+//					iterator.remove();
+//					break; // 현재 보드가 삭제되었으므로 내부 루프 종료
+//				}
+//			}
+//		}
 
 
 //	    logger.debug("list : {}", list);
