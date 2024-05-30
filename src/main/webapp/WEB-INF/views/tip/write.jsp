@@ -31,60 +31,59 @@ var sUploadURL = '/board/fileupload';
         oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
         // 업데이트된 에디터 내용 가져오기
         var content = document.getElementById("ir1").value;
-        /* // 확인용으로 alert에 내용 출력
-        alert(content); */
+        
+        // 내용이 비어있는지 확인하는 코드 추가
+        if (content.trim() === "" || content === '<p>&nbsp;</p>') {
+	        // 내용이 비어있는 경우 경고 메시지 표시
+	        alert("내용이 없습니다");
+	        return; // 함수 종료
+    	}
+        
         // 숨겨진 input 요소에 내용 설정
         document.getElementById("content").value = content;
         // form 제출
-        alert("작성되었습니다");
         document.getElementById('btnWrite').click();
     }
-
-
 
 </script>
 <script type="text/javascript">
     $(function () {
 
-        $("#writeFrom").submit(function (e) {
-            console.log("#writeFrom submit")
+        $("#writeForm").submit(function (e) {
+            console.log("#writeForm submit");
 
-            var titleTerm = $("#title").val().trim()
-            var contentTerm = $("#content").val().trim()
-            console.log("#writeFrom submit contentTerm", contentTerm)
+            var titleTerm = $("#title").val().trim();
+            var contentTerm = $("#content").val().trim();
+            console.log("#writeForm submit contentTerm", contentTerm);
 
+            // 제목이 비어있는지 확인하는 코드 추가
             if (!titleTerm) {
-                alert("제목을 입력해주세요")
-                $("#title").focus()
+                alert("제목을 입력해주세요");
+                $("#title").focus();
                 return false;
             }
 
             if (titleTerm.length === 0) {
                 alert('제목이 공백만 입력되었습니다 ');
-                $("#title").focus()
+                $("#title").focus();
                 return false;
             }
 
-
+            // 내용이 비어있는지 확인하는 코드 추가
             if (!contentTerm) {
-                alert("내용을 입력해주세요")
-                $("#content").focus()
+                alert("내용을 입력해주세요");
+                $("#content").focus();
                 return false;
             }
 
             if (contentTerm.length === 0) {
                 alert('내용이 공백만 입력되었습니다 ');
-                $("#content").focus()
+                $("#content").focus();
                 return false;
             }
+        });
 
-            $("#title").val(searchTerm)
-
-        })
-
-
-    })
-</script>
+    });
 </script>
 </head>
 <body>
@@ -103,9 +102,9 @@ var sUploadURL = '/board/fileupload';
             <label for="categoryNo" class="form-label" style="margin-right: 30px">게시물 종류: </label>
             <select name="categoryNo" id="categoryNo" placeholder="종류를 선택해 주세요" class="form-option">
                 <c:forEach var="category" items="${categorylist}">
-                    <c:if test="${category.categoryNo == 12}">
+                   <c:if test="${category.categoryNo == 11}">
                     	<option value="${category.categoryNo}">${category.categoryName}</option>
-                    </c:if>
+                	</c:if>
                 </c:forEach>
             </select>
         </div>
@@ -134,7 +133,7 @@ var sUploadURL = '/board/fileupload';
     nhn.husky.EZCreator.createInIFrame({
         oAppRef: oEditors,
         elPlaceHolder: "ir1",  //textarea ID 입력
-        sSkinURI: "/resources/editor/SmartEditor2Skin.html",  //martEditor2Skin.html 경로 입력
+        sSkinURI: "/resources/editor/SmartEditor2Skin.html",  //SmartEditor2Skin.html 경로 입력
         fCreator: "createSEditor2",
         htParams: {
             // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
@@ -146,8 +145,6 @@ var sUploadURL = '/board/fileupload';
         }
     });
 </script>
-
-
 
 </body>
 </html>
