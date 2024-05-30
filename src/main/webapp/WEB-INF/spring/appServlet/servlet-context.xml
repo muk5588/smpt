@@ -69,8 +69,6 @@
             <mapping path="/board/delete"/>
             <mapping path="/board/userbyboardlist/**"/>
             <mapping path="/board/userbyrecommlist/**"/>
-            <mapping path="/user/**"/>
-            <mapping path="/shop/**"/>
             <mapping path="/shop/**"/>
             <mapping path="/basket/**"/>
             <mapping path="/calendar/**"/>
@@ -80,10 +78,13 @@
             <mapping path="/order/**"/>
             <mapping path="/user/userPass"/>
             <mapping path="/user/userLog"/>
+            <mapping path="/report/boardReport"/>
+            <mapping path="/report/commentReport"/>
             <mapping path="/inquiry/list"/>
             <mapping path="/inquiry/inquirylist"/>
             <exclude-mapping path="/shop/"/>
             <exclude-mapping path="/shop/list"/>
+            <exclude-mapping path="/shop/detail"/>
             <exclude-mapping path="/user/insertUser"/>
             <exclude-mapping path="/user/searchUser"/>
             <exclude-mapping path="/inquiry/adminList"/>
@@ -94,6 +95,7 @@
             <exclude-mapping path="/user/deleteUser"/>
             <exclude-mapping path="/user/userBlack"/>
             <exclude-mapping path="/user/userWhite"/>
+            <exclude-mapping path="/user/checkEmail"/>
             <exclude-mapping path="/report/deleteReport"/>
             <exclude-mapping path="/report/deleteCommReport"/>
             <exclude-mapping path="/order/admin/**"/>
@@ -122,7 +124,6 @@
             <mapping path="/order/admin/**"/>
             <mapping path="/user/adminPage"/>
             <mapping path="/user/userList"/>
-            <mapping path="/user/deleteUser"/>
             <mapping path="/user/userBlack"/>
             <mapping path="/user/userWhite"/>
             <mapping path="/inquiry/adminList"/>
