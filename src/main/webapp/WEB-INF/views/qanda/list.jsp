@@ -106,6 +106,7 @@
                     </select>
                     <input type="text" name="search" id="search" value="${paging.search }">
                     <input hidden="hidden" name="curPage" value="${curPage}">
+                    <input hidden="hidden" name="categoryNo" value="${paging.categoryNo}">
                     <button id="searchBtn">검색</button>
                 </form>
             </div>
