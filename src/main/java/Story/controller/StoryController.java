@@ -1,6 +1,7 @@
  package Story.controller;
 
- 
+ import Story.dto.*;
+import Story.service.StoryService;
 import board.dto.Board;
 import board.dto.BoardFile;
 import board.dto.Category;
@@ -9,8 +10,8 @@ import board.dto.RecommendRes;
 import board.service.BoardService;
  import board.service.FileService;
  import comment.dto.Comment;
-import Story.dto.Story;
-import Story.service.StoryService;
+import report.dto.CommReport;
+import report.service.ReportService;
 
 import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
@@ -28,7 +29,9 @@ import org.slf4j.Logger;
  import javax.servlet.http.HttpServletResponse;
  import javax.servlet.http.HttpSession;
  import java.util.ArrayList;
- import java.util.List;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
  import java.util.Map;
 
 @Controller
@@ -40,8 +43,9 @@ public class StoryController {
 	@Autowired private StoryService storyService;
 	@Autowired private FileService fileService;
 	@Autowired private ServletContext servletContext;
+	@Autowired private ReportService reportService;
 	
-	@GetMapping("/storylist")
+	@GetMapping("/list")
 	public String list(
 	    Model model,
 	    @RequestParam(defaultValue ="0") int curPage,
@@ -49,11 +53,11 @@ public class StoryController {
 	    @RequestParam(value="searchKind", required = false) String searchKind,
 	    @RequestParam(value="categoryNo", required = false) Integer categoryNo) {
 
-	    logger.info("/Story/storylist [GET]");
-	    logger.info("/Story/storylist search : {}", search);
-	    logger.info("/Story/storylist searchKind : {}", searchKind);
-	    logger.info("/Story/storylist categoryNo : {}", categoryNo);
-		String URL = "/story/storylist";
+	    logger.info("/story/list [GET]");
+	    logger.info("/story/list search : {}", search);
+	    logger.info("/story/list searchKind : {}", searchKind);
+	    logger.info("/story/list categoryNo : {}", categoryNo);
+		String URL = "/story/list";
 	    // 페이징 계산
 	    Paging paging = new Paging();
 	    paging.setSearch(search);
@@ -102,15 +106,13 @@ public class StoryController {
 	        recommList = storyService.getuserRecommendRes(list);
 			name = "전체";
 	    }
-
+	    
+	    
 //	    logger.debug("list : {}", list);
 //	    logger.debug("recommList : {}", recommList);
-	    // 각 스토리에 이미지 출력: 파일 리스트를 추가
-	    for (Story story : list) {
-	        List<BoardFile> files = fileService.getFilesByBoardNo(story.getBoardNo());
-	        story.setFiles(files);
+	    for(Story M : list) {
+//			logger.debug("!!@!@!@M : {}", M); 
 	    }
-
 	    for(Map<String, Object> M : recommList) {
 //	        logger.debug("M : {}", M.toString());
 	    }
@@ -131,7 +133,6 @@ public class StoryController {
 	public void view(
 			@RequestParam("boardNo") int boardno
 			, Board board
-			, Story story
 			, Model model
 			, HttpSession session
 			, @RequestParam(value="curPage", defaultValue="0") int curPage
@@ -139,27 +140,37 @@ public class StoryController {
 			, @RequestParam(value ="usrno", required = false, defaultValue = "0")int usrno
 			) {
 
-		story =  storyService.viewByBoardNo(boardno);
+		board =  boardService.viewByBoardNo(boardno);
 		User user = (User)session.getAttribute("dto1");
 		int recomm = 0;
 		if( null == user) {
-			recomm = storyService.viewRecommend(boardno);
+			recomm = boardService.viewRecommend(boardno);
 		}else {
 			Good paramGood = new Good(user.getUserno(), boardno);
-			GoodVO good = storyService.getRecommendVO(paramGood);
+			GoodVO good = boardService.getRecommendVO(paramGood);
 			model.addAttribute("isRecomm", good.getIsRecomm());
 			logger.info("isRecomm : {}", good.getIsRecomm());
 			recomm = good.getTotalRecomm();
 		}
-		List<BoardFile> files = fileService.getFilesByBoardNo(boardno); // 파일 리스트 조회 추가 : 이미지 출력
-		model.addAttribute("files", files); // 모델에 파일 리스트 추가 : 이미지 출력
+		List<Comment> comment = boardService.commentList(board);
+//		신고된 댓글 블러 처리
+		List<CommReport> reportlist = reportService.reportcommlist();
+		Iterator<Comment> iterator = comment.iterator();
 		
-		List<Comment> comment = storyService.commentList(board);
+		while (iterator.hasNext()) {
+			Comment comment2 = iterator.next();
+			for (CommReport report : reportlist) {
+				if (report.getCommNo() == comment2.getCommNo()) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
 		model.addAttribute("comment", comment);
 		model.addAttribute("recomm", recomm);
 		logger.info("recomm : {}", recomm);
 		model.addAttribute("curPage", curPage);
-		model.addAttribute("story", story);
+		model.addAttribute("board", board);
 		model.addAttribute("usrno",usrno);
 	}
 	
@@ -169,12 +180,13 @@ public class StoryController {
 		model.addAttribute("categorylist", categorylist);
 	}
 	
+	///========좌표1
 	@PostMapping("/write")
 	public String writeProc(
 			HttpSession session
 			, Board board
 			, @RequestParam("categoryNo") int categoryNo
-			, @RequestParam("files") List<MultipartFile> files	//다중 이미지 첨부 
+			, @RequestAttribute(required = false)MultipartFile file	//다중 이미지 첨부 
 			) {
 		logger.debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 		User user = (User) session.getAttribute("dto1");
@@ -198,7 +210,7 @@ public class StoryController {
 		logger.info("storedNames Ȯ�� : {}", storedNames);
 		
 		if (originNames != null && storedNames != null && originNames.size() == storedNames.size() && !originNames.isEmpty() && !storedNames.isEmpty()) {
-			ArrayList<BoardFile> filesList = new ArrayList<>();
+			ArrayList<BoardFile> files = new ArrayList<>();
 			logger.info("�̹��� ���� ó���� :%%%%%%%%%%%%%%%%%%%%%%%%%%" );
 		    for (int i = 0; i < originNames.size(); i++) {
 		        String originName = originNames.get(i);
@@ -208,30 +220,29 @@ public class StoryController {
 		            bf.setBoardNo(board.getBoardNo());
 		            bf.setOriginName(originName);
 		            bf.setStoredName(storedName);
-		            filesList.add(bf);
+		            files.add(bf);
 		        }
 		    }
-		    fileService.setFile(filesList);
+		    fileService.setFile(files);
 		}
         
 		logger.info("board �� Ȯ�� : {}", board);
 		
-		
-		// 다중 이미지 출력
-		 for (MultipartFile file : files) {
-		 if (file != null && !file.isEmpty()) { 
-			 fileService.filesave(board, file);  //이미지 출력
-		 
-		 }
+		if( null == file ) {
+			logger.debug("÷�� ���� ����");
+		}else if( file.getSize() <= 0 ){
+			logger.debug("������ ũ�Ⱑ 0");
+		}else { 
+//			for( )
+			fileService.filesave(board,file);
 		}
 		
-		
-		 return "redirect:/story/storylist?categoryNo=" + categoryNo; // 글작성 시 선택한 카테고리 목록으로 이동.
+		 return "redirect:/story/list?categoryNo=" + categoryNo; // 글작성 시 선택한 카테고리 목록으로 이동.
 	}
 	
 	
 	
-	
+	///========좌표2
 	@ResponseBody
 	@PostMapping("/fileupload")
 	public void fileupload(HttpServletResponse response
@@ -255,33 +266,33 @@ public class StoryController {
 		return files;
 	}
 	
-	 @GetMapping("/update")
-	    public void update(
-	            @RequestParam("boardNo") int boardNo
-	            , Model model
-	            ) {
-	        logger.info("게시물 번호: {}",boardNo);
-	        Board board = boardService.boardView(boardNo);
-	        model.addAttribute("board", board);
-	    }
+	@GetMapping("/update")
+	public void update(
+			int boardNo
+			, Model model
+			) {
+		logger.info("{}",boardNo);
+		List<Category> categorylist = boardService.categoryList();
+		Board board = boardService.boardView(boardNo);
+		model.addAttribute("categorylist", categorylist);
+		model.addAttribute("board", board);
+	}
+	
+	///========좌표3
+	@PostMapping("/update")
+	public String updateProc(
+			Board board
+			) {
+		logger.info("{}", board);
+		board.setUpdateDate(new Date());
+		int res = boardService.boardUpdate(board);
+		
+		if ( res > 0) {
+			return "redirect:/board/list";
+		}
+		return "./list";
+	}
 
-	    @PostMapping("/update")
-	    public String updateProc(
-	            Board board,
-	            @RequestParam("file") MultipartFile file,
-	            HttpSession session) {
-	        logger.info("게시물 업데이트: {}", board);
-
-	        int res = boardService.boardUpdate(board);
-
-	        if (res > 0) {
-	            if (file != null && !file.isEmpty()) {
-	                fileService.filesave(board, file);
-	            }
-	            return "redirect:/story/view?boardNo=" + board.getBoardNo(); // 해당 글 상세페이지로 이동
-	        }
-	        return "redirect:/story/view?boardNo=" + board.getBoardNo(); // 해당 글 상세페이지로 이동
-	    }
 	
 	@RequestMapping("/delete")
 	public String delete(@RequestParam("boardNo") int boardno) {
@@ -294,7 +305,7 @@ public class StoryController {
 		boardService.commentDeleteAll(comment);
 		boardService.boardDelete(deleteBoard);
 		
-		return "redirect:./storylist";
+		return "redirect:./list";
 	}
 	
 	@RequestMapping("/recommend")
@@ -409,7 +420,7 @@ public class StoryController {
 	}
 
 	@RequestMapping("/userbyrecommlist")
-	public void userbyRecommList(@SessionAttribute(value = "dto1", required = false) User login,
+	public String userbyRecommList(@SessionAttribute(value = "dto1", required = false) User login,
 								 @RequestParam(defaultValue ="0") int curPage, Model model
 								,@RequestParam(value="search",required = false) String search
 								,@RequestParam(value="searchKind", required = false ) String searchKind){
@@ -426,6 +437,7 @@ public class StoryController {
 		}
 		//게시글 없는 경우
 		if( paging == null ) {
+			paging = new Paging();
 			paging.setSearch(search);
 			paging.setSearchKind(searchKind);
 			paging.setUserno(login.getUserno());
@@ -434,9 +446,17 @@ public class StoryController {
 		paging.setSearchKind(searchKind);
 		paging.setUserno(login.getUserno());
 		List<Board> list2 = boardService.userbyrecommList(paging);
-
+		if( list2 == null ) {
+			model.addAttribute("curPage", curPage);
+			model.addAttribute("paging", paging);
+			model.addAttribute("param", login);
+			logger.debug("paramparamparamparam: {}", login);
+			return "board/userbyboardlist";
+		}
 		model.addAttribute("list2", list2);
 		model.addAttribute("paging", paging);
+		model.addAttribute("curPage", curPage);
+		return "board/userbyrecommlist";
 	}
 	
 	@RequestMapping("/fileDown")
