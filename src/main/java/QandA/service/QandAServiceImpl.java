@@ -262,7 +262,10 @@ public class QandAServiceImpl implements QandAService {
 		return pagingres;
 	}
 
-
+	@Override
+	public int category(Integer categoryNo) {
+		return qandaDao.category(categoryNo);
+	}
 
 
 }

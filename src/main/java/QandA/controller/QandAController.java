@@ -100,13 +100,15 @@ public class QandAController {
 	    	paging.setCategoryNo(categoryNo);
 	        list = qandaService.listByCategory(paging);
 	        recommList = qandaService.getuserRecommendRes(list);
-			name = qandaService.getCategoryName(categoryNo);
+	        name = qandaService.getCategoryName(categoryNo);
+	    	int categoryno = qandaService.category(categoryNo);
+	    	model.addAttribute("gradeNo", categoryno);
 	    } else {
 	        list = qandaService.list(paging);
 	        recommList = qandaService.getuserRecommendRes(list);
 			name = "전체";
 	    }
-	    
+	    Iterator<QandA> iterator = list.iterator();
 	    
 //	    logger.debug("list : {}", list);
 //	    logger.debug("recommList : {}", recommList);

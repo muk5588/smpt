@@ -102,4 +102,6 @@ public interface QandADao {
 	public List<QandA> userbyrecommList(Paging paging);
 
 	public int selectCntByUserNo(@Param("paging")Paging paging, @Param("user")User login);
+	
+	public int category(Integer categoryNo);
 }

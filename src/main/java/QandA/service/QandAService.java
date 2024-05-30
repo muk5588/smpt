@@ -130,4 +130,6 @@ public interface QandAService {
 	 * @return - 페이징 객체
 	 */
 	public Paging getPagingByUserNo(int curPage, Paging paging, User login);
+
+	public int category(Integer categoryNo);
 }

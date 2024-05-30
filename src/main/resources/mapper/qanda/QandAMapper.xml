@@ -96,11 +96,16 @@
 	</select>
 
 	<select id="selectCntAll" resultType="int" parameterType="util.Paging">
-		SELECT count(*) FROM (
-			<include refid="selectQandA" />
+	      SELECT count(*) FROM (
+         SELECT 
+      b.boardno, b.userno,  title, content, nickname, createdate, boardview, CATEGORYNO
+      FROM board b
+       LEFT JOIN boardreport br ON b.boardno = br.boardno
 			<where>
+			AND br.boardno IS NULL
+			
 				<include refid="searchAND"/>
-	           	<if test="categoryNo != null and !categoryNo.equals('')">
+	           	<if test="categoryNo != null and !categoryNo.equals('') and categoryNo != 0">
 	   				AND categoryNo = #{categoryNo}
 				</if>
 	        </where>
@@ -257,9 +262,14 @@
 
 	<select id="categoryList" resultType="Category">
 		select CATEGORYNAME, CATEGORYNO from CATEGORY order by CATEGORYNO
+		<where>
+			AND CATEGORYNO <![CDATA[ <>  61 ]]>
+		</where>
+		order by CATEGORYNO
 	</select>
-
-	<select id="selectLogCntAll" resultType="int" parameterType="util.Paging">
+	
+	<!--  에러? 유의 -->
+	<select id="selectLogCntAll" resultType="int" parameterType="util.UserPaging">
 		SELECT count(*) FROM (
 		    select ACCESSNO, USERNO, ACCESSDATE from ACCESSHIQandA
 		)
@@ -268,6 +278,7 @@
 	<select id="selectAdminCntAll" resultType="int" parameterType="util.Paging">
 		select count(*) from (
 								 select USERNO from USERTB
+								  where userno is not null
 							 )
 	</select>
 
@@ -338,27 +349,29 @@
 		</where>
 	</select> -->
 
-<select id="listByCategory" parameterType="util.Paging" resultType="QandA.dto.QandA">
+	<select id="listByCategory" parameterType="util.Paging" resultType="QandA.dto.QandA">
     SELECT * FROM (
-    SELECT rownum rnum, B.* FROM (
-    <include refid="selectQandA"/>
-    <where>
-        AND categoryno = #{categoryNo}
-        <choose>
-            <when test="searchKind != null and searchKind.equals('title')">
-                AND TITLE Like '%${search}%'
-            </when>
-            <when test="searchKind != null and searchKind.equals('content')">
-                AND CONTENT Like '%${search}%'
-            </when>
-        </choose>
-    </where>
-    ORDER BY boardno DESC
-    ) B
+        SELECT rownum rnum, a.* FROM (
+            SELECT 
+                b.boardno, b.userno, b.title, b.content, b.nickname, b.createdate, b.boardview, b.categoryno
+            FROM board b
+            LEFT JOIN boardreport br ON b.boardno = br.boardno
+            <where>
+                br.boardno IS NULL
+                AND b.categoryno = #{categoryNo}
+                <choose>
+                    <when test="searchKind != null and searchKind.equals('title')">
+                        AND b.title LIKE '%${search}%'
+                    </when>
+                    <when test="searchKind != null and searchKind.equals('content')">
+                        AND b.content LIKE '%${search}%'
+                    </when>
+                </choose>
+            </where>
+            ORDER BY b.boardno DESC
+        ) a
     )
-    <where>
-        AND rnum BETWEEN #{startNo } AND #{endNo}
-    </where>
+    WHERE rnum BETWEEN #{startNo} AND #{endNo}
 </select>
 
 	<select id="selectCntByCategory" resultType="int" parameterType="int">
@@ -413,11 +426,22 @@
 		<where>
 			and g.boardno = b.boardno
 			and g.userno = #{userno}
+			<if test="search != null and searchKind != null">
+				<choose>
+					<when test="searchKind.equals('title')">
+						AND title Like '%${search}%'
+					</when>
+					<when test="searchKind.equals('content')">
+						AND content Like '%${search}%'
+					</when>
+				</choose>
+			</if>
 		</where>
 		order by createdate desc) A )
 		<where>
 			and rnum between #{startNo} and #{endNo}
 		</where>
+
 	</select>
 	
 
@@ -441,5 +465,36 @@
         </where>
     )
 </select>
+
+	<select id="selectCntByUserNoGood" resultType="int" parameterType="map">
+		select count(*) from (
+        select g.USERNO, g.BOARDNO, b.TITLE, b.BOARDVIEW, b.NICKNAME, b.CREATEDATE
+        from good g
+        left outer join BOARD B on B.BOARDNO = g.BOARDNO
+		<where>
+			<if test="user != null">
+				g.userno = #{user.userno}
+			</if>
+			<if test="paging.search != null and paging.searchKind != null">
+				<choose>
+					<when test="paging.searchKind.equals('title')">
+						AND title Like '%${paging.search}%'
+					</when>
+					<when test="paging.searchKind.equals('content')">
+						AND content Like '%${paging.search}%'
+					</when>
+				</choose>
+			</if>
+		</where>
+		)
+	</select>
+	<select id="category" parameterType="Integer" resultType="int">
+		select GRADENO from CATEGORY
+		<where>
+		    and CATEGORYNO = #{categoryNo}
+			AND CATEGORYNO <![CDATA[ <>  61 ]]>
+		</where>
+		order by CATEGORYNO
+	</select>
 	
 </mapper>
