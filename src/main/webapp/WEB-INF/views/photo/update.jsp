@@ -105,8 +105,13 @@
 				<label for="categoryNo" class="form-label" style="margin-right: 30px">게시물 종류: </label>
 				<select name="categoryNo" id="categoryNo" placeholder="종류를 선택해 주세요" class="form-option">
 					<c:forEach var="category" items="${categorylist}">
+					
+					 <c:if test="${category.categoryNo == 21}">
+					
 						<option value="${category.categoryNo}">${category.categoryName}</option>
+					</c:if>
 					</c:forEach>
+					
 				</select>
 			</div>
 			<div class="mb-3">
