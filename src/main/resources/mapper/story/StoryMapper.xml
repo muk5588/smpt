@@ -96,16 +96,20 @@
 	</select>
 
 	<select id="selectCntAll" resultType="int" parameterType="util.Paging">
-		SELECT count(*) FROM (
-			<include refid="selectStory" />
-			<where>
-				<include refid="searchAND"/>
-	           	<if test="categoryNo != null and !categoryNo.equals('')">
-	   				AND categoryNo = #{categoryNo}
-				</if>
-	        </where>
-		)
-	</select>
+      SELECT count(*) FROM (
+         SELECT 
+      b.boardno, b.userno,  title, content, nickname, createdate, boardview, CATEGORYNO
+      FROM board b
+       LEFT JOIN boardreport br ON b.boardno = br.boardno
+          <where>
+          AND br.boardno IS NULL
+            <include refid="searchAND"/>
+                 <if test="categoryNo != null and !categoryNo.equals('') and categoryNo != 0">
+                  AND categoryNo = #{categoryNo}
+            </if>
+           </where>
+      )
+   </select>
 
 	<select id="selectCntTitleBySearch" parameterType="int" resultType="int">
 		SELECT count(*) FROM (
@@ -173,9 +177,10 @@
 			<if test="content != null and !content.equals('')">
 				content = #{content},
 			</if>
+			updatedate = #{updateDate}
 		</set>
 		<where>
-			AND boardno = #{boardNo}
+			 boardno = #{boardNo}
 		</where>
 	</update>
 
@@ -338,11 +343,15 @@
 		</where>
 	</select> -->
 
-<select id="listByCategory" parameterType="util.Paging" resultType="Story.dto.Story">
+<select id="listByCategory" parameterType="util.Paging" >
     SELECT * FROM (
-    SELECT rownum rnum, B.* FROM (
-    <include refid="selectStory"/>
+    SELECT rownum rnum, a.* FROM (
+         SELECT 
+      b.boardno, b.userno,  title, content, nickname, createdate, boardview, CATEGORYNO
+      FROM board b
+       LEFT JOIN boardreport br ON b.boardno = br.boardno
     <where>
+       AND br.boardno IS NULL
         AND categoryno = #{categoryNo}
         <choose>
             <when test="searchKind != null and searchKind.equals('title')">
@@ -353,8 +362,8 @@
             </when>
         </choose>
     </where>
-    ORDER BY boardno DESC
-    ) B
+    ORDER BY b.boardno DESC
+    ) a
     )
     <where>
         AND rnum BETWEEN #{startNo } AND #{endNo}
