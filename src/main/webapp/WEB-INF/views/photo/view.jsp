@@ -109,7 +109,7 @@
 
                     if (res) {
                         $(function () {
-                            $(location).attr('href', './view?categoryNo=${board.categoryNo}&boardNo=${photo.boardNo }')
+                            $(location).attr('href', './view?categoryNo=${photo.categoryNo}&boardNo=${photo.boardNo }')
                         })
                     }
                 }
@@ -256,7 +256,7 @@
                         boardNo: ${photo.boardNo}
                     },
                     success: function () {
-                        $(location).attr('href', '/board/list');
+                        $(location).attr('href', './list?categoryNo=${param.categoryNo}&curPage=${curPage}');
                     },
                     error: function () {
                         alert("삭제 실패");
@@ -311,7 +311,7 @@ $(function () {
         <div class="tit">
             <div>
                 <c:choose>
-                    <c:when test="${usrno != 0 }">
+                    <c:when test="${userno != 0 }">
                         <a href="./userbyboardlist?userno=${dto1.userno}">
                             <button>목록으로</button>
                         </a>

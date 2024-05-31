@@ -297,7 +297,7 @@ public class PhotoController {
 			int res = photoService.boardUpdate(photo);
 			
 			if ( res > 0) {
-				return "redirect:/photo/list";
+				return "redirect:/photo/list?categoryNo=" + photo.getCategoryNo();
 			}
 			return "./list";
 		}
