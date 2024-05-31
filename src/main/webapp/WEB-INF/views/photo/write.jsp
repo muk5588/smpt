@@ -99,7 +99,7 @@ var sUploadURL = '/photo/fileupload';
 <div class="container">
     <div class="title">
     <h1>글쓰기 페이지</h1>
-    <a href="./list" class="btn">
+<a href="./list?categoryNo=21&curPage=${curPage}" class="btn">
         게시판으로
     </a>
     </div>
