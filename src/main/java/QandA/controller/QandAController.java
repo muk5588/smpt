@@ -288,7 +288,7 @@ public class QandAController {
 		int res = boardService.boardUpdate(board);
 		
 		if ( res > 0) {
-			return "redirect:/board/list";
+			return "redirect:/qanda/list?categoryNo=" + board.getCategoryNo();		
 		}
 		return "./list";
 	}

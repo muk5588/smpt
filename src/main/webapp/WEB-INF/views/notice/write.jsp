@@ -31,12 +31,24 @@ var sUploadURL = '/board/fileupload';
         oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
         // 업데이트된 에디터 내용 가져오기
         var content = document.getElementById("ir1").value;
-        // 확인용으로 alert에 내용 출력
-        alert(content);
+//         확인용으로 alert에 내용 출력
+//         alert(content);
+        
+        if (content.trim() === "") {
+	        // 내용이 비어있는 경우 경고 메시지 표시
+	        alert("내용이 없습니다");
+	        return; // 함수 종료
+    	}
+        if (content === '<p>&nbsp;</p>') {
+	        // 내용이 비어있는 경우 경고 메시지 표시
+	        alert("내용이 없습니다");
+	        return; // 함수 종료
+    	}
         // 숨겨진 input 요소에 내용 설정
         document.getElementById("content").value = content;
         // form 제출
         document.getElementById('btnWrite').click();
+        
     }
 
 
@@ -44,8 +56,8 @@ var sUploadURL = '/board/fileupload';
 </script>
 <script type="text/javascript">
     $(function () {
-
-        $("#writeFrom").submit(function (e) {
+	
+        $("#btnWrite").click(function (e) {
             console.log("#writeFrom submit")
 
             var titleTerm = $("#title").val().trim()
@@ -78,30 +90,32 @@ var sUploadURL = '/board/fileupload';
             }
 
             $("#title").val(searchTerm)
-
+			
         })
-
+    	
 
     })
-</script>
 </script>
 </head>
 <body>
 <c:import url="/WEB-INF/views/layout/header.jsp"/>
+<jsp:include page="/WEB-INF/views/layout/boardmenu.jsp"/>
 <div class="container">
     <div class="title">
     <h1>글쓰기 페이지</h1>
-    <a href="./list" class="btn">
-        게시판으로
+    <a href="#" class="btn" onclick="window.history.back(); return false;">
+        이전페이지로
     </a>
     </div>
     <hr>
     <form action="./write" method="post" id="writeForm" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="categoryNo" class="form-label" style="margin-right: 30px">게시물 종류: </label>
-            <select name="categoryNo" id="categoryNo" placeholder="종류를 선택해 주세요" class="form-option">
+            <select name="categoryNo" id="categoryNo" class="form-option">
                 <c:forEach var="category" items="${categorylist}">
-                    <option value="${category.categoryNo}">${category.categoryName}</option>
+                    <c:if test="${category.categoryNo == 43}">
+                    	<option value="${category.categoryNo}">${category.categoryName}</option>
+                    </c:if>
                 </c:forEach>
             </select>
         </div>

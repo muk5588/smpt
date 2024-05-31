@@ -237,7 +237,7 @@ public class FreeController {
 			fileService.filesave(board,file);
 		}
 		
-		 return "redirect:/qanda/list?categoryNo=" + categoryNo; // 글작성 시 선택한 카테고리 목록으로 이동.
+		 return "redirect:/Free/list?categoryNo=" + categoryNo; // 글작성 시 선택한 카테고리 목록으로 이동.
 	}
 	
 	
@@ -288,7 +288,7 @@ public class FreeController {
 		int res = boardService.boardUpdate(board);
 		
 		if ( res > 0) {
-			return "redirect:/board/list";
+			return "redirect:/Free/list?categoryNo=" + board.getCategoryNo();	
 		}
 		return "./list";
 	}
@@ -305,7 +305,7 @@ public class FreeController {
 	      boardService.commentDeleteAll(comment);
 	      boardService.boardDelete(deleteBoard);
 	      
-	       return "redirect:/qanda/list?categoryNo=" + categoryNo;
+	       return "redirect:/Free/list?categoryNo=" + categoryNo;
 	   }
 
 	
