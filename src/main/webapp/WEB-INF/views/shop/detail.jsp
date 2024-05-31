@@ -76,8 +76,13 @@
   border: 1px solid transparent;
   border-radius: .25rem;
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    #addToCartBtn:focus, #purchaseBtn:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+    }
 }
 
 #addToCartBtn:hover,
@@ -91,6 +96,29 @@
   outline: none;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
 }
+
+  #searchForm button {
+        padding: 0.5em 1em;
+    }
+
+button {
+        background: #87cefa;
+        border: none;
+        padding: 0.5em 1em;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    button:hover {
+        background: #39a9db;
+    }
+
+    button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+    
+    
 </style>
 <script>
     function incrementQuantity() {
@@ -218,10 +246,11 @@ $(function(){
 
  <div class="container">
     <h1>상품 정보</h1>
+    <div class="mainbtn">
     <a href="/">
         <button>메인 페이지로</button>
     </a>
-        
+      </div>
     <div id="itemwarp" style="border: 1px solid #ccc; padding: 20px; margin-top: 20px;">
         <div class="row">
             <div class="col-md-4">
@@ -267,7 +296,7 @@ $(function(){
                             <td>
                                 <!-- 수량 선택기에 증가 및 감소 버튼 추가 -->
                                 <div class="quantity-selector">
-                                    <input type="text" id="quantity" name="quantity" value="1" readonly="readonly">
+                                    <input type="text" id="quantity" name="quantity" value="0" readonly="readonly">
                                     <button type="button" onclick="incrementQuantity()">+</button>
                                     <button type="button" onclick="decrementQuantity()">-</button>
                                 </div>
