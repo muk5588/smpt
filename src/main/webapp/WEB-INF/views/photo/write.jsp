@@ -31,6 +31,12 @@ var sUploadURL = '/photo/fileupload';
         oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
         // 업데이트된 에디터 내용 가져오기
         var content = document.getElementById("ir1").value;
+        
+        if (content.trim() === "" || content === '<p>&nbsp;</p>') {
+	        // 내용이 비어있는 경우 경고 메시지 표시
+	        alert("내용이 없습니다");
+	        return; // 함수 종료
+    	}
         // 확인용으로 alert에 내용 출력
        //  alert(content);
         // 숨겨진 input 요소에 내용 설정
@@ -45,7 +51,7 @@ var sUploadURL = '/photo/fileupload';
 <script type="text/javascript">
     $(function () {
 
-        $("#writeFrom").submit(function (e) {
+        $("#writeForm").submit(function (e) {
             console.log("#writeFrom submit")
 
             var titleTerm = $("#title").val().trim()
@@ -88,6 +94,8 @@ var sUploadURL = '/photo/fileupload';
 </head>
 <body>
 <c:import url="/WEB-INF/views/layout/header.jsp"/>
+<jsp:include page="/WEB-INF/views/layout/boardmenu.jsp"/>
+
 <div class="container">
     <div class="title">
     <h1>글쓰기 페이지</h1>
