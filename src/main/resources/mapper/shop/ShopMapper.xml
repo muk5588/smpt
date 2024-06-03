@@ -116,7 +116,7 @@
                 AND price BETWEEN #{minPrice} AND #{maxPrice}
             </if>
             <if test="minPrice != null and maxPrice == null">
-                AND price >= #{minPrice}
+                 <![CDATA[ AND price >= #{minPrice} ]]>
             </if>
             <if test="minPrice == null and maxPrice != null">
                    <![CDATA[ AND price <= #{maxPrice} ]]>
