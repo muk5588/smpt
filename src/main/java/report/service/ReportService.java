@@ -63,4 +63,11 @@ public interface ReportService {
 	public List<CommReport> userbycommlist(int userNo);
 
 	public List<ItemReport> userbyitemlist(int userNo);
+
+	/**
+	 * categoryNo 에 맞는 URL 가져오기
+	 * @param categoryNo
+	 * @return
+	 */
+	public String getURL(String categoryNo);
 }

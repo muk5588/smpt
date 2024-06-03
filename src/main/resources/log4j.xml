@@ -35,6 +35,9 @@
 	<logger name="board">
 		<level value="debug" />
 	</logger>
+	<logger name="report">
+		<level value="debug" />
+	</logger>
 	<logger name="comment">
 		<level value="debug" />
 	</logger>
