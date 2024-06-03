@@ -27,7 +27,7 @@ public class ShopController {
 
     @Autowired private ShopService shopService;
     @Autowired private ShopFileService shopFileService;
-   @Autowired private util.ExchangeRateUtils exchangeRateUtils;
+   //@Autowired private util.ExchangeRateUtils exchangeRateUtils;
 
     
 //    @RequestMapping("/")
@@ -111,7 +111,7 @@ public class ShopController {
         }
 
         paging = shopService.getPaging(curPage, paging);
-        BigDecimal[] exchangeRates =  ExchangeRateUtils.getExchangeRate();
+        //BigDecimal[] exchangeRates =  ExchangeRateUtils.getExchangeRate();
         
         List<Item> items = shopService.selectItems(paging);
         List<ItemFile> itemFiles = shopService.selectTitleImgFile(items);
@@ -125,7 +125,7 @@ public class ShopController {
         model.addAttribute("items", items);
         model.addAttribute("itemFiles", itemFiles);
         model.addAttribute("files", files);
-        model.addAttribute("exchangeRates", exchangeRates);
+        //model.addAttribute("exchangeRates", exchangeRates);
         
         return "/shop/main";
     }
