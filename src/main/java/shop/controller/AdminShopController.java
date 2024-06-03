@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import dto.Item;
@@ -77,20 +78,25 @@ public class AdminShopController {
 		logger.debug("post create adminShopService : {}", res);
 		//상품 설명 IMG파일 DB에 insert
 		if( res > 0  ) {
-			int fileSave = adminShopService.fileSave(item);
-			logger.debug("post create fileSave res : {}", fileSave);
+			if(!file.isEmpty()) {
+				int fileSave = adminShopService.fileSave(item);
+				logger.debug("post create fileSave res : {}", fileSave);
+			}
 		}//if( res > 0  )
 		
 		//상품 대표 이미지 파일 update
 		if( res > 0  && null != file && file.getSize() > 0) {
-			int titleImgRes = adminShopService.updatetitleImg(item,file);
-			logger.debug("post create fileSave titleImgRes : {}", titleImgRes);
+			if(!file.isEmpty()) {
+				int titleImgRes = adminShopService.updatetitleImg(item,file);
+				logger.debug("post create fileSave titleImgRes : {}", titleImgRes);
+			}
 		}else {
 			logger.debug("post create file  : {}", file);
 		}
 		return "redirect:/shop/admin/list";
 	}
 
+	@ResponseBody
 	@RequestMapping("/fileupload")
 	public void uploadItemFile() {
 		logger.debug("파일 업로드 처리");

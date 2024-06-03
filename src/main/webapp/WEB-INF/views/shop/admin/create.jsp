@@ -12,12 +12,12 @@
         crossorigin="anonymous"></script>
 <script type="text/javascript" src="/resources/editor/js/HuskyEZCreator.js" charset="utf-8"></script>
 <script type="text/javascript">
-var sUploadURL = './fileupload';
+var sUploadURL = '/shop/admin/fileupload';
 var oEditors = [];
 nhn.husky.EZCreator.createInIFrame({
  oAppRef: oEditors,
  elPlaceHolder: "ir1",
- sSkinURI: "/resources/editor/SmartEditor2Skin.html",
+ sSkinURI: "/resources/editor/shopSmartEditor2Skin.html",
  fCreator: "createSEditor2"
 });
 //‘저장’ 버튼을 누르는 등 저장을 위한 액션을 했을 때 submitContents가 호출된다고 가정한다.
@@ -152,7 +152,7 @@ function validateFileUpload(input) {
 	nhn.husky.EZCreator.createInIFrame({
 	    oAppRef: oEditors,
 	    elPlaceHolder: "txtContent",  //textarea ID 입력
-	    sSkinURI: "/resources/editor/SmartEditor2Skin.html",  //martEditor2Skin.html 경로 입력
+	    sSkinURI: "/resources/editor/shopSmartEditor2Skin.html",  //martEditor2Skin.html 경로 입력
 	    fCreator: "createSEditor2",
 	    htParams : { 
 	    	// 툴바 사용 여부 (true:사용/ false:사용하지 않음) 
