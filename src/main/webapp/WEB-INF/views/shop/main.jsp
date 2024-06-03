@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/shop/list.css">
 <style>
- button {
+    button {
         background: #87cefa;
         color: white;
         border: none;
@@ -23,6 +23,7 @@
         background: #ccc;
         cursor: not-allowed;
     }
+
     #searchForm {
         display: flex;
         gap: 10px;
@@ -39,6 +40,57 @@
 
     #searchForm button {
         padding: 0.5em 1em;
+    }
+
+    .exchange-card {
+        position: fixed;
+        right: 20px;
+        top: 40%;
+        width: 200px; /* 기본 너비 조정 */
+        height: 40px;
+        background: #87cefa;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: height 0.3s ease, width 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px; /* 내부 여백 추가 */
+    }
+
+    .exchange-card .title {
+        display: block;
+    }
+
+    .exchange-card .card-body {
+        display: none;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0.3s, opacity 0.3s;
+        padding: 10px;
+    }
+
+    .exchange-card:hover {
+        height: auto;
+        width: 230px; /* 마우스를 올렸을 때 너비 조정 */
+    }
+
+    .exchange-card:hover .title {
+        display: none;
+    }
+
+    .exchange-card:hover .card-body {
+        display: block;
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .exchange-rates {
+        padding: 10px;
     }
 </style>
 <script type="text/javascript">
@@ -66,10 +118,7 @@
             alert("상품이 존재하지 않습니다.");
         </c:if>
     });
-    
-    
 </script>
-
 
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 <jsp:include page="/WEB-INF/views/layout/boardmenu.jsp"/>
@@ -85,6 +134,7 @@
             <button id="searchBtn">검색</button>
         </form>
         <hr>
+        
         <div class="oneAll">
             <c:forEach var="item" items="${items}">
                 <ul class="oneItem">
@@ -118,6 +168,20 @@
         </div>
     </div>
     <c:import url="/WEB-INF/views/layout/shopPaging.jsp"/>
+</div>
+
+<div class="exchange-card">
+    <div class="title">환율 정보</div>
+    <div class="card-body">
+        <h5 class="card-title">환율 정보</h5>
+        <div class="exchange-rates">
+            <p class="card-text">미국 달러(USD) 환율 정보: ${exchangeRates[0]}</p>
+            <p class="card-text">일본 엔(JPY) 환율 정보: ${exchangeRates[1]}</p>
+            <p class="card-text">중국 위안(CNY) 환율 정보: ${exchangeRates[2]}</p>
+            <p class="card-text">태국 바트(THB) 환율 정보: ${exchangeRates[3]}</p>
+            <p class="card-text">유럽 유로(EUR) 환율 정보: ${exchangeRates[4]}</p>
+        </div>
+    </div>
 </div>
 
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
