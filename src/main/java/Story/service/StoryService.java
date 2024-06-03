@@ -9,6 +9,8 @@ import vo.GoodVO;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import board.dto.Board;
 import board.dto.BoardFile;
 import board.dto.Category;
@@ -133,4 +135,9 @@ public interface StoryService {
 	public Paging getPagingByUserNo(int curPage, Paging paging, User login);
 	
 	public List<BoardFile> getFilesByBoardNo(int boardNo);
+	
+	
+	public void filesave(Board board, MultipartFile file);
+	
+	
 }

@@ -12,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import board.dao.FileDao;
 import board.dto.Board;
 import board.dto.BoardFile;
 import board.dto.Category;
@@ -21,10 +23,15 @@ import board.dto.RecommendRes;
 import util.Paging;
 import vo.GoodVO;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class StoryServiceImpl implements StoryService {
@@ -34,6 +41,11 @@ public class StoryServiceImpl implements StoryService {
 	@Autowired private CommentDao commentDao;
 	@Autowired private HttpSession session;
 	@Autowired private SqlSession sqlSession;
+	@Autowired
+    private ServletContext servletContext;
+
+    @Autowired
+    private FileDao fileDao;
 	
 	@Override
 	public List<Story> list(Paging paging) {
@@ -269,6 +281,29 @@ public class StoryServiceImpl implements StoryService {
 	public List<BoardFile> getFilesByBoardNo(int boardNo) {
 	    return storyDao.getFilesByBoardNo(boardNo);
 	}
+	
+	
+	@Override
+    public void filesave(Board board, MultipartFile file) {
+        String storedPath = servletContext.getRealPath("/resources/boardUpload");
+        File storedFolder = new File(storedPath);
+        if (!storedFolder.exists()) {
+            storedFolder.mkdir();
+        }
+
+        String storedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        File dest = new File(storedFolder, storedName);
+        try {
+            file.transferTo(dest);
+            BoardFile boardFile = new BoardFile();
+            boardFile.setBoardNo(board.getBoardNo());
+            boardFile.setOriginName(file.getOriginalFilename());
+            boardFile.setStoredName(storedName);
+            fileDao.insert(boardFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
