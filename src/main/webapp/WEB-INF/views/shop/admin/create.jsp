@@ -167,11 +167,10 @@ function validateFileUpload(input) {
 
 <hr>
 <a href="./list">
-    <button>게시판으로</button>
+    <button>상품메뉴로</button>
 </a>
 <div style="width: 90%;">
 </div>
-<%-- <jsp:include page="/resources/editor/SmartEditor2.html"/> --%>
 
 </body>
 </html>
