@@ -307,7 +307,7 @@
 		sFileSize = setUnitString(ofile.size);
 		sFileName = cuttingNameByLength(ofile.name, 15);
 		bExceedLimitTotalSize = checkTotalImageSize(ofile.size);
-
+		
 		if( !!bExceedLimitTotalSize ){
 			alert("전체 이미지 용량이 50MB를 초과하여 등록할 수 없습니다. \n\n (파일명 : "+sFileName+", 사이즈 : "+sFileSize+")");
 		} else {
@@ -318,6 +318,7 @@
 			aFileList.push('	<li id="img'+nImageInfoCnt+'" class="imgLi"><span>'+ sFileName +'</span>');
 			aFileList.push('	<em>'+ sFileSize +'</em>');
 	        aFileList.push('	<a onclick="delImage(\'img'+nImageInfoCnt+'\')"><img class="del_button" src="./img/btn_del.png"  width="14" height="13" alt="첨부 사진 삭제"></a>');
+//        	aFileList.push('    <a onclick="delImage(\'img' + nImageInfoCnt + '\')"><img class="del_button" src="./img/btn_del.png"  width="14" height="13" alt="첨부 사진 삭제"></a>');
 			aFileList.push('	</li> ');   
 			
 			sLiTag = aFileList.join(" ");
@@ -335,6 +336,7 @@
     	var	sUploadURL;
     	
     	sUploadURL= '/board/fileupload'; 	//upload URL
+//    	sUploadURL= './fileupload'; 	//upload URL
     	//파일을 하나씩 보내고, 결과를 받음.
     	for(var j=0, k=0; j < nImageInfoCnt; j++) {
     		tempFile = htImageInfo['img'+j];

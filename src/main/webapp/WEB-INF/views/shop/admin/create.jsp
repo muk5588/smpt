@@ -12,6 +12,7 @@
         crossorigin="anonymous"></script>
 <script type="text/javascript" src="/resources/editor/js/HuskyEZCreator.js" charset="utf-8"></script>
 <script type="text/javascript">
+var sUploadURL = './fileupload';
 var oEditors = [];
 nhn.husky.EZCreator.createInIFrame({
  oAppRef: oEditors,
@@ -43,7 +44,6 @@ function save(){
 	return; 
 }
 // 스마트 에디터 (사진파일 업로드 URL)
-var sUploadURL = './uploaditemfile';
 
 //대표이미지 file 검사
 function validateFileUpload(input) {
