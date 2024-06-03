@@ -416,7 +416,7 @@ $(function () {
                                 </td>
                                 <c:if test="${isLogin > 0}">
                                     <td class="rpt">
-                                        <a href='../report/commentReport?commno=${comment.commNo}'>
+                                        <a href='../report/commentReport?commno=${comment.commNo}&categoryNo=${param.categoryNo}&boardNo=${photo.boardNo}'>
                                             <img src="/resources/img/board/신고.jpg" height="30" width="30">
                                         </a>
                                     </td>
