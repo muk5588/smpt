@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<title>Insert title here</title>
+<title>사진갤러리 게시글 작성</title>
 <link href="/resources/css/board/boardWrite.css" rel="stylesheet" type="text/css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
@@ -99,7 +99,7 @@ var sUploadURL = '/photo/fileupload';
 <div class="container">
     <div class="title">
     <h1>글쓰기 페이지</h1>
-    <a href="./list" class="btn">
+<a href="./list?categoryNo=21&curPage=${curPage}" class="btn">
         게시판으로
     </a>
     </div>
