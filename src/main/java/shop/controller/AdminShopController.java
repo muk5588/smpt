@@ -23,6 +23,7 @@ import dto.ItemFile;
 import shop.service.face.AdminShopService;
 import user.dto.User;
 import util.Paging;
+import util.ShopPaging;
 
 @Controller
 @RequestMapping("/shop/admin")
@@ -38,7 +39,7 @@ public class AdminShopController {
 		    ,@RequestParam(value="search",required = false) String search
 			,Model model
 			) {
-	    Paging paging = new Paging();
+	    ShopPaging paging = new ShopPaging();
 	    if( null != search && !"".equals(search)) {
 	    	paging.setSearch(search);
 	    }
@@ -111,7 +112,7 @@ public class AdminShopController {
 		logger.debug("item : {}", item);
 		logger.debug("files : {}", files);
 		model.addAttribute("item", item);
-		model.addAttribute("files", files);
+		model.addAttribute("itemFiles", files);
 	}
 	
 	@GetMapping("/update")
@@ -132,7 +133,8 @@ public class AdminShopController {
 			,Item item) {
 		logger.debug("post update");
 		logger.debug("post update item : {}", item);
-		if(  null != file && file.getSize() > 0) {
+		logger.debug("post update file : {}", file);
+		if(  null != file && file.getSize() > 0 && !file.isEmpty()) {
 			int titleImgFileNo = adminShopService.updatetitleImg(item,file);
 			item.setTitleImg(titleImgFileNo);
 			logger.debug("post create fileSave titleImgFileNo : {}", titleImgFileNo);
