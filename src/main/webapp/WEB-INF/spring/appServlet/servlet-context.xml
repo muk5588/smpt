@@ -67,6 +67,14 @@
         <interceptor>
             <mapping path="/message/**"/>
             <mapping path="/board/delete"/>
+            <mapping path="/story/delete"/>
+            <mapping path="/photo/delete"/>
+            <mapping path="/qanda/delete"/>
+            <mapping path="/Free/delete"/>
+            <mapping path="/notice/delete"/>
+            <mapping path="/stroy/delete"/>
+            <mapping path="/tip/delete"/>
+            <mapping path="/recomm/delete"/>
             <mapping path="/board/userbyboardlist/**"/>
             <mapping path="/board/userbyrecommlist/**"/>
             <mapping path="/shop/**"/>
@@ -106,8 +114,22 @@
     <beans:bean id="roleInterceptor" class="interceptor.RoleInterceptor"/>
     <interceptors>
         <interceptor>
-            <mapping path="/board/write/**"/>
-            <mapping path="/board/update/**"/>
+            <mapping path="/board/write/"/>
+            <mapping path="/board/update/"/>
+            <mapping path="/story/write/"/>
+            <mapping path="/story/update/"/>
+            <mapping path="/photo/write/"/>
+            <mapping path="/photo/update/"/>
+            <mapping path="/qanda/write/"/>
+            <mapping path="/qanda/update/"/>
+            <mapping path="/Free/write/"/>
+            <mapping path="/Free/update/"/>
+            <mapping path="/notice/write/"/>
+            <mapping path="/notice/update/"/>
+            <mapping path="/recomm/write/"/>
+            <mapping path="/recomm/update/"/>
+            <mapping path="/tip/write/"/>
+            <mapping path="/tip/update/"/>
             <beans:ref bean="roleInterceptor"/>
         </interceptor>
     </interceptors>
