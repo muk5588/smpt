@@ -450,5 +450,11 @@
         </where>
     )
 </select>
+
+
+<select id="getFilesByBoardNo" parameterType="int" resultType="BoardFile">
+    SELECT * FROM boardfile WHERE boardNo = #{boardNo}
+</select>
+
 	
 </mapper>

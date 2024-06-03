@@ -102,7 +102,7 @@ var sUploadURL = '/board/fileupload';
             <label for="categoryNo" class="form-label" style="margin-right: 30px">게시물 종류: </label>
             <select name="categoryNo" id="categoryNo" placeholder="종류를 선택해 주세요" class="form-option">
                 <c:forEach var="category" items="${categorylist}">
-                   <c:if test="${category.categoryNo == 11}">
+                   <c:if test="${category.categoryNo == 13}">
                     	<option value="${category.categoryNo}">${category.categoryName}</option>
                 	</c:if>
                 </c:forEach>

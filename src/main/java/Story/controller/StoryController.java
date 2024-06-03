@@ -108,6 +108,12 @@ public class StoryController {
 	    }
 	    
 	    
+	    for (Story story : list) {
+	        List<BoardFile> files = storyService.getFilesByBoardNo(story.getBoardNo());
+	        story.setFiles(files);
+	    }
+	    
+	    
 //	    logger.debug("list : {}", list);
 //	    logger.debug("recommList : {}", recommList);
 	    for(Story M : list) {

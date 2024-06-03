@@ -6,6 +6,7 @@ import user.dto.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import board.dto.BoardFile;
 import board.dto.Category;
 import board.dto.Good;
 import board.dto.RecommendRes;
@@ -103,4 +104,6 @@ public interface StoryDao {
 	public List<Story> userbyrecommList(Paging paging);
 
 	public int selectCntByUserNo(@Param("paging")Paging paging, @Param("user")User login);
+	
+	public List<BoardFile> getFilesByBoardNo(int boardNo);
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import board.dto.Board;
+import board.dto.BoardFile;
 import board.dto.Category;
 import board.dto.Good;
 import board.dto.RecommendRes;
@@ -263,6 +264,11 @@ public class StoryServiceImpl implements StoryService {
 		return pagingres;
 	}
 
+	
+	@Override
+	public List<BoardFile> getFilesByBoardNo(int boardNo) {
+	    return storyDao.getFilesByBoardNo(boardNo);
+	}
 
 
 

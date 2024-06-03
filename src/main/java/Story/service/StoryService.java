@@ -10,6 +10,7 @@ import vo.GoodVO;
 import javax.servlet.http.HttpSession;
 
 import board.dto.Board;
+import board.dto.BoardFile;
 import board.dto.Category;
 import board.dto.Good;
 import board.dto.RecommendRes;
@@ -130,4 +131,6 @@ public interface StoryService {
 	 * @return - 페이징 객체
 	 */
 	public Paging getPagingByUserNo(int curPage, Paging paging, User login);
+	
+	public List<BoardFile> getFilesByBoardNo(int boardNo);
 }
