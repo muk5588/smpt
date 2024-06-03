@@ -1,16 +1,42 @@
 package report.service;
 
-import dto.Item;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import report.dao.ReportDao;
-import report.dto.*;
 
-import java.util.List;
+import dto.Item;
+import report.dao.ReportDao;
+import report.dto.BoardReport;
+import report.dto.BoardReportType;
+import report.dto.CommReport;
+import report.dto.ItemReport;
+import report.dto.ItemReportType;
 @Service
 public class ReportServiceImpl implements ReportService{
 @Autowired
 ReportDao reportDao;
+private static Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
+
+	private static final Map<Integer, String> categoryUrlMap = new HashMap<>();
+	
+	static {
+	    categoryUrlMap.put(11, "redirect:/story");
+	    categoryUrlMap.put(12, "redirect:/tip");
+	    categoryUrlMap.put(13, "redirect:/recomm");
+	    categoryUrlMap.put(21, "redirect:/photo");
+	    categoryUrlMap.put(31, "redirect:/board");
+	    categoryUrlMap.put(32, "redirect:/board");
+	    categoryUrlMap.put(41, "redirect:/qanda");
+	    categoryUrlMap.put(42, "redirect:/Free");
+	    categoryUrlMap.put(43, "redirect:/notice");
+	    categoryUrlMap.put(51, "redirect:/board");
+	    categoryUrlMap.put(52, "redirect:/board");
+	}
     @Override
     public List<BoardReportType> reportType() {
         return reportDao.reportType();
@@ -104,6 +130,19 @@ ReportDao reportDao;
     public List<ItemReport> userbyitemlist(int userNo) {
         return reportDao.userbyitemlist(userNo);
     }
+
+	@Override
+	public String getURL(String categoryNo) {
+		String URL = "";
+		if(categoryNo != null && !categoryNo.equals("")) {
+			int tempCategory = Integer.valueOf(categoryNo);
+			URL = categoryUrlMap.get(tempCategory);
+			logger.debug("categoryNo : {}",tempCategory);
+			logger.debug("URL!!!! : {}",URL);
+		}
+		
+		return URL;
+	}
 
 
 }

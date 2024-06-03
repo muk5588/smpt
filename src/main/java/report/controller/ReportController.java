@@ -29,7 +29,6 @@ public class ReportController {
     @Autowired
     ReportService reportService;
 
-
     @GetMapping("/boardReport")
     public String boardReport(Model model, int boardno,@RequestParam(value ="categoryNo",required = false)String categoryNo) {
         List<BoardReportType> reportTypeList = reportService.reportType();
@@ -47,7 +46,9 @@ public class ReportController {
     	String URL = "redirect:/";
     	if(categoryNo == null) {
     	}else {
-    		URL = "redirect:/board/list?categoryNo="+categoryNo;
+    		String getURL = reportService.getURL(categoryNo);
+    		getURL += "/list?categoryNo=" +categoryNo;
+    		URL = getURL;
     	}
         int userNo = (int)session.getAttribute("isLogin");
         boardReport.setUserNo(userNo);
@@ -72,10 +73,12 @@ public class ReportController {
     @PostMapping("/commentReport")
     public String commentReport(CommReport commReport, HttpSession session,@RequestParam(value ="boardNo",required = false)String boardNo
     		,@RequestParam(value ="categoryNo",required = false)String categoryNo){
-    	String URL = "/";
+    	String URL = "redirect:/";
     	if( boardNo != null && categoryNo != null) {
-    		URL = "redirect:/board/view?boardNo=" + boardNo;
-    		URL += "&categoryNo=" + categoryNo;
+    		String getURL = reportService.getURL(categoryNo);
+    		getURL += "/view?categoryNo="+categoryNo;
+    		getURL += "&boardNo="+boardNo;
+    		URL = getURL;
     	}
         int userNo = (int)session.getAttribute("isLogin");
         commReport.setUserNo(userNo);
