@@ -243,7 +243,9 @@ public class StoryController {
 			fileService.filesave(board,file);
 		}
 		
+		
 		if (res > 0 && file != null && !file.isEmpty()) {
+	        // 이미지를 한 번만 저장하도록 수정
 	        fileService.filesave(board, file);
 	    }
 		

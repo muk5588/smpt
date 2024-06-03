@@ -139,9 +139,13 @@
 										</c:if>
 										<!-- 이미지 출력 추가 -->
 										<c:if test="${not empty board.files}">
-											<c:forEach var="file" items="${board.files}">
-												<img src="/resources/boardUpload/${file.storedName}"
-													alt="${file.originName}" class="img-fluid">
+											<c:forEach var="file" items="${board.files}"
+												varStatus="status">
+												<!-- 첫 번째 이미지 파일만 출력 -->
+												<c:if test="${status.index == 0}">
+													<img src="/resources/boardUpload/${file.storedName}"
+														alt="${file.originName}" class="img-fluid">
+												</c:if>
 											</c:forEach>
 										</c:if>
 										<h5 class="card-title">글 번호: ${board.boardNo }</h5>
