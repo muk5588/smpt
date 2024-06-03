@@ -106,4 +106,7 @@ public interface StoryDao {
 	public int selectCntByUserNo(@Param("paging")Paging paging, @Param("user")User login);
 	
 	public List<BoardFile> getFilesByBoardNo(int boardNo);
+	
+	public void insert(BoardFile boardFile);
+   
 }

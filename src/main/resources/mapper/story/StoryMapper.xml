@@ -457,4 +457,13 @@
 </select>
 
 	
+	
+	
+    <insert id="insert" parameterType="BoardFile">
+        INSERT INTO  (fileNo, boardNo, originName, storedName)
+        VALUES (boardfile_seq.nextval, #{boardNo}, #{originName}, #{storedName})
+    </insert>
+
+    
+
 </mapper>

@@ -137,10 +137,9 @@
 											<input type="checkbox" value="${board.boardNo }"
 												name="deleteNum" class="delCheckBox">
 										</c:if>
-										<!-- 이미지 파일 한 개만 표시 -->
+										<!-- 이미지 출력 추가 -->
 										<c:if test="${not empty board.files}">
-											<c:forEach var="file" items="${board.files}" begin="0"
-												end="0">
+											<c:forEach var="file" items="${board.files}">
 												<img src="/resources/boardUpload/${file.storedName}"
 													alt="${file.originName}" class="img-fluid">
 											</c:forEach>

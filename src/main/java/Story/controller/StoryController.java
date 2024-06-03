@@ -243,6 +243,10 @@ public class StoryController {
 			fileService.filesave(board,file);
 		}
 		
+		if (res > 0 && file != null && !file.isEmpty()) {
+	        fileService.filesave(board, file);
+	    }
+		
 		 return "redirect:/story/list?categoryNo=" + categoryNo; // 글작성 시 선택한 카테고리 목록으로 이동.
 	}
 	
