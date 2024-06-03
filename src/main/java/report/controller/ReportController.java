@@ -48,6 +48,7 @@ public class ReportController {
     	}else {
     		String getURL = reportService.getURL(categoryNo);
     		getURL += "/list?categoryNo=" +categoryNo;
+    		logger.debug("111111: {} ",getURL);
     		URL = getURL;
     	}
         int userNo = (int)session.getAttribute("isLogin");
@@ -60,8 +61,11 @@ public class ReportController {
     		,@RequestParam(value ="categoryNo",required = false)String categoryNo) {
         List<BoardReportType> commReportTypeList = reportService.commReportType();
         Comment comment = boardService.commentByBoardNo(commno);
+        logger.debug("boardNo : {}",boardNo);
+        logger.debug("categoryNo! : {}",categoryNo);
         if( boardNo != null && categoryNo != null ) {
         	logger.debug("boardNo : {}",boardNo);
+        	logger.debug("categoryNo!! : {}",categoryNo);
         	model.addAttribute("boardNo", boardNo);
         	model.addAttribute("categoryNo", categoryNo);
         }
@@ -74,10 +78,13 @@ public class ReportController {
     public String commentReport(CommReport commReport, HttpSession session,@RequestParam(value ="boardNo",required = false)String boardNo
     		,@RequestParam(value ="categoryNo",required = false)String categoryNo){
     	String URL = "redirect:/";
+    	logger.debug("boardNo : {}",boardNo);
+    	logger.debug("categoryNo@ : {}",categoryNo);
     	if( boardNo != null && categoryNo != null) {
     		String getURL = reportService.getURL(categoryNo);
     		getURL += "/view?categoryNo="+categoryNo;
     		getURL += "&boardNo="+boardNo;
+    		logger.debug("111111: {} ",getURL);
     		URL = getURL;
     	}
         int userNo = (int)session.getAttribute("isLogin");
