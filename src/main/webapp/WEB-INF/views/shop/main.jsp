@@ -135,38 +135,44 @@
         </form>
         <hr>
         
-        <div class="oneAll">
-            <c:forEach var="item" items="${items}">
-                <ul class="oneItem">
-                    <li style="list-style: none; border: 1px solid #ccc;">
-                        <div class="item Img">
-                            <a href="./detail?itemNo=${item.itemNo}">
-                                <c:choose>
-                                    <c:when test="${not empty itemFiles}">
-                                        <c:forEach items="${itemFiles}" var="imgFile">
-                                            <c:if test="${item.itemNo == imgFile.itemNo}">
-                                                <img alt="ItemImg" src="/resources/itemUpload/${imgFile.storedName}" class="img-fluid">
-                                            </c:if>
-                                        </c:forEach>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid">
-                                    </c:otherwise>
-                                </c:choose>
-                            </a>
-                        </div>
-                        <div class="item Info">
-                            <a href="./detail?itemNo=${item.itemNo}">
-                                ${item.itemName}<br>
-                                <fmt:setLocale value="ko_KR"/>
-                                <fmt:formatNumber type="currency" value="${item.price}"/>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </c:forEach>
-        </div>
-    </div>
+     <div class="oneAll">
+    <c:forEach var="item" items="${items}">
+        <ul class="oneItem">
+            <li style="list-style: none; border: 1px solid #ccc;">
+                <div class="item Img">
+                    <a href="./detail?itemNo=${item.itemNo}">
+                        <c:choose>
+                            <c:when test="${not empty itemFiles}">
+                                <c:set var="hasImage" value="false"/>
+                                <c:forEach items="${itemFiles}" var="imgFile">
+                                    <c:if test="${item.itemNo == imgFile.itemNo}">
+                                        <img alt="ItemImg" src="/resources/itemUpload/${imgFile.storedName}" class="img-fluid" style="width: 200px; height: 200px;">
+                                        <c:set var="hasImage" value="true"/>
+                                    </c:if>
+                                </c:forEach>
+                                <c:if test="${!hasImage}">
+                                    <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid" style="width: 300px; height: 250px;">
+                                </c:if>
+                            </c:when>
+                            <c:otherwise>
+                                <img src="/resources/img/shop/nullimg.jpg" alt="notready" class="img-fluid" style="width: 300px; height: 250px;">
+                            </c:otherwise>
+                        </c:choose>
+                    </a>
+                </div>
+                <div class="item Info">
+                    <a href="./detail?itemNo=${item.itemNo}">
+                        ${item.itemName}<br>
+                        <fmt:setLocale value="ko_KR"/>
+                        <fmt:formatNumber type="currency" value="${item.price}"/>
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </c:forEach>
+</div>
+
+
     <c:import url="/WEB-INF/views/layout/shopPaging.jsp"/>
 </div>
 
