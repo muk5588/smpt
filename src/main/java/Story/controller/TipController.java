@@ -288,7 +288,7 @@ public class TipController {
 		int res = boardService.boardUpdate(board);
 		
 		if ( res > 0) {
-			return "redirect:/story/list?categoryNo=" + board.getCategoryNo();
+			return "redirect:/tip/list?categoryNo=" + board.getCategoryNo();
 		}
 		return "./list";
 	}

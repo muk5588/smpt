@@ -274,7 +274,7 @@ public class RecommController {
 		int res = boardService.boardUpdate(board);
 		
 		if ( res > 0) {
-			return "redirect:/story/list?categoryNo=" + board.getCategoryNo();
+			return "redirect:/recomm/list?categoryNo=" + board.getCategoryNo();
 		}
 		return "./list";
 	}
