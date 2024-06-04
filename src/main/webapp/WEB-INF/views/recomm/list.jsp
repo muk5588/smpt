@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/board/boardList.css">
-<title>전체 게시판</title>
+<title>다양한 여행 목적지 추천 게시판</title>
 
 <script type="text/javascript">
     $(function () {
@@ -344,46 +344,49 @@
 		
 		
 
-        <!-- 게시글(카드형태) -->
-        <div class="row">
-            <c:choose>
-                <c:when test="${not empty list }">
-                    <c:forEach var="board" items="${list }">
-                        <div class="col-md-6 mb-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
-                                        <input type="checkbox" value="${board.boardNo }" name="deleteNum" class="delCheckBox">
+        <!-- 게시글 목록을 감싸는 요소에 ID 추가 -->
+<div id="post-list">
+    <div class="row">
+        <c:choose>
+            <c:when test="${not empty list}">
+                <c:forEach var="board" items="${list}">
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
+                                    <input type="checkbox" value="${board.boardNo}" name="deleteNum" class="delCheckBox">
+                                </c:if>
+                                <h6 class="card-title">글 번호: ${board.boardNo}</h5>
+                                <h5 class="card-subtitle mb-2 text-muted">제목: 
+                                    <c:if test="${not empty param.categoryNo}">
+                                        <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
                                     </c:if>
-                                    <h5 class="card-title">글 번호: ${board.boardNo }</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">제목: 
-                                        <c:if test="${not empty param.categoryNo }">
-                                            <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
-                                        </c:if>
-                                        <c:if test="${empty param.categoryNo }">
-                                            <a href="./view?boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
-                                        </c:if>
-                                    </h6>
-                                    <p class="card-text">작성자 닉네임: ${board.nickName }</p>
-                                    <p class="card-text">조회수: ${board.boardView }</p>
-                                    <p class="card-text">최초작성일: <fmt:formatDate value="${board.createDate }" pattern="yyyy-MM-dd"/></p>
-                                    <c:forEach items="${totalrecomm }" var="recommList">
-                                        <c:if test="${recommList.BOARDNO eq board.boardNo }">
-                                            <p class="card-text">추천수: <a id="totalRecommend">${recommList.GOOD }</a></p>
-                                        </c:if>
-                                    </c:forEach>
-                                </div>
+                                    <c:if test="${empty param.categoryNo}">
+                                        <a href="./view?boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
+                                    </c:if>
+                                </h6>
+                                <p class="card-text">작성자 닉네임: ${board.nickName}</p>
+                                <p class="card-text">조회수: ${board.boardView}</p>
+                                <p class="card-text">최초작성일: <fmt:formatDate value="${board.createDate}" pattern="yyyy-MM-dd"/></p>
+                                <c:forEach items="${totalrecomm}" var="recommList">
+                                    <c:if test="${recommList.BOARDNO eq board.boardNo}">
+                                        <p class="card-text">추천수: <a id="totalRecommend">${recommList.GOOD}</a></p>
+                                    </c:if>
+                                </c:forEach>
                             </div>
                         </div>
-                    </c:forEach>
-                </c:when>
-                <c:when test="${empty list }">
-                    <div class="col-12">
-                        게시글이 존재하지 않습니다
                     </div>
-                </c:when>
-            </c:choose>
-        </div>
+                </c:forEach>
+            </c:when>
+            <c:when test="${empty list}">
+                <div class="col-12">
+                    게시글이 존재하지 않습니다
+                </div>
+            </c:when>
+        </c:choose>
+    </div>
+</div>
+
         <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
             <button id="deleteBtn">체크 삭제</button>
         </c:if>

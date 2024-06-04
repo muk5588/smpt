@@ -210,11 +210,36 @@ if (!mapContainer) {
     // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
     // 인포윈도우에 장소명을 표시합니다
     function displayInfowindow(marker, title) {
-        var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+    var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
 
-        infowindow.setContent(content);
-        infowindow.open(map, marker);
-    }
+    infowindow.setContent(content);
+    infowindow.open(map, marker);
+
+    // 마커 클릭 시 제목으로 게시물 필터링
+    marker.addListener('click', function() {
+        filterPostsByLocation(title);
+    });
+}
+
+// 게시물 필터링 함수
+function filterPostsByLocation(location) {
+    $.ajax({
+        type: "GET",
+        url: "./list",
+        data: {
+            search: location,
+            searchKind: "content"  // content를 검색하도록 설정
+        },
+        dataType: "html",
+        success: function(response) {
+            $("#post-list").html($(response).find("#post-list").html());
+        },
+        error: function() {
+            alert("게시물 필터링 중 오류가 발생했습니다.");
+        }
+    });
+}
+
 
     // 검색결과 목록의 자식 Element를 제거하는 함수입니다
     function removeAllChildNods(el) {   
