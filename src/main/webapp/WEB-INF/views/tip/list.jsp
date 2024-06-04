@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/board/boardList.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<title>전체 게시판</title>
+<title>여행 팁 및 권고사항 게시판</title>
 
 <script type="text/javascript">
     $(function () {
@@ -124,8 +124,8 @@
                                     <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
                                         <input type="checkbox" value="${board.boardNo }" name="deleteNum" class="delCheckBox">
                                     </c:if>
-                                    <h5 class="card-title">글 번호: ${board.boardNo }</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">제목: 
+                                    <h6 class="card-title">글 번호: ${board.boardNo }</h5>
+                                    <h5 class="card-subtitle mb-2 text-muted">제목: 
                                         <c:if test="${not empty param.categoryNo }">
                                             <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
                                         </c:if>

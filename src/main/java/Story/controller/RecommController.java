@@ -49,7 +49,7 @@ public class RecommController {
 	public String list(
 	    Model model,
 	    @RequestParam(defaultValue ="0") int curPage,
-	    @RequestParam(value="search",required = false) String search,
+	    @RequestParam(value="search", required = false) String search,
 	    @RequestParam(value="searchKind", required = false) String searchKind,
 	    @RequestParam(value="categoryNo", required = false) Integer categoryNo) {
 
@@ -57,73 +57,59 @@ public class RecommController {
 	    logger.info("/recomm/list search : {}", search);
 	    logger.info("/recomm/list searchKind : {}", searchKind);
 	    logger.info("/recomm/list categoryNo : {}", categoryNo);
-		String URL = "/recomm/list";
+	    String URL = "/recomm/list";
+
 	    // 페이징 계산
 	    Paging paging = new Paging();
 	    paging.setSearch(search);
 	    paging.setSearchKind(searchKind);
-	    
+
 	    if (categoryNo != null) {
 	        paging.setCategoryNo(categoryNo);
 	    }
-	    
-	    if (null !=  search && !"".equals(search)) {
-	        paging = storyService.getPaging(curPage, paging);
-	    } 
-	    else {
-	        paging = storyService.getPaging(curPage, paging);
-	    }
-	    logger.info("$$$%%%paging : {}",paging);
-	    
-	    //게시글 0개 조회 되면
-	    if( paging == null) {
-	    	paging = new Paging();
-	    	paging.setSearch(search);
-	    	paging.setSearchKind(searchKind);
-	    	if (categoryNo != null) {
-	    		paging.setCategoryNo(categoryNo);
-	    	}
-	    	model.addAttribute("curPage", curPage);
-	    	model.addAttribute("paging", paging);
-	    	return URL;
-	    	
+
+	    paging = storyService.getPaging(curPage, paging);
+	    logger.info("$$$%%%paging : {}", paging);
+
+	    // 게시글 0개 조회 되면
+	    if (paging == null) {
+	        paging = new Paging();
+	        paging.setSearch(search);
+	        paging.setSearchKind(searchKind);
+	        if (categoryNo != null) {
+	            paging.setCategoryNo(categoryNo);
+	        }
+	        model.addAttribute("curPage", curPage);
+	        model.addAttribute("paging", paging);
+	        return URL;
 	    }
 	    paging.setSearch(search);
 	    paging.setSearchKind(searchKind);
-	    
-	    List<Story> list = null;
-	    List<Map<String, Object>> recommList = null;
-		String name = null;
-	    logger.info("paging : {}",paging);
-	    
+
+	    List<Story> list;
+	    List<Map<String, Object>> recommList;
+	    String name;
+
 	    if (categoryNo != null) {
-	    	paging.setCategoryNo(categoryNo);
+	        paging.setCategoryNo(categoryNo);
 	        list = storyService.listByCategory(paging);
 	        recommList = storyService.getuserRecommendRes(list);
-			name = storyService.getCategoryName(categoryNo);
+	        name = storyService.getCategoryName(categoryNo);
 	    } else {
 	        list = storyService.list(paging);
 	        recommList = storyService.getuserRecommendRes(list);
-			name = "전체";
+	        name = "전체";
 	    }
-	    
-	    
-//	    logger.debug("list : {}", list);
-//	    logger.debug("recommList : {}", recommList);
-	    for(Story M : list) {
-//			logger.debug("!!@!@!@M : {}", M); 
-	    }
-	    for(Map<String, Object> M : recommList) {
-//	        logger.debug("M : {}", M.toString());
-	    }
+
 	    model.addAttribute("URL", URL);
 	    model.addAttribute("totalrecomm", recommList);
 	    model.addAttribute("curPage", curPage);
 	    model.addAttribute("paging", paging);
 	    model.addAttribute("list", list);
-		model.addAttribute("name", name);
-		return URL;
+	    model.addAttribute("name", name);
+	    return URL;
 	}
+
 	
 	@GetMapping("/category")
 	public void category(Model model){
