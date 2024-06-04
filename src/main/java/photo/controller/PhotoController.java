@@ -118,6 +118,11 @@ public class PhotoController {
 				name = "전체";
 		    }
 
+		    
+		    for (Photo photo : list) {
+		        List<PhotoFile> files = photofileService.getFileList(photo.getBoardNo());
+		        photo.setFiles(files);  // Photo 객체에 파일 목록 설정
+		    }
 //		    logger.debug("list : {}", list);
 //		    logger.debug("recommList : {}", recommList);
 		    for(Photo M : list) {
@@ -200,6 +205,7 @@ public class PhotoController {
 	public String writeProc(
 			HttpSession session
 			, Photo photo
+			, Board board
 			, @RequestParam("categoryNo") int categoryNo
 			, @RequestAttribute(required = false)MultipartFile file
 			) {
@@ -250,6 +256,11 @@ public class PhotoController {
 //			for( )
 			photofileService.filesave(photo,file);
 		}
+		if (res > 0 && file != null && !file.isEmpty()) {
+	        // 이미지를 한 번만 저장하도록 수정
+	        photofileService.filesave(photo, file);
+	    }
+		
 		
 		return "redirect:/photo/list?categoryNo=" + categoryNo;
 	}
@@ -291,10 +302,15 @@ public class PhotoController {
 	 @PostMapping("/update")
 		public String updateProc(
 				Photo photo
+				,  @RequestParam(value = "file", required = false) MultipartFile file
 				) {
 			logger.info("{}", photo);
 			photo.setUpdateDate(new Date());
 			int res = photoService.boardUpdate(photo);
+			
+			 if (file != null && !file.isEmpty()) {
+			        photofileService.filesave(photo, file);
+			    }
 			
 			if ( res > 0) {
 				return "redirect:/photo/list?categoryNo=" + photo.getCategoryNo();
@@ -469,5 +485,7 @@ public class PhotoController {
 		logger.info("���� �ٿ�ε� : {}", file);
 		return "downView";	
 		}
+	 
+	 
     
 }

@@ -1,8 +1,11 @@
 package photo.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import board.dto.BoardFile;
 
 public class Photo {
 
@@ -15,6 +18,7 @@ public class Photo {
 	private Date createDate;
 	private Date updateDate;
 	private int boardView;
+	private List<PhotoFile> files;	//이미지 출력
 
 
 	public Photo() {
@@ -23,7 +27,7 @@ public class Photo {
 
 
 	public Photo(int boardNo, int categoryNo, int userNo, String nickName, String title, String content,
-			Date createDate, Date updateDate, int boardView) {
+			Date createDate, Date updateDate, int boardView, List<PhotoFile> files) {
 		super();
 		this.boardNo = boardNo;
 		this.categoryNo = categoryNo;
@@ -34,6 +38,7 @@ public class Photo {
 		this.createDate = createDate;
 		this.updateDate = updateDate;
 		this.boardView = boardView;
+		this.files = files;
 	}
 
 
@@ -41,7 +46,7 @@ public class Photo {
 	public String toString() {
 		return "Photo [boardNo=" + boardNo + ", categoryNo=" + categoryNo + ", userNo=" + userNo + ", nickName="
 				+ nickName + ", title=" + title + ", content=" + content + ", createDate=" + createDate
-				+ ", updateDate=" + updateDate + ", boardView=" + boardView + "]";
+				+ ", updateDate=" + updateDate + ", boardView=" + boardView + ", files=" + files + "]";
 	}
 
 
@@ -132,6 +137,16 @@ public class Photo {
 
 	public void setBoardView(int boardView) {
 		this.boardView = boardView;
+	}
+
+
+	public List<PhotoFile> getFiles() {
+		return files;
+	}
+
+
+	public void setFiles(List<PhotoFile> files) {
+		this.files = files;
 	}
 	
 }
