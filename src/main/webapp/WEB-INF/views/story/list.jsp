@@ -148,8 +148,8 @@
 												</c:if>
 											</c:forEach>
 										</c:if>
-										<h5 class="card-title">글 번호: ${board.boardNo }</h5>
-										<h6 class="card-subtitle mb-2 text-muted">
+										<h6 class="card-title">글 번호: ${board.boardNo }</h5>
+										<h5 class="card-subtitle mb-2 text-muted">
 											제목:
 											<c:if test="${not empty param.categoryNo }">
 												<a
@@ -160,12 +160,13 @@
 											</c:if>
 										</h6>
 										<p class="card-text">작성자 닉네임: ${board.nickName }</p>
-										<p class="card-text">조회수: ${board.boardView }</p>
+										
 										<p class="card-text">
 											최초작성일:
 											<fmt:formatDate value="${board.createDate }"
 												pattern="yyyy-MM-dd" />
 										</p>
+										<p class="card-text">조회수: ${board.boardView }</p>
 										<c:forEach items="${totalrecomm }" var="recommList">
 											<c:if test="${recommList.BOARDNO eq board.boardNo }">
 												<p class="card-text">

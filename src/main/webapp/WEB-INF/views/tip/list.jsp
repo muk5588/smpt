@@ -134,8 +134,9 @@
                                         </c:if>
                                     </h6>
                                     <p class="card-text">작성자 닉네임: ${board.nickName }</p>
-                                    <p class="card-text">조회수: ${board.boardView }</p>
+                                    
                                     <p class="card-text">최초작성일: <fmt:formatDate value="${board.createDate }" pattern="yyyy-MM-dd"/></p>
+                                    <p class="card-text">조회수: ${board.boardView }</p>
                                     <c:forEach items="${totalrecomm }" var="recommList">
                                         <c:if test="${recommList.BOARDNO eq board.boardNo }">
                                             <p class="card-text">추천수: <a id="totalRecommend">${recommList.GOOD }</a></p>
