@@ -125,7 +125,9 @@
 			<div class="mb-3">
 				<label for="file" class="form-label">첨부파일</label>
 				<input type="file" id="file" name="file">
+				
 			</div>
+			
 			<textarea rows="20" cols="10" id="ir1" name="ir1" class="ir1" style="width: 100%;">${photo.content }</textarea>
 			<div id="se2_sample" style="margin: 10px 0;">
 				<input type="button" onclick="save();" value="수정하기" class="btn">
