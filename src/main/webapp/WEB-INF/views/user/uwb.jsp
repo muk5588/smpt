@@ -38,7 +38,7 @@
         <tr>
             <td class="no">${board.boardNo }</td>
             <td class="title">
-                <a href="../board/view?categoryNo=${board.categoryNo}&boardNo=${board.boardNo }&curPage=${curPage}">${board.title }</a>
+                <a href="./urlConnector?categoryNo=${board.categoryNo}&boardNo=${board.boardNo }&curPage=${curPage}">${board.title }</a>
             </td>
             <td class="nick">${board.nickName }</td>
             <td class="hit">${board.boardView }</td>
