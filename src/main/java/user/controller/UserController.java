@@ -23,7 +23,10 @@ import util.UserPaging;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -31,6 +34,21 @@ import java.util.UUID;
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+	private static final Map<Integer, String> categoryUrlMap = new HashMap<>();
+	
+	static {
+	    categoryUrlMap.put(11, "redirect:/story");
+	    categoryUrlMap.put(12, "redirect:/tip");
+	    categoryUrlMap.put(13, "redirect:/recomm");
+	    categoryUrlMap.put(21, "redirect:/photo");
+	    categoryUrlMap.put(31, "redirect:/board");
+	    categoryUrlMap.put(32, "redirect:/board");
+	    categoryUrlMap.put(41, "redirect:/qanda");
+	    categoryUrlMap.put(42, "redirect:/Free");
+	    categoryUrlMap.put(43, "redirect:/notice");
+	    categoryUrlMap.put(51, "redirect:/board");
+	    categoryUrlMap.put(52, "redirect:/board");
+	}
 
     @Autowired
     private UserService service;
@@ -316,6 +334,28 @@ public class UserController {
         model.addAttribute("paging", paging);
         model.addAttribute("URL", URL);
         return "user/userLog";
+    }
+    
+    @RequestMapping("/urlConnector")
+    public String urlConnector(Model model,
+    		@RequestParam(name ="boardNo",required = false)String boardNo
+    		,@RequestParam(name ="categoryNo",required = false)String categoryNo) {
+    	String URL = "redirect:/user/userDetail";
+    	if(boardNo ==null || categoryNo == null) {
+    		return URL;
+    	}
+    	logger.debug("boardNo : {}",boardNo);
+    	logger.debug("categoryNo : {}",categoryNo);
+    	int Intcategory =  Integer.parseInt(categoryNo);
+    	logger.debug("Intcategory : {}",Intcategory);
+    	String category = categoryUrlMap.get(Intcategory);
+    	URL = category +"/view?";
+    	URL += "categoryNo=" + categoryNo;
+    	URL += "&boardNo=" + boardNo;
+    	URL += "&curPage=0" ;
+    	
+    	
+    	return URL;
     }
     
 }
