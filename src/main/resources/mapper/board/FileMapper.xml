@@ -72,5 +72,12 @@
 	SELECT FILENO,BOARDNO,ORIGIN_NAME,STORED_NAME FROM BOARDFILE 
 	WHERE FILENO = #{fileNo}
 </select>
+
+
+<!-- 게시글 파일 수정 시 전 파일 삭제 -->
+<delete id="delete" parameterType="int">
+        DELETE FROM BOARDFILE WHERE FILENO = #{fileNo}
+    </delete>
+
 	
 </mapper>
