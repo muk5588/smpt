@@ -234,6 +234,20 @@ public class PhotoFileServiceImpl implements PhotoFileService{
 		return photofileDao.getFileByFileNo(fileNo);
 
 	}
+
+	@Override
+	public void deleteFile(int fileNo) {
+		  PhotoFile file = photofileDao.getFileByFileNo(fileNo);
+	       if (file != null) {
+	           String storedPath = servletContext.getRealPath("/resources/boardUpload");
+	           File storedFile = new File(storedPath, file.getStoredName());
+	           if (storedFile.exists()) {
+	               storedFile.delete();
+	           }
+	           photofileDao.delete(fileNo);
+	       }
+		
+	}
 	
 
 }

@@ -32,4 +32,6 @@ public interface PhotoFileService {
 
 	public PhotoFile getFileByFileNo(int fileNo);
 
+	public void deleteFile(int fileNo);
+
 }
