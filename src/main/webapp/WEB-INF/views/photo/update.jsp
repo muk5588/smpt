@@ -26,17 +26,17 @@
 		} catch (e) {
 		}
 	}
-
 	function save() {
 		// 에디터의 내용을 textarea에 업데이트합니다.
 		oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
 		// 업데이트된 에디터 내용 가져오기
 		var content = document.getElementById("ir1").value;
-		// 확인용으로 alert에 내용 출력
-		// alert(content);
+		/* // 확인용으로 alert에 내용 출력
+		alert(content); */
 		// 숨겨진 input 요소에 내용 설정
 		document.getElementById("content").value = content;
 		// form 제출
+		alert("수정되었습니다");
 		document.getElementById('btnWrite').click();
 	}
 
