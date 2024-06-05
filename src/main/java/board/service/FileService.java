@@ -74,5 +74,10 @@ public interface FileService {
 	 * @return - 조회된 파일 정보
 	 */
 	public BoardFile getFileByFileNo(int fileNo);
+	
+	
+	
+	// 게시글 파일 수정 시 첨부파일삭제
+	public void deleteFile(int fileNo);
 
 }

@@ -243,4 +243,19 @@ public class FileServiceImpl implements FileService {
 		return fileDao.getFileByFileNo(fileNo);
 	}	
 	
+	
+		// 게시글 파일 수정 시 전 파일 삭제
+	   @Override
+	   public void deleteFile(int fileNo) {
+	       BoardFile file = fileDao.getFileByFileNo(fileNo);
+	       if (file != null) {
+	           String storedPath = servletContext.getRealPath("/resources/boardUpload");
+	           File storedFile = new File(storedPath, file.getStoredName());
+	           if (storedFile.exists()) {
+	               storedFile.delete();
+	           }
+	           fileDao.delete(fileNo);
+	       }
+	   }
+	
 }

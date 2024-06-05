@@ -26,4 +26,7 @@ public interface FileDao {
 	public List<BoardFile> getFileList(int boardNo);
 
 	public BoardFile getFileByFileNo(int fileNo);
+	
+	// 게시글 파일 수정 시 전 파일 삭제
+	public void delete(int fileNo);
 }
