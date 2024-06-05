@@ -308,9 +308,19 @@ public class PhotoController {
 			photo.setUpdateDate(new Date());
 			int res = photoService.boardUpdate(photo);
 			
-			 if (file != null && !file.isEmpty()) {
-			        photofileService.filesave(photo, file);
-			    }
+			   // 파일 업데이트 로직 추가
+		       if (file != null && !file.isEmpty()) {
+		           // 기존 파일 삭제
+		           List<PhotoFile> existingFiles = photofileService.getFilesByBoardNo(photo.getBoardNo());
+		           if (existingFiles != null && !existingFiles.isEmpty()) {
+		               for (PhotoFile existingFile : existingFiles) {
+		                   photofileService.deleteFile(existingFile.getFileNo());
+		               }
+		           }
+		           // 새로운 파일 저장
+		           photofileService.filesave(photo, file);
+		       }
+
 			
 			if ( res > 0) {
 				return "redirect:/photo/list?categoryNo=" + photo.getCategoryNo();

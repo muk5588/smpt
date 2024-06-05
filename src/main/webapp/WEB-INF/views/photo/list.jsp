@@ -13,14 +13,15 @@
 <title>사진 갤러리</title>
 <style>
     .image-wrapper {
-        width: 300px; /* 원하는 이미지 너비 */
-        height: 200px; /* 원하는 이미지 높이 */
+        width: 400px; /* 원하는 이미지 너비 */
+        height: 300px; /* 원하는 이미지 높이 */
         overflow: hidden; /* 넘치는 이미지 부분을 잘라내기 위해 설정 */
+        margin: 0 auto;
     }
 
     .image-wrapper img {
-        width: 100%; /* 이미지가 부모 요소의 100% 크기를 가지도록 설정 */
-        height: auto; /* 가로 세로 비율을 유지하도록 합니다 */
+         max-width: 100%; /* 이미지가 부모 요소의 최대 100% 크기를 가지도록 설정 */
+        max-height: 150%; /* 이미지가 부모 요소의 최대 높이를 가지도록 설정 */
         object-fit: cover; /* 이미지를 컨테이너에 맞추고 자르거나 확대/축소하여 표시합니다 */
     }
 </style>

@@ -67,5 +67,9 @@
 		FROM boardfile
 		WHERE  BOARDNO = #{boardno}
 	</select>
+	
+	<delete id="delete" parameterType="int">
+        DELETE FROM BOARDFILE WHERE FILENO = #{fileNo}
+    </delete>
 
 </mapper>

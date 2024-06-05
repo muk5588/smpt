@@ -7,6 +7,13 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <style type="text/css">
 
+
+  .content img {
+        max-width: 200px;
+        height: auto;
+    }
+
+
     /* .wrap {
         width: 1100px;
     }

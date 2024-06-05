@@ -26,5 +26,7 @@ public interface PhotoFileDao {
 
 	public PhotoFile getFileByFileNo(int fileNo);
 
+	public void delete(int fileNo);
+
 	
 }
