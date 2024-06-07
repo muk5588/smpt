@@ -8,8 +8,23 @@
 <title>${name }</title>
 
 <script type="text/javascript">
+function link(boardNo, categoryNo, curPage) {
+    console.log("실행");
+    var url = './view?categoryNo=' + categoryNo + '&boardNo=' + boardNo + '&curPage=' + curPage;
+    window.location.href = url;
+}
     $(function () {
+		
+    	$(".oneboard").click(function () {
+            // 클릭된 게시물(tr)에 대한 정보를 가져옵니다.
+            var boardNo = $(this).find('.no').text(); // 게시글 번호
+            var categoryNo = $(this).data('category'); // 카테고리 번호
+            var curPage = $(this).data('curpage'); // 현재 페이지 번호
 
+            // link 함수를 호출하여 해당 URL로 이동합니다.
+            link(boardNo, categoryNo, curPage);
+        });
+    	
         var blank_pattern = /^\s+|\s+$/g;
 
         $("#searchForm").submit(function (e) {
@@ -135,7 +150,7 @@
             <c:choose>
                 <c:when test="${not empty list }">
                     <c:forEach var="board" items="${list }">
-                        <tr>
+                        <tr onclick="link(${board.boardNo}, ${board.categoryNo}, ${curPage})" class="oneboard" data-category="${board.categoryNo}" data-curpage="${curPage}">
                             <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
                                 <td class="checkbox"><input type="checkbox" value="${board.boardNo }" name="deleteNum"
                                                             class="delCheckBox"></td>
@@ -143,10 +158,20 @@
                             <td class="no">${board.boardNo }</td>
                             <td class="title">
                                 <c:if test="${not empty param.categoryNo }">
-                                    <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
+                                	<c:if test="${empty header }">
+	                                    <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
+                                	</c:if>
+                                	<c:if test="${not empty header }">
+	                                    <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}&header=header">${board.title}</a>
+                                	</c:if>
                                 </c:if>
                                 <c:if test="${empty param.categoryNo }">
-                                    <a href="./view?&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
+                                	<c:if test="${empty header }">
+	                                    <a href="./view?&boardNo=${board.boardNo}&curPage=${curPage}&categoryNo=${board.categoryNo}">${board.title}</a>
+                                	</c:if>
+                                	<c:if test="${not empty header }">
+	                                    <a href="./view?&boardNo=${board.boardNo}&curPage=${curPage}&categoryNo=${board.categoryNo}&header=header">${board.title}</a>
+                                	</c:if>
                                 </c:if>
                             </td>
                             <td class="nick">${board.nickName }</td>

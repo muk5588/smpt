@@ -245,8 +245,18 @@
         <div class="tit">
             <div style="top: 6px">
                 <c:choose>
+                	<c:when test="${not empty category}">
+                        <a href="${category}/list?curPage=0&categoryNo=${categoryNo}">
+                            <button>목록으로</button>
+                        </a>
+                	</c:when>
                     <c:when test="${usrno != 0 }">
                         <a href="./userbyboardlist?userno=${dto1.userno}">
+                            <button>목록으로</button>
+                        </a>
+                    </c:when>
+                    <c:when test="${not empty categoryNo }">
+                        <a href="./list?categoryNo=${categoryNo}&curPage=${curPage}">
                             <button>목록으로</button>
                         </a>
                     </c:when>
