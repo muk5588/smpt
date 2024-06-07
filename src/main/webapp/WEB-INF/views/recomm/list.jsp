@@ -356,7 +356,18 @@
                                 <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
                                     <input type="checkbox" value="${board.boardNo}" name="deleteNum" class="delCheckBox">
                                 </c:if>
-                                <h6 class="card-title">글 번호: ${board.boardNo}</h5>
+                                <!-- 이미지 출력 추가 -->
+										<c:if test="${not empty board.files}">
+											<c:forEach var="file" items="${board.files}"
+												varStatus="status">
+												<!-- 첫 번째 이미지 파일만 출력 -->
+												<c:if test="${status.index == 0}">
+													<img src="/resources/boardUpload/${file.storedName}"
+														alt="${file.originName}" class="img-fluid">
+												</c:if>
+											</c:forEach>
+										</c:if>
+                                <h6 class="card-title">글 번호: ${board.boardNo}</h6>
                                 <h5 class="card-subtitle mb-2 text-muted">제목: 
                                     <c:if test="${not empty param.categoryNo}">
                                         <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
@@ -364,7 +375,7 @@
                                     <c:if test="${empty param.categoryNo}">
                                         <a href="./view?boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
                                     </c:if>
-                                </h6>
+                                </h5>
                                 <p class="card-text">작성자 닉네임: ${board.nickName}</p>
                                 
                                 <p class="card-text">최초작성일: <fmt:formatDate value="${board.createDate}" pattern="yyyy-MM-dd"/></p>
@@ -395,7 +406,7 @@
     <!-- .container End -->
 
 
-
+	<br>
     <c:import url="/WEB-INF/views/layout/boardPaging.jsp"/>
 </div>
 

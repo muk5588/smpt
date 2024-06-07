@@ -100,6 +100,11 @@ public class RecommController {
 	        recommList = storyService.getuserRecommendRes(list);
 	        name = "전체";
 	    }
+	    
+	    for (Story story : list) {
+	        List<BoardFile> files = storyService.getFilesByBoardNo(story.getBoardNo());
+	        story.setFiles(files);
+	    }
 
 	    model.addAttribute("URL", URL);
 	    model.addAttribute("totalrecomm", recommList);
@@ -266,18 +271,29 @@ public class RecommController {
 	
 	///========좌표3
 	@PostMapping("/update")
-	public String updateProc(
-			Board board
-			) {
-		logger.info("{}", board);
-		board.setUpdateDate(new Date());
-		int res = boardService.boardUpdate(board);
-		
-		if ( res > 0) {
-			return "redirect:/recomm/list?categoryNo=" + board.getCategoryNo();
-		}
-		return "./list";
-	}
+	   public String updateProc(Board board, @RequestParam("file") MultipartFile file) {
+	       logger.info("{}", board);
+	       board.setUpdateDate(new Date());
+	       int res = boardService.boardUpdate(board);
+
+	       // 파일 업데이트 로직 추가
+	       if (file != null && !file.isEmpty()) {
+	           // 기존 파일 삭제
+	           List<BoardFile> existingFiles = storyService.getFilesByBoardNo(board.getBoardNo());
+	           if (existingFiles != null && !existingFiles.isEmpty()) {
+	               for (BoardFile existingFile : existingFiles) {
+	                   fileService.deleteFile(existingFile.getFileNo());
+	               }
+	           }
+	           // 새로운 파일 저장
+	           storyService.filesave(board, file);
+	       }
+
+	       if (res > 0) {
+	           return "redirect:/recomm/list?categoryNo=" + board.getCategoryNo();
+	       }
+	       return "./list";
+	   }
 
 	
 	@RequestMapping("/delete")

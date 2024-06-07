@@ -81,6 +81,14 @@
 
 	})
 </script>
+
+<style>
+    .card img {
+        width: 497.33px;
+        height: 331.42px;
+        object-fit: cover; /* 이미지 왜곡 X */
+    }
+</style>
 </head>
 <body>
 	<c:import url="/WEB-INF/views/layout/header.jsp" />
@@ -148,7 +156,7 @@
 												</c:if>
 											</c:forEach>
 										</c:if>
-										<h6 class="card-title">글 번호: ${board.boardNo }</h5>
+										<h6 class="card-title">글 번호: ${board.boardNo }</h6>
 										<h5 class="card-subtitle mb-2 text-muted">
 											제목:
 											<c:if test="${not empty param.categoryNo }">
@@ -158,7 +166,7 @@
 											<c:if test="${empty param.categoryNo }">
 												<a href="./view?boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
 											</c:if>
-										</h6>
+										</h5>
 										<p class="card-text">작성자 닉네임: ${board.nickName }</p>
 										
 										<p class="card-text">
@@ -193,8 +201,10 @@
 		</div>
 		<!-- .container End -->
 
-
+		<br>
 		<c:import url="/WEB-INF/views/layout/boardPaging.jsp" />
 	</div>
+	
+	
 
 	<c:import url="/WEB-INF/views/layout/footer.jsp" />
