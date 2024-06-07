@@ -206,9 +206,9 @@ button[onclick*="신고하기"]:hover {
 	height: auto;
 }
 
-/* .content p { */
-/* 	min-height: 500px; */
-/* } */
+.content p {
+ text-align: initial;
+}
 
 #contentBox {
 	min-height: 500px;
