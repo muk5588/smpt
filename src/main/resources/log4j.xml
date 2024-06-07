@@ -17,6 +17,9 @@
 	<logger name="shop">
 		<level value="debug" />
 	</logger>
+	<logger name="interceptor">
+		<level value="debug" />
+	</logger>
 	<logger name="util">
 		<level value="debug" />
 	</logger>

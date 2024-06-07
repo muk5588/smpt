@@ -22,8 +22,17 @@ public class RoleInterceptor implements HandlerInterceptor {
 		HttpSession session = request.getSession();
 		//세션에서 유저객체 get
 		User user = (User) session.getAttribute("dto1");
+		String loginMessage = "로그인이 필요한 서비스입니다.";
+		String roleMessage = "작성 권한이 없습니다.";
 		if(user == null) {
 			session.invalidate();
+			request.setAttribute("message", loginMessage);
+			response.sendRedirect("/login");
+			return false;
+		}
+		if( user.getName() == null) {
+			session.invalidate();
+			request.setAttribute("message", loginMessage);
 			response.sendRedirect("/login");
 			return false;
 		}
