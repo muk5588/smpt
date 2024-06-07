@@ -5,63 +5,6 @@
 
 <link href="/resources/css/board/boardView.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<style type="text/css">
-
-    /* .wrap {
-        width: 1100px;
-    }
-
-    table, th {
-        text-align: center;
-    } */
-
-    /* <!-- body { --> */
-    /* <!-- 	width: 1500px; --> */
-    /* <!-- 	margin: 0 auto; --> */
-    /* <!-- } --> */
-
-    /* <!-- h1 { --> */
-    /* <!-- 	text-align: center; --> */
-    /* <!-- } --> */
-
-    /* <!-- table { --> */
-    /* <!-- 	border: 1px solid black; --> */
-    /* <!-- 	margin: 0 auto; --> */
-    /* <!-- } --> */
-
-    /* <!-- tr, th, td { --> */
-    /* <!-- 	border: 1px solid black; --> */
-    /* <!-- } --> */
-
-    /* <!-- th { --> */
-    /* <!-- 	background-color: #ccc; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.no, .title, .id, .nick, .hit, .date { --> */
-    /* <!-- 	text-align: center; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.title { --> */
-    /* <!-- 	width: 200px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.content { --> */
-    /* <!-- 	width: 500px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.id, .nick { --> */
-    /* <!-- 	width: 150px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.hit { --> */
-    /* <!-- 	width: 50px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.date { --> */
-    /* <!-- 	width: 200px; --> */
-    /* <!-- } --> */
-
-</style>
 <script type="text/javascript">
 
     $(function () {
@@ -72,6 +15,20 @@
             handleFileChk();
             handleCommentDelete();
             $("#commentRefresh").click()
+			 var paragraphCount = $('.content p').length;
+            
+            $('.content p img').each(function() {
+                // 이미지 태그의 부모 p 태그 가져오기
+                var parentParagraph = $(this).closest('p');
+
+                // 이미지 태그의 최대 높이와 너비를 부모 p 태그의 크기에 맞게 설정
+                $(this).css({
+                    'max-height': parentParagraph.height(),
+                    'max-width': parentParagraph.width()*0.75
+                });
+            });
+
+
             if (${empty isRecomm or isRecomm eq 0}) {
                 $(".cancle").toggle()
             }
@@ -88,6 +45,32 @@
 
         })
 
+        
+        function adjustImageSize() {
+	    $('.content p img').each(function() {
+	        var parentParagraph = $(this).closest('p');
+	        var parentWidth = parentParagraph.width();
+	        var parentHeight = parentParagraph.height();
+	        var originalWidth = $(this).prop('naturalWidth');
+	        var originalHeight = $(this).prop('naturalHeight');
+	
+	        if (originalWidth > parentWidth || originalHeight > parentHeight) {
+	            var aspectRatio = originalWidth / originalHeight;
+	
+	            if (originalWidth > originalHeight) {
+	                $(this).css({
+	                    'max-width': parentWidth,
+	                    'max-height': parentWidth / aspectRatio
+	                });
+	            } else {
+	                $(this).css({
+	                    'max-width': parentHeight * aspectRatio,
+	                    'max-height': parentHeight
+	                });
+	            }
+	        }
+	    });
+	}
 
         $(".doRecomm").click(function () {
             console.log("#doRecomm   Click")
@@ -339,7 +322,9 @@
                 <th colspan="6">본문</th>
             </tr>
             <tr class="con">
-                <td class="content" colspan="6">${board.content }</td>
+                <td class="content" colspan="6">
+                	<div id="contentBox">${board.content }</div>
+                </td>
             </tr>
         </table>
 
