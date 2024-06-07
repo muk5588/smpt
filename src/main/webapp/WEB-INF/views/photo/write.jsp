@@ -31,32 +31,35 @@ var sUploadURL = '/photo/fileupload';
         oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
         // 업데이트된 에디터 내용 가져오기
         var content = document.getElementById("ir1").value;
+
+        // 첨부파일 존재 여부 확인
+        var fileInput = document.getElementById("file");
+        if (fileInput.files.length === 0) {
+            alert("첨부파일을 넣어주세요");
+            return; // 함수 종료
+        }
         
         if (content.trim() === "" || content === '<p>&nbsp;</p>') {
 	        // 내용이 비어있는 경우 경고 메시지 표시
 	        alert("내용이 없습니다");
 	        return; // 함수 종료
     	}
-        // 확인용으로 alert에 내용 출력
-       //  alert(content);
+        
         // 숨겨진 input 요소에 내용 설정
         document.getElementById("content").value = content;
         // form 제출
         document.getElementById('btnWrite').click();
     }
-
-
-
 </script>
 <script type="text/javascript">
     $(function () {
 
         $("#writeForm").submit(function (e) {
-            console.log("#writeFrom submit")
+            console.log("#writeForm submit")
 
             var titleTerm = $("#title").val().trim()
             var contentTerm = $("#content").val().trim()
-            console.log("#writeFrom submit contentTerm", contentTerm)
+            console.log("#writeForm submit contentTerm", contentTerm)
 
             if (!titleTerm) {
                 alert("제목을 입력해주세요")
@@ -69,7 +72,6 @@ var sUploadURL = '/photo/fileupload';
                 $("#title").focus()
                 return false;
             }
-
 
             if (!contentTerm) {
                 alert("내용을 입력해주세요")
@@ -87,9 +89,7 @@ var sUploadURL = '/photo/fileupload';
 
         })
 
-
     })
-</script>
 </script>
 </head>
 <body>
@@ -98,10 +98,8 @@ var sUploadURL = '/photo/fileupload';
 
 <div class="container">
     <div class="title">
-    <h1>글쓰기 페이지</h1>
-<a href="./list?categoryNo=21&curPage=${curPage}" class="btn">
-        게시판으로
-    </a>
+        <h1>글쓰기 페이지</h1>
+        <a href="./list?categoryNo=21&curPage=${curPage}" class="btn">게시판으로</a>
     </div>
     <hr>
     <form action="./write" method="post" id="writeForm" enctype="multipart/form-data">
@@ -109,8 +107,8 @@ var sUploadURL = '/photo/fileupload';
             <label for="categoryNo" class="form-label" style="margin-right: 30px">게시물 종류: </label>
             <select name="categoryNo" id="categoryNo" placeholder="종류를 선택해 주세요" class="form-option">
                 <c:forEach var="category" items="${categorylist}">
-                 	<c:if test="${category.categoryNo == 21}">
-                    	<option value="${category.categoryNo}">${category.categoryName}</option>
+                    <c:if test="${category.categoryNo == 21}">
+                        <option value="${category.categoryNo}">${category.categoryName}</option>
                     </c:if>
                 </c:forEach>
             </select>
@@ -120,7 +118,7 @@ var sUploadURL = '/photo/fileupload';
             <input type="text" class="form-control" id="title" placeholder="제목을 적어주세요" name="title" style="width: 100%;height: 5%">
         </div>
         <div class="mb-3">
-            <label for="content" class="form-label" >내용</label>
+            <label for="content" class="form-label">내용</label>
             <input type="text" class="form-control" id="content" hidden="hidden" name="content">
         </div>
         <div class="mb-3">
@@ -140,7 +138,7 @@ var sUploadURL = '/photo/fileupload';
     nhn.husky.EZCreator.createInIFrame({
         oAppRef: oEditors,
         elPlaceHolder: "ir1",  //textarea ID 입력
-        sSkinURI: "/resources/editor/SmartEditor2Skin.html",  //martEditor2Skin.html 경로 입력
+        sSkinURI: "/resources/editor/SmartEditor2Skin.html",  //SmartEditor2Skin.html 경로 입력
         fCreator: "createSEditor2",
         htParams: {
             // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
@@ -152,8 +150,5 @@ var sUploadURL = '/photo/fileupload';
         }
     });
 </script>
-
-
-
 </body>
 </html>
