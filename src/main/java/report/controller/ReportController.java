@@ -17,6 +17,7 @@ import report.dto.*;
 import report.service.ReportService;
 import user.dto.User;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -100,25 +101,37 @@ public class ReportController {
         model.addAttribute("boardlist", boardlist);
         model.addAttribute("commlist", commlist);
         model.addAttribute("itemlist", itemlist);
-        return "report/reportlist";
+        return "report/adminreportlist";
     }
     @RequestMapping("deleteReport")
-    public String deleteReport(int reportno) {
+    public String deleteReport(int reportno, HttpServletRequest req,@RequestParam(name = "url",required = false)String url) {
         reportService.deleteReport(reportno);
-        return "redirect: ./list";
+        if( url == null) {
+        	return "redirect:/";
+        }
+        String URL = "redirect:/report/" +url;
+        return URL;
     }
     @RequestMapping("deleteCommReport")
-    public String deleteCommReport(int reportno) {
+    public String deleteCommReport(int reportno,@RequestParam(name = "url",required = false)String url) {
         reportService.deleteCommReport(reportno);
-        return "redirect: ./list";
+        if( url == null) {
+        	return "redirect:/";
+        }
+        String URL = "redirect:/report/" +url;
+        return URL;
     }
     
     @RequestMapping("deleteItemReport")
-    public String deleteItemReport(int reportno) {
+    public String deleteItemReport(int reportno,@RequestParam(name = "url",required = false)String url) {
     	logger.debug("~~~~~~~~~~~~~~~~~~~~~");
     	logger.debug("~~~~~~~~~~~~~~~~~~~~~reportno: {}",reportno);
     	reportService.deleteItemReport(reportno);
-    	return "redirect: ./list";
+    	if( url == null) {
+    		return "redirect:/";
+    	}
+    	String URL = "redirect:/report/" +url;
+    	return URL;
     }
     
     //상품 신고하기

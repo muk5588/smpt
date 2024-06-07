@@ -12,7 +12,7 @@
 <c:import url="/WEB-INF/views/layout/header.jsp"/>
 <html>
 <head>
-    <title>나의 신고내역</title>
+    <title>신고내역</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Oswald:700" rel="stylesheet">
@@ -36,7 +36,7 @@
 
  
 <body>
-<h3>나의 신고 내역</h3>
+<h3>전체 신고 내역</h3>
 <div class="content">
 	<div class="table-wrapper">
 	<div class="report-section">
@@ -65,7 +65,7 @@
             <td class="report">${list.reportType}</td>
             <td class="report">${list.content}</td>
             <td class="report">${list.nickname}</td>
-            <td><a class='btn-fill' href="/report/deleteReport?reportno=${list.boardReportNo}&url=userByReportList"><button>삭제</button></a></td>
+            <td><a class='btn-fill' href="/report/deleteReport?reportno=${list.boardReportNo}&url=list"><button>삭제</button></a></td>
             </tr>
             <tr class="fold">
                     <td colspan="7">
@@ -107,7 +107,7 @@
                     <td>${commlist.commReport}</td>
                     <td>${commlist.commContent}</td>
                     <td>${commlist.nickname}</td>
-                    <td><a class='btn-fill' href="/report/deleteCommReport?reportno=${commlist.commReportNo}&url=userByReportList"><button>삭제</button></a></td>
+                    <td><a class='btn-fill' href="/report/deleteCommReport?reportno=${commlist.commReportNo}&url=list"><button>삭제</button></a></td>
                 </tr>
                 <tr class="fold">
                     <td colspan="7">
@@ -148,7 +148,7 @@
                     <td>${item.itemReport}</td>
                     <td>${item.itemName}</td>
                     <td>${item.nickName}</td>
-                    <td><a class='btn-fill' href="/report/deleteItemReport?reportno=${item.reportNo}&url=userByReportList"><button>삭제</button></a></td>
+                    <td><a class='btn-fill' href="/report/deleteItemReport?reportno=${item.reportNo}&url=list"><button>삭제</button></a></td>
                 </tr>
                 <tr class="fold">
                     <td colspan="7">

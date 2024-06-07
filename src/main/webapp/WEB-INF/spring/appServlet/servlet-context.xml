@@ -141,8 +141,6 @@
             <mapping path="/grade/**"/>
             <mapping path="/menu/**"/>
             <mapping path="/report/list"/>
-            <mapping path="/report/deleteReport"/>
-            <mapping path="/report/deleteCommReport"/>
             <mapping path="/order/admin/**"/>
             <mapping path="/user/adminPage"/>
             <mapping path="/user/userList"/>
