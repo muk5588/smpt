@@ -83,10 +83,21 @@
 </script>
 
 <style>
-    .card img {
-        width: 497.33px;
+    .card img, .no-image {
+        width: 100%;
         height: 331.42px;
         object-fit: cover; /* 이미지 왜곡 X */
+    }
+    
+    
+    .no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f0f0f0;
+        color: #aaa;
+        font-size: 18px;
+        font-weight: bold;
     }
 </style>
 </head>
@@ -146,16 +157,18 @@
 												name="deleteNum" class="delCheckBox">
 										</c:if>
 										<!-- 이미지 출력 추가 -->
-										<c:if test="${not empty board.files}">
-											<c:forEach var="file" items="${board.files}"
-												varStatus="status">
-												<!-- 첫 번째 이미지 파일만 출력 -->
+										<c:choose>
+										<c:when test="${not empty board.files}">
+											<c:forEach var="file" items="${board.files}" varStatus="status">
 												<c:if test="${status.index == 0}">
-													<img src="/resources/boardUpload/${file.storedName}"
-														alt="${file.originName}" class="img-fluid">
+													<img src="/resources/boardUpload/${file.storedName}" alt="${file.originName}" class="img-fluid">
 												</c:if>
 											</c:forEach>
-										</c:if>
+										</c:when>
+										<c:otherwise>
+											<div class="no-image">No Image Available</div>
+										</c:otherwise>
+										</c:choose>
 										<h6 class="card-title">글 번호: ${board.boardNo }</h6>
 										<h5 class="card-subtitle mb-2 text-muted">
 											제목:
