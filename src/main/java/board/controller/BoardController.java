@@ -128,7 +128,7 @@ public class BoardController {
 //		}
 
 		if(header != null) {
-			model.addAttribute("category", "header");
+			model.addAttribute("header", "header");
 		}
 			
 //	    logger.debug("list : {}", list);
