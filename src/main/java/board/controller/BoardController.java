@@ -34,13 +34,30 @@ public class BoardController {
 	@Autowired private ServletContext servletContext;
 	@Autowired private ReportService reportService;
 	
+	private static final Map<Integer, String> categoryUrlMap = new HashMap<>();
+	
+	static {
+	    categoryUrlMap.put(11, "/story");
+	    categoryUrlMap.put(12, "/tip");
+	    categoryUrlMap.put(13, "/recomm");
+	    categoryUrlMap.put(21, "/photo");
+	    categoryUrlMap.put(31, "/board");
+	    categoryUrlMap.put(32, "/board");
+	    categoryUrlMap.put(41, "/qanda");
+	    categoryUrlMap.put(42, "/Free");
+	    categoryUrlMap.put(43, "/notice");
+	    categoryUrlMap.put(51, "/board");
+	    categoryUrlMap.put(52, "/board");
+	}
+	
 	@GetMapping("/list")
 	public String list(
 	    Model model,
 	    @RequestParam(defaultValue ="0") int curPage,
 	    @RequestParam(value="search",required = false) String search,
 	    @RequestParam(value="searchKind", required = false) String searchKind,
-	    @RequestParam(value="categoryNo", required = false) Integer categoryNo) {
+	    @RequestParam(value="categoryNo", required = false) Integer categoryNo,
+	    @RequestParam(value="header", required = false) String header) {
 
 	    logger.info("/board/list [GET]");
 	    logger.info("/board/list search : {}", search);
@@ -110,7 +127,10 @@ public class BoardController {
 //			}
 //		}
 
-
+		if(header != null) {
+			model.addAttribute("header", "header");
+		}
+			
 //	    logger.debug("list : {}", list);
 //	    logger.debug("recommList : {}", recommList);
 	    for(Board M : list) {
@@ -142,6 +162,7 @@ public class BoardController {
 			, @RequestParam(value="curPage", defaultValue="0") int curPage
 			, @RequestParam(value ="categoryNo", required = false, defaultValue = "0")int categoryNo 
 			, @RequestParam(value ="usrno", required = false, defaultValue = "0")int usrno
+			,@RequestParam(value="header", required = false) String header
 			) {
 
 		board =  boardService.viewByBoardNo(boardno);
@@ -169,7 +190,13 @@ public class BoardController {
 				}
 			}
 		}
+		if(header != null) {
+			int getCategoryNo = board.getCategoryNo();
+			String category =categoryUrlMap.get(getCategoryNo);
+			model.addAttribute("category", category);
+		}
 		model.addAttribute("comment", comment);
+		model.addAttribute("categoryNo", board.getCategoryNo());
 		model.addAttribute("recomm", recomm);
 		logger.info("recomm : {}", recomm);
 		model.addAttribute("curPage", curPage);
