@@ -9,7 +9,7 @@
 
 
   .content img {
-        max-width: 200px;
+        max-width: 300px;
         height: auto;
     }
 
