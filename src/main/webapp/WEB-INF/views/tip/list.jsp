@@ -75,6 +75,15 @@
     
     
 </script>
+
+<style>
+    .card img {
+        width: 497.33px;
+        height: 331.42px;
+        object-fit: cover; /* 이미지 왜곡 X */
+    }
+</style>
+
 </head>
 <body>
 <c:import url="/WEB-INF/views/layout/header.jsp"/>
@@ -124,7 +133,7 @@
                                     <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
                                         <input type="checkbox" value="${board.boardNo }" name="deleteNum" class="delCheckBox">
                                     </c:if>
-                                    <h6 class="card-title">글 번호: ${board.boardNo }</h5>
+                                    <h6 class="card-title">글 번호: ${board.boardNo }</h6>
                                     <h5 class="card-subtitle mb-2 text-muted">제목: 
                                         <c:if test="${not empty param.categoryNo }">
                                             <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
@@ -132,7 +141,7 @@
                                         <c:if test="${empty param.categoryNo }">
                                             <a href="./view?boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
                                         </c:if>
-                                    </h6>
+                                    </h5>
                                     <p class="card-text">작성자 닉네임: ${board.nickName }</p>
                                     
                                     <p class="card-text">최초작성일: <fmt:formatDate value="${board.createDate }" pattern="yyyy-MM-dd"/></p>
@@ -160,7 +169,7 @@
     </div>
     <!-- .container End -->
 
-
+	<br>
     <c:import url="/WEB-INF/views/layout/boardPaging.jsp"/>
 </div>
 
