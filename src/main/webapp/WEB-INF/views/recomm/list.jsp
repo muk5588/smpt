@@ -279,6 +279,22 @@
 		column-count: 2;
 	}
 }
+
+.card img, .no-image {
+    width: 100%; /* 497.33px로 고정하지 않고 100%로 설정하여 반응형으로 만듦 */
+    height: 331.42px;
+    object-fit: cover; /* 이미지 왜곡 방지 */
+}
+
+.no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    color: #aaa;
+    font-size: 18px;
+    font-weight: bold;
+}
 </style>
 
 
@@ -357,17 +373,19 @@
                                     <input type="checkbox" value="${board.boardNo}" name="deleteNum" class="delCheckBox">
                                 </c:if>
                                 <!-- 이미지 출력 추가 -->
-										<c:if test="${not empty board.files}">
-											<c:forEach var="file" items="${board.files}"
-												varStatus="status">
-												<!-- 첫 번째 이미지 파일만 출력 -->
+										<c:choose>
+										<c:when test="${not empty board.files}">
+											<c:forEach var="file" items="${board.files}" varStatus="status">
 												<c:if test="${status.index == 0}">
-													<img src="/resources/boardUpload/${file.storedName}"
-														alt="${file.originName}" class="img-fluid">
+													<img src="/resources/boardUpload/${file.storedName}" alt="${file.originName}" class="img-fluid">
 												</c:if>
 											</c:forEach>
-										</c:if>
-                                <h6 class="card-title">글 번호: ${board.boardNo}</h6>
+										</c:when>
+										<c:otherwise>
+											<div class="no-image">썸네일 이미지를 추가해주세요</div>
+										</c:otherwise>
+										</c:choose>
+                                <h6 class="card-title">글 번호: ${board.boardNo}</h5>
                                 <h5 class="card-subtitle mb-2 text-muted">제목: 
                                     <c:if test="${not empty param.categoryNo}">
                                         <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
@@ -375,7 +393,7 @@
                                     <c:if test="${empty param.categoryNo}">
                                         <a href="./view?boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
                                     </c:if>
-                                </h5>
+                                </h6>
                                 <p class="card-text">작성자 닉네임: ${board.nickName}</p>
                                 
                                 <p class="card-text">최초작성일: <fmt:formatDate value="${board.createDate}" pattern="yyyy-MM-dd"/></p>
