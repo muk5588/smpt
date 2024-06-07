@@ -41,6 +41,7 @@
 	<ul class="links">
 		<li>
 			<a>로그인</a>
+			<a><c:if test="${not empty message}">${message}</c:if></a>
 		</li>
 	</ul>
 		
