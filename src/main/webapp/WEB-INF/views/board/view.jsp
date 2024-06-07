@@ -6,16 +6,37 @@
 <link href="/resources/css/board/boardView.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script type="text/javascript">
-
+    // 온클릭 이벤트로 copyUrl 함수 실행
     $(function () {
+        sharePage = () => {
+            const shareObject = {
+                title: '${board.title}',
+                text: 'http://localhost:8088',
+                url: window.location.href,
+            };
 
+            if (navigator.share) { // Navigator를 지원하는 경우만 실행
+                navigator
+                    .share(shareObject)
+                    .then(() => {
+                    })
+                    .catch((error) => {
+                        alert('에러가 발생했습니다.')
+                    })
+            } else { // navigator를 지원하지 않는 경우
+                alert('페이지 공유를 지원하지 않습니다.')
+            }
+        }
         $(document).ready(function () {
+            const url = window.location.href; // 현재 링크를 가져오는 코드
+
+            const copyUrl = async () => {
+                await navigator.clipboard.writeText(url);
+            };
             //HTML전체 로딩이 끝나면 댓글을 비동기통신으로 가져오기 위해.
 //             handleGetFile();
             handleFileChk();
             handleCommentDelete();
-            $("#commentRefresh").click()
-			 var paragraphCount = $('.content p').length;
             
             $('.content p img').each(function() {
                 // 이미지 태그의 부모 p 태그 가져오기
@@ -27,8 +48,8 @@
                     'max-width': parentParagraph.width()*0.75
                 });
             });
-
-
+            
+            $("#commentRefresh").click()
             if (${empty isRecomm or isRecomm eq 0}) {
                 $(".cancle").toggle()
             }
@@ -45,32 +66,6 @@
 
         })
 
-        
-        function adjustImageSize() {
-	    $('.content p img').each(function() {
-	        var parentParagraph = $(this).closest('p');
-	        var parentWidth = parentParagraph.width();
-	        var parentHeight = parentParagraph.height();
-	        var originalWidth = $(this).prop('naturalWidth');
-	        var originalHeight = $(this).prop('naturalHeight');
-	
-	        if (originalWidth > parentWidth || originalHeight > parentHeight) {
-	            var aspectRatio = originalWidth / originalHeight;
-	
-	            if (originalWidth > originalHeight) {
-	                $(this).css({
-	                    'max-width': parentWidth,
-	                    'max-height': parentWidth / aspectRatio
-	                });
-	            } else {
-	                $(this).css({
-	                    'max-width': parentHeight * aspectRatio,
-	                    'max-height': parentHeight
-	                });
-	            }
-	        }
-	    });
-	}
 
         $(".doRecomm").click(function () {
             console.log("#doRecomm   Click")
@@ -246,9 +241,9 @@
 
     <div class="container">
 
-        <h1>상세보기</h1>
+        <h1>${board.title}</h1>
         <div class="tit">
-            <div>
+            <div style="top: 6px">
                 <c:choose>
                     <c:when test="${usrno != 0 }">
                         <a href="./userbyboardlist?userno=${dto1.userno}">
@@ -271,9 +266,10 @@
                 </c:if>
             </div>
             <div>
-                <c:if test="${isLogin > 0}">
                     <div id="reBtn">
                         <div class="recommendBtn doRedomm">
+                            <button class="share" onclick="sharePage()">공유하기</button>
+                            <c:if test="${isLogin > 0}">
                             <c:if test="${empty isRecomm or isRecomm eq 0 }">
                                 <a class="doRecomm do"><img src="/resources/img/board/개추.png" height="13"
                                                             width="15">${recomm }</a>
@@ -286,9 +282,10 @@
                             <button onclick="location.href='../report/boardReport?categoryNo=${param.categoryNo}&boardno=${board.boardNo}'">
                                 신고하기
                             </button>
+                            </c:if>
                         </div>
                     </div>
-                </c:if>
+
             </div>
         </div>
         <hr>
@@ -327,8 +324,8 @@
                 </td>
             </tr>
         </table>
-
         <hr>
+
         <div class="comment">
             <table>
                 <tr>
@@ -411,6 +408,5 @@
 
 
 </div>
-
 
 <c:import url="/WEB-INF/views/layout/footer.jsp"/>
