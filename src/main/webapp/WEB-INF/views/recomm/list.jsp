@@ -372,21 +372,8 @@
                                 <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
                                     <input type="checkbox" value="${board.boardNo}" name="deleteNum" class="delCheckBox">
                                 </c:if>
-                                <!-- 이미지 출력 추가 -->
-										<c:choose>
-										<c:when test="${not empty board.files}">
-											<c:forEach var="file" items="${board.files}" varStatus="status">
-												<c:if test="${status.index == 0}">
-													<img src="/resources/boardUpload/${file.storedName}" alt="${file.originName}" class="img-fluid">
-												</c:if>
-											</c:forEach>
-										</c:when>
-										<c:otherwise>
-											<div class="no-image">썸네일 이미지를 추가해주세요</div>
-										</c:otherwise>
-										</c:choose>
-                                <h6 class="card-title">글 번호: ${board.boardNo}</h5>
-                                <h5 class="card-subtitle mb-2 text-muted">제목: 
+                                <h5 class="card-title">글 번호: ${board.boardNo}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">제목: 
                                     <c:if test="${not empty param.categoryNo}">
                                         <a href="./view?categoryNo=${param.categoryNo}&boardNo=${board.boardNo}&curPage=${curPage}">${board.title}</a>
                                     </c:if>
@@ -395,9 +382,8 @@
                                     </c:if>
                                 </h6>
                                 <p class="card-text">작성자 닉네임: ${board.nickName}</p>
-                                
-                                <p class="card-text">최초작성일: <fmt:formatDate value="${board.createDate}" pattern="yyyy-MM-dd"/></p>
                                 <p class="card-text">조회수: ${board.boardView}</p>
+                                <p class="card-text">최초작성일: <fmt:formatDate value="${board.createDate}" pattern="yyyy-MM-dd"/></p>
                                 <c:forEach items="${totalrecomm}" var="recommList">
                                     <c:if test="${recommList.BOARDNO eq board.boardNo}">
                                         <p class="card-text">추천수: <a id="totalRecommend">${recommList.GOOD}</a></p>
@@ -417,6 +403,11 @@
     </div>
 </div>
 
+
+   
+
+
+
         <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
             <button id="deleteBtn">체크 삭제</button>
         </c:if>
@@ -425,7 +416,9 @@
 
 
 	<br>
+    <div id="paging">
     <c:import url="/WEB-INF/views/layout/boardPaging.jsp"/>
+	</div>
 </div>
 
 <c:import url="/WEB-INF/views/layout/footer.jsp"/>

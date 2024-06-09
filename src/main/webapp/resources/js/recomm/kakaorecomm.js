@@ -233,12 +233,15 @@ function filterPostsByLocation(location) {
         dataType: "html",
         success: function(response) {
             $("#post-list").html($(response).find("#post-list").html());
+            $("#paging").html($(response).find("#paging").html());  // 페이징 정보 업데이트
         },
         error: function() {
             alert("게시물 필터링 중 오류가 발생했습니다.");
         }
     });
 }
+
+
 
 
     // 검색결과 목록의 자식 Element를 제거하는 함수입니다

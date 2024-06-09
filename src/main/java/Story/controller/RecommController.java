@@ -100,11 +100,6 @@ public class RecommController {
 	        recommList = storyService.getuserRecommendRes(list);
 	        name = "전체";
 	    }
-	    
-	    for (Story story : list) {
-	        List<BoardFile> files = storyService.getFilesByBoardNo(story.getBoardNo());
-	        story.setFiles(files);
-	    }
 
 	    model.addAttribute("URL", URL);
 	    model.addAttribute("totalrecomm", recommList);
@@ -114,6 +109,8 @@ public class RecommController {
 	    model.addAttribute("name", name);
 	    return URL;
 	}
+
+
 
 	
 	@GetMapping("/category")
