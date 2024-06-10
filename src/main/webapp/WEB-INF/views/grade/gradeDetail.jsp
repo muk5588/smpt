@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>등급</title>
+    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
     <link href="/resources/css/grade/gradeDetail.css" rel="stylesheet" type="text/css">
 
 </head>

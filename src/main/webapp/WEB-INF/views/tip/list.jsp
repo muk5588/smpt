@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="/resources/css/board/boardList.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <title>여행 팁 및 권고사항 게시판</title>
+    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
 
 <script type="text/javascript">
     $(function () {

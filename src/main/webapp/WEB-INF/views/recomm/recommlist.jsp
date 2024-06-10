@@ -14,6 +14,7 @@
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <title>Travle Square</title>
+    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
 
 <style>
 .wrap {

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Edit Q&A</title>
+    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
 </head>
 <body>
 <h1>글 수정</h1>

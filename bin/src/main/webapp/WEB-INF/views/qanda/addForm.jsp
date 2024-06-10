@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Add New Q&A</title>
+    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
     <style>
         body {
             font-family: Arial, sans-serif;

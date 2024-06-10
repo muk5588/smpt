@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/board/boardList.css">
 <title>꿀팁 게시판</title>
+    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
 
 <script type="text/javascript">
     $(function () {

@@ -19,6 +19,7 @@ $(function(){
 <html>
   <head>
     <title>네이버로그인</title>
+    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
   </head>
   <body>
 <h1>로그인 테스트</h1>

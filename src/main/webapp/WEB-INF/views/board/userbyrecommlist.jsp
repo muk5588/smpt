@@ -13,6 +13,7 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
 <title>내 추천글</title>
+    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
 <link rel="stylesheet" type="text/css" href="/resources/css/board/boardList.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">
 <style type="text/css">

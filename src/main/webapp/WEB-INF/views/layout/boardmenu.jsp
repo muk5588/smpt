@@ -5,6 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Travle Square</title>
+    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
         <link rel="stylesheet" type="text/css" href="/resources/css/mainPage/boardMenu.css">
 
         <script>
