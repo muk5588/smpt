@@ -9,115 +9,6 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <jsp:include page="/WEB-INF/views/layout/boardmenu.jsp" />
         
-        <style>
-/* 이미지 컨테이너 */
-/* .col-md-4 img { */
-/*   max-width: 100%; */
-/*   height: auto; */
-/* } */
-
-/* /* 상품 정보 테이블 스타일 */ */
-/* .table { */
-/*   width: 100%; */
-/*   border-collapse: collapse; */
-/*   border-spacing: 0; */
-/* } */
-
-/* .table th, */
-/* .table td { */
-/*   border: 1px solid #dee2e6; */
-/*   padding: .75rem; */
-/*   vertical-align: top; */
-/* } */
-
-/* .table th { */
-/*   background-color: #f8f9fa; */
-/* } */
-
-/* /* 수량 선택기 */ */
-/* .quantity-selector { */
-/*   display: flex; */
-/*   align-items: center; */
-/* } */
-
-/* .quantity-selector input[type="text"] { */
-/*   width: 50px; */
-/*   padding: 5px; */
-/*   text-align: center; */
-/*   border: 1px solid #ced4da; */
-/*   border-radius: .25rem; */
-/* } */
-
-/* .quantity-selector button { */
-/*   width: 30px; */
-/*   padding: 5px; */
-/*   border: 1px solid #ced4da; */
-/*   border-radius: .25rem; */
-/*   cursor: pointer; */
-/*   background-color: #fff; */
-/* } */
-
-/* /* 장바구니 담기 및 구매하기 버튼 */ */
-/* #addToCartBtn, */
-/* #purchaseBtn { */
-/*   display: block; */
-/*   width: 100%; */
-/*   margin-top: 10px; */
-/*   padding: .375rem .75rem; */
-/*   font-size: 1rem; */
-/*   line-height: 1.5; */
-/*   text-align: center; */
-/*   white-space: nowrap; */
-/*   vertical-align: middle; */
-/*   cursor: pointer; */
-/*   user-select: none; */
-/*   border: 1px solid transparent; */
-/*   border-radius: .25rem; */
-/*   color: #fff; */
-/*         background-color: #0056b3; */
-/*         border-color: #0056b3; */
-/*     } */
-/*     #addToCartBtn:focus, #purchaseBtn:focus { */
-/*         outline: none; */
-/*         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5); */
-/*     } */
-/* } */
-
-/* #addToCartBtn:hover, */
-/* #purchaseBtn:hover { */
-/*   background-color: #0056b3; */
-/*   border-color: #0056b3; */
-/* } */
-
-/* #addToCartBtn:focus, */
-/* #purchaseBtn:focus { */
-/*   outline: none; */
-/*   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5); */
-/* } */
-
-/*   #searchForm button { */
-/*         padding: 0.5em 1em; */
-/*     } */
-
-/* button { */
-/*         background: #87cefa; */
-/*         border: none; */
-/*         padding: 0.5em 1em; */
-/*         cursor: pointer; */
-/*         transition: background 0.3s ease; */
-/*     } */
-
-/*     button:hover { */
-/*         background: #39a9db; */
-/*     } */
-
-/*     button:disabled { */
-/*         background: #ccc; */
-/*         cursor: not-allowed; */
-/*     } */
-    
-    
-</style>
 <script>
     function incrementQuantity() {
         var quantityInput = document.getElementById('quantity');
@@ -375,7 +266,7 @@ $(function () {
                             </td>
                         </tr>
                     <tr>
-                <td>
+                <td style="text-align: left;" colspan="2">
                     <!-- 장바구니 담기 버튼 -->
                     <button type="button" id="addToCartBtn">장바구니 담기</button>
                     <!-- 구매하기 버튼 -->
@@ -385,7 +276,7 @@ $(function () {
                 </td>
             </tr>
 			<tr>
-                <td><a style="font-size: 1.3em">상품설명</a><br>${item.itemComm}</td>
+                <td colspan="2"><a style="font-size: 1.3em">상품설명</a><br>${item.itemComm}</td>
             </tr>
 
         </table>
