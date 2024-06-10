@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>등급</title>
     <link href="/resources/css/grade/gradeUpdate.css" rel="stylesheet" type="text/css">
 
 </head>

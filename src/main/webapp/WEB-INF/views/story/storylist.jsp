@@ -10,7 +10,7 @@
 	href="/resources/css/story/storyList.css">
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<title>전체 게시판</title>
+<title>Travle Square</title>
 
 <style>
 	.wrap {

@@ -4,7 +4,7 @@
     <html>
     <head>
         <meta charset="UTF-8">
-        <title>네이버 쪽지함 스타일 메뉴</title>
+        <title>Travle Square</title>
         <link rel="stylesheet" type="text/css" href="/resources/css/mainPage/boardMenu.css">
 
         <script>
@@ -14,7 +14,7 @@
             var searchKind = "title";
 
             // 검색어와 검색 조건을 사용하여 전체 게시물 페이지 URL을 생성합니다.
-            var searchUrl = "/board/list?searchKind=" + searchKind + "&search=" + encodeURIComponent(searchText) +'&header=ok';
+            var searchUrl = "/board/list?searchKind=" + searchKind + "&search=" + encodeURIComponent(searchText) +'&header=header';
 
             // 생성된 URL로 이동합니다.
             window.location.href = searchUrl;

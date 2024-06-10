@@ -9,7 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Travle Square</title>
     <link href="/resources/css/user/updatepw.css" rel="stylesheet" type="text/css">
     <script src="${pageContext.request.contextPath}/resources/js/user/password.js" charset="UTF-8"></script>
 </head>

@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<h1>에러입니당</h1>
+<h1>에러페이지</h1>
 <hr>
 <div>
 <img alt="" src="/resources/img/error/error.png" width="300px">

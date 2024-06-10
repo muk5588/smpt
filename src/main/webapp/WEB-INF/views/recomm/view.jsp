@@ -5,63 +5,6 @@
 
 <link href="/resources/css/board/boardView.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<style type="text/css">
-
-    /* .wrap {
-        width: 1100px;
-    }
-
-    table, th {
-        text-align: center;
-    } */
-
-    /* <!-- body { --> */
-    /* <!--    width: 1500px; --> */
-    /* <!--    margin: 0 auto; --> */
-    /* <!-- } --> */
-
-    /* <!-- h1 { --> */
-    /* <!--    text-align: center; --> */
-    /* <!-- } --> */
-
-    /* <!-- table { --> */
-    /* <!--    border: 1px solid black; --> */
-    /* <!--    margin: 0 auto; --> */
-    /* <!-- } --> */
-
-    /* <!-- tr, th, td { --> */
-    /* <!--    border: 1px solid black; --> */
-    /* <!-- } --> */
-
-    /* <!-- th { --> */
-    /* <!--    background-color: #ccc; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.no, .title, .id, .nick, .hit, .date { --> */
-    /* <!--    text-align: center; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.title { --> */
-    /* <!--    width: 200px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.content { --> */
-    /* <!--    width: 500px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.id, .nick { --> */
-    /* <!--    width: 150px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.hit { --> */
-    /* <!--    width: 50px; --> */
-    /* <!-- } --> */
-
-    /* <!-- td.date { --> */
-    /* <!--    width: 200px; --> */
-    /* <!-- } --> */
-
-</style>
 <script type="text/javascript">
 
     $(function () {
@@ -284,7 +227,7 @@ $(function () {
 <div class="wrap mx-auto">
 
     <header class="header text-center">
-        <h1>Spring Board</h1>
+        <h1>${board.title }</h1>
     </header>
 
     <div class="container">

@@ -283,7 +283,7 @@ $(function () {
 <div class="wrap mx-auto">
 
     <header class="header text-center">
-        <h1>Spring Board</h1>
+        <h1>${board.title }</h1>
     </header>
 
     <div class="container">
