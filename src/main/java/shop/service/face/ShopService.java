@@ -2,6 +2,7 @@ package shop.service.face;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import dto.Item;
 import dto.ItemFile;
@@ -51,5 +52,7 @@ public interface ShopService {
 	public List<Item> selectItems(ShopPaging paging);
 
 	public List<ItemFile> selectTitleImgFile(List<Item> items);
+
+	public int countMyOrderByItemNo(Map<Object, String> map);
 
 }

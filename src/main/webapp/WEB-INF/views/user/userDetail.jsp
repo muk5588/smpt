@@ -13,7 +13,7 @@
 <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
 <html>
 <head>
-    <title>Title</title>
+    <title>Travel Square</title>
     <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
     <link href="/resources/css/common/common.css" rel="stylesheet" type="text/css">
     <link rel="preconnect" href="https://fonts.googleapis.com">

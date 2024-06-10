@@ -76,4 +76,9 @@ public class ShopServiceImpl implements ShopService {
 	    }
 	    return shopDao.selectTitleImgFile(items);
 	}
+
+	@Override
+	public int countMyOrderByItemNo(Map<Object, String> map) {
+		return shopDao.countMyOrderByItemNo(map);
+	}
 }

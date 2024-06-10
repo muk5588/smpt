@@ -9,7 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Travel Square</title>
     <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
     <link href="/resources/css/user/updatepw.css" rel="stylesheet" type="text/css">
     <script src="${pageContext.request.contextPath}/resources/js/user/password.js" charset="UTF-8"></script>

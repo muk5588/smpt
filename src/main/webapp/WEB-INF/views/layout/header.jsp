@@ -61,7 +61,7 @@
     }
 </style>
 <head>
-    <title>헤더</title>
+    <title>Travel Square</title>
     <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
 </head>
 <div class="Head">

@@ -3,17 +3,9 @@
 <mapper namespace="shop.dao.ShopFileDao">
 
 <select id="getTitleImgs" resultType="dto.ItemFile">
-	SELECT itemno, stored_Name storedName, origin_Name originName , fileNo  
-	FROM itemfile
-	WHERE fileno IN 
-		( SELECT titleIMG FROM ITEM
-		<where>
-		itemno IN
-			<foreach collection="items" item="data" open="(" close=")" separator=",">
-				#{data.itemNo}
-			</foreach>
-		</where>
-		)
+	SELECT it.itemno, stored_Name storedName, origin_Name originName , fileNo  FROM item it, itemFile ItF 
+	WHERE it.itemno = itf.itemno
+	AND it.titleimg = itf.FILENO
 </select>
 
 <select id="getItemFilesByItemNo" parameterType="int" resultType="dto.ItemFile">

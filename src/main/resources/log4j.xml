@@ -10,40 +10,40 @@
 		</layout>
 	</appender>
 	
-	<!-- Application Loggers -->
-<!-- 	<logger name="com.test.www"> -->
-<!-- 		<level value="info" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="shop"> -->
-<!-- 		<level value="debug" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="interceptor"> -->
-<!-- 		<level value="debug" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="util"> -->
-<!-- 		<level value="debug" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="user"> -->
-<!-- 		<level value="info" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="login"> -->
-<!-- 		<level value="debug" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="menu"> -->
-<!-- 		<level value="debug" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="message"> -->
-<!-- 		<level value="debug" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="board"> -->
-<!-- 		<level value="debug" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="report"> -->
-<!-- 		<level value="debug" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="comment"> -->
-<!-- 		<level value="debug" /> -->
-<!-- 	</logger> -->
+	Application Loggers
+	<logger name="com.test.www">
+		<level value="info" />
+	</logger>
+	<logger name="shop">
+		<level value="debug" />
+	</logger>
+	<logger name="interceptor">
+		<level value="debug" />
+	</logger>
+	<logger name="util">
+		<level value="debug" />
+	</logger>
+	<logger name="user">
+		<level value="info" />
+	</logger>
+	<logger name="login">
+		<level value="debug" />
+	</logger>
+	<logger name="menu">
+		<level value="debug" />
+	</logger>
+	<logger name="message">
+		<level value="debug" />
+	</logger>
+	<logger name="board">
+		<level value="debug" />
+	</logger>
+	<logger name="report">
+		<level value="debug" />
+	</logger>
+	<logger name="comment">
+		<level value="debug" />
+	</logger>
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
 		<level value="info" />
