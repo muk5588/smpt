@@ -10,7 +10,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-    <title>Travle Square</title>
+    <title>Title</title>
     <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
     <link href="/resources/css/common/common.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -135,8 +135,8 @@
             <table class="table table-striped table-hover table-sm">
                 <tr>
                     <th class='w-px60'>회원번호</th>
-                    <th class='w-px200'>이름</th>
-                    <th>닉네임</th>
+                    <th class='w-px200'>닉네임</th>
+                    <th></th>
                     <th>성별</th>
                     <th>최근 접속 시간</th>
                     <th>누적 접속일</th>
