@@ -373,6 +373,19 @@
                                 <c:if test="${dto1.gradeno == 0 || dto1.gradeno == 5000}">
                                     <input type="checkbox" value="${board.boardNo}" name="deleteNum" class="delCheckBox">
                                 </c:if>
+                                <!-- 이미지 출력 추가 -->
+										<c:choose>
+										<c:when test="${not empty board.files}">
+											<c:forEach var="file" items="${board.files}" varStatus="status">
+												<c:if test="${status.index == 0}">
+													<img src="/resources/boardUpload/${file.storedName}" alt="${file.originName}" class="img-fluid">
+												</c:if>
+											</c:forEach>
+										</c:when>
+										<c:otherwise>
+											<div class="no-image">No Image Available</div>
+										</c:otherwise>
+										</c:choose>
                                 <h5 class="card-title">글 번호: ${board.boardNo}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">제목: 
                                     <c:if test="${not empty param.categoryNo}">
