@@ -340,7 +340,7 @@ $(function () {
                 <th colspan="6">본문</th>
             </tr>
             <tr class="con">
-                <td class="content" colspan="6">${photo.content }</td>
+                <td class="content" colspan="6"><div id="contentBox">${photo.content }</div></td>
             </tr>
         </table>
 
