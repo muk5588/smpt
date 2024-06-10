@@ -417,7 +417,7 @@
 
 	<br>
     <div id="paging">
-    <c:import url="/WEB-INF/views/layout/boardPaging.jsp"/>
+    <c:import url="/WEB-INF/views/layout/recommPaging.jsp"/>
 	</div>
 </div>
 
