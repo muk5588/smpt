@@ -9,7 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Travel Square</title>
     <link rel="stylesheet" href="/resources/css/menu/update.css">
 
 </head>

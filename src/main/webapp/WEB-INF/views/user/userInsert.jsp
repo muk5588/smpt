@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>join JSP</title>
+    <title>Travle Square</title>
     <script src="/resources/js/user/user.js" charset="UTF-8"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <link href="/resources/css/user/userInsert.css" rel="stylesheet" type="text/css">

@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Travle Square</title>
     <script src="/resources/js/user/search.js" charset="UTF-8"></script>
 	<link href="/resources/css/user/userSearch.css" rel="stylesheet" type="text/css">
 

@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Insert title here</title>
+    <title>카카오 로그인</title>
 </head>
 <body>
     <c:if test="${userId eq null || email eq null }">
