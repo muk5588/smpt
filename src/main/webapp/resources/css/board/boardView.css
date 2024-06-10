@@ -207,5 +207,9 @@ button[onclick*="신고하기"]:hover {
 }
 
 .content p {
+	text-align: initial;
+}
+
+#contentBox {
 	min-height: 500px;
 }
