@@ -126,7 +126,7 @@
                                         <tr>
                                             <c:if test="${not empty orderItem }">
                                                 <th>상품명 : <c:if test="${not empty userOrder.orderNo}">
-                                                	<a href="http://localhost:8088/shop/detail?orderNo=${orderItem.orderNo}&itemNo=${orderItem.itemNo}">${orderItem.itemName }</a>
+                                                	<a href="/shop/detail?orderNo=${orderItem.orderNo}&itemNo=${orderItem.itemNo}">${orderItem.itemName }</a>
                                                 	</c:if>
                                                 </th>
                                                 <th>구매수량 : ${orderItem.orderQuantity }</th>

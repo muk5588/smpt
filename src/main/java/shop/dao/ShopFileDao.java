@@ -9,7 +9,7 @@ import dto.ItemFile;
 
 public interface ShopFileDao {
 
-	public List<ItemFile> getTitleImgs(@Param("items")List<Item> item);
+	public List<ItemFile> getTitleImgs();
 
 	public List<ItemFile> getItemFilesByItemNo(int itemNo);
 	

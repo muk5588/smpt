@@ -17,8 +17,8 @@ public class ShopFileServiceImpl implements ShopFileService{
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired private ShopFileDao shopFileDao;
 	@Override
-	public List<ItemFile> getTitleImgs(List<Item> item) {
-		return shopFileDao.getTitleImgs(item);
+	public List<ItemFile> getTitleImgs() {
+		return shopFileDao.getTitleImgs();
 	}
 	@Override
 	public List<ItemFile> getItemFilesByItemNo(int itemNo) {

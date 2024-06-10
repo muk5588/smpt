@@ -1,7 +1,9 @@
 package shop.controller;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,11 +12,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import dto.Item;
 import dto.ItemFile;
 import shop.service.face.ShopFileService;
 import shop.service.face.ShopService;
+import user.dto.User;
 import util.ExchangeRateUtils;
 import util.Paging;
 import util.ShopPaging;
@@ -133,7 +137,7 @@ public class ShopController {
 
 
     @RequestMapping("/detail")
-    public void detail(@RequestParam("itemNo") int itemNo, Model model) {
+    public void detail(@RequestParam("itemNo") int itemNo, Model model,@SessionAttribute(value = "dto1", required = false) User login) {
         logger.debug("Detail itemNo : {}", itemNo);
         
         // 상품 정보 조회
@@ -147,5 +151,18 @@ public class ShopController {
         // 모델에 상품 정보와 파일 정보 추가
         model.addAttribute("item", item);
         model.addAttribute("files", files);
+        
+		if( login != null) {
+			int userno = login.getUserno();
+			Map<Object,String> map = new HashMap<Object,String>();
+			map.put("itemNo", String.valueOf(itemNo));
+			map.put("userno", String.valueOf(userno));
+			//상품 구매 내역
+			int countMyOrder = shopService.countMyOrderByItemNo(map);
+	
+	
+			System.out.println("countMyOrder" + countMyOrder);
+			model.addAttribute("countMyOrder", countMyOrder);
+		}
     }
 }

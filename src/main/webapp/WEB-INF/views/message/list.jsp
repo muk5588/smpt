@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Travel Square</title>
     <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
 <link rel="stylesheet" type="text/css" href="/resources/css/message/list.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/common/paging.css">

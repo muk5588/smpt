@@ -34,6 +34,9 @@ public interface ShopDao {
 
    public List<ItemFile> selectTitleImgFile(@Param("items")List<Item> items);
 
+
+   public int countMyOrderByItemNo(Map<Object, String> map);
+
 //public List<Item> getList(ShopPaging shopPaging);
 
 }
