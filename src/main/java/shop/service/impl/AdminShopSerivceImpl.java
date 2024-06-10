@@ -26,6 +26,7 @@ import dto.Item;
 import dto.ItemFile;
 import shop.dao.AdminShopDao;
 import shop.service.face.AdminShopService;
+import util.Paging;
 import util.ShopPaging;
 
 @Service

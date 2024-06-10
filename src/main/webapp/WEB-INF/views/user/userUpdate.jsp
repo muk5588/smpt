@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Travle Square</title>
+    <title>Title</title>
     <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
@@ -22,10 +22,6 @@
                 }
                 if ($("#nickname").val() == null|| val.replace(/\s| /gi,"").length == 0) {
                     alert("닉네임을 입력해 주세요")
-                    return;
-                }
-                if ($("#email").val() == null || val.replace(/\s| /gi,"").length == 0) {
-                    alert("이메일을 입력해 주세요")
                     return;
                 }
                 if ($("#address").val() == null|| val.replace(/\s| /gi,"").length == 0) {
@@ -112,7 +108,7 @@
             <br>
             <div id=emailbox">
                 <label for="email">이메일</label>
-                <input type="email" name="email" id="email"value="${dto.email}"/><br>
+                <input type="email" name="email" id="email"value="${dto.email}" readonly/><br>
             </div>
             <div id="postcodebox">
                 <label for="postcode">우편번호</label>

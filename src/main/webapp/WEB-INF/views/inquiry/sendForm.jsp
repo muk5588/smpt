@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>문의사항</title>
-    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/resources/css/message/send.css">
     <script type="text/javascript">
@@ -135,7 +134,7 @@
         </c:choose>
     </h1>
     <div class="btndiv">
-        <button id="homeBtn" class="button">메인 화면으로</button>
+        <!-- <button id="homeBtn" class="button">메인 화면으로</button> -->
         <button id="inquiryBtn" class="button">문의함으로</button>
     </div>
     <hr>

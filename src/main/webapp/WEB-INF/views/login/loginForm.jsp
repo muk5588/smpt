@@ -10,8 +10,8 @@
 
 <html>
 <head>
-    <title>로그인</title>
-    <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
+    <title>Title</title>
+	<link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
 	<link href="/resources/css/login/loginForm.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script type="text/javascript">
@@ -42,7 +42,6 @@
 	<ul class="links">
 		<li>
 			<a>로그인</a>
-			<a><c:if test="${not empty message}">${message}</c:if></a>
 		</li>
 	</ul>
 		

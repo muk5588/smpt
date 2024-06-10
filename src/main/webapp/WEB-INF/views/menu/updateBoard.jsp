@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Travel Square</title>
+    <title>Title</title>
     <link rel="icon" href="<%=request.getContextPath()%>/resources/img/20191208094528217881320965.png">
     <link rel="stylesheet" href="/resources/css/menu/update.css">
 
